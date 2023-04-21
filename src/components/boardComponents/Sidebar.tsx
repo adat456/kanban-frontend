@@ -3,10 +3,16 @@ import { BoardsContext } from "../../Context";
 
 import CreateBoard from "./CreateBoard";
 
-const Sidebar = function({ setBoardsData }) {
+const Sidebar = function({ setBoardsData, setCurBoardId }) {
     const boardsData = useContext(BoardsContext);
 
-    const boardLinks = boardsData.map(board => <a key={board._id}>{board.name}</a>);
+    function handleClick(e) {
+        const boardLink = e.target;
+        const boardId = boardLink.getAttribute("data-id");
+        setCurBoardId(boardId);
+    };
+
+    const boardLinks = boardsData.map(board => <a key={board._id} data-id={board._id} onClick={handleClick}>{board.name}</a>);
 
     return (
         <section className="sidebar">
