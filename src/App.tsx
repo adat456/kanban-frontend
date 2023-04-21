@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { BoardsContext } from "./Context";
 
@@ -18,7 +18,7 @@ function App() {
           <Routes>
             <Route path="/log-in" element={<Login setBoardsData={setBoardsData} />} />
             <Route path="/sign-up" element={<Signup />} />
-            <Route path="/boards/*" element={<AllBoards />} />
+            <Route path="/boards/*" element={<AllBoards setLiteMode={setLiteMode} setSidebarVis={setSidebarVis} setBoardsData={setBoardsData} />} />
           </Routes>
         </BrowserRouter>
       </BoardsContext.Provider>
