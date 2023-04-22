@@ -26,7 +26,7 @@ const AllBoards = function({ setLiteMode, setSidebarVis, setBoardsData, setCurBo
                 </header>
             } 
             <hr />
-            <Board setBoardsData={setBoardsData} />
+            {!curBoardId ? <p>No board chosen!</p> : <Board setBoardsData={setBoardsData} />}
             <hr />
             <Sidebar setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />
         </>

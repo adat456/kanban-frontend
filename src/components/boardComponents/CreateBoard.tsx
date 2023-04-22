@@ -28,11 +28,13 @@ const CreateBoard = function({ setBoardsData }) {
         let columns = [];      
         function pullColumnNames() {
             const colArr = [...document.getElementsByClassName("columns")];
-            columns = colArr.map((col, index) => {
-                return {
-                    name: col.value,
-                    order: index,
-                }; 
+            colArr.forEach((col, index) => {
+                if (col.value) {
+                    columns.push({
+                        name: col.value,
+                        order: index,
+                    });
+                };
             });
         };
         pullColumnNames();
@@ -51,7 +53,7 @@ const CreateBoard = function({ setBoardsData }) {
             // this will print any messages (success or error) received from the server
             console.log(message);
             if (res.ok) {
-                // update context as well
+                // update context as well, with board NAME
                 const boardNameUrl = boardName.split(" ").join("-");
                 const res = await fetch(`http://localhost:3000/read-board/${boardNameUrl}`, {credentials: "include"});
                 const newMongoBoard = await res.json();
@@ -69,12 +71,12 @@ const CreateBoard = function({ setBoardsData }) {
     
     return (
         <form method="POST" className="create-board" onSubmit={handleSubmit}>
-            <h3>Add New Board</h3>
+            <h2>Add New Board</h2>
             <label htmlFor="boardName">Name<input type="text" name="boardName" id="boardName" value={boardName} onChange={handleChange} /></label>
             <fieldset>
                 <legend>Columns</legend>
-                <label key="0" htmlFor="col0"><input type="text" id="col0" name="columns" className="columns" /></label>
-                <label key="1" htmlFor="col1"><input type="text" id="col1" name="columns" className="columns" /></label>
+                <label htmlFor="col0"><input type="text" id="col0" name="columns" className="columns" /></label>
+                <label htmlFor="col1"><input type="text" id="col1" name="columns" className="columns" /></label>
                 {extraColFields}
                 <button type="button" onClick={handleAddColField}>+ Add New Column</button>
             </fieldset>

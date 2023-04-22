@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
 import Task from "./Task";
+import CreateTask from "./CreateTask";
 
 const Board = function({ setBoardsData }) {
     const boardsData = useContext(BoardsContext);
@@ -10,7 +11,7 @@ const Board = function({ setBoardsData }) {
     function filterColumns() {
         const curBoard = boardsData.find(board => board._id === curBoardId);
         return curBoard.columns;
-    }
+    };
     const columnsArr = filterColumns();
     const columns = columnsArr.map(col => {
 
@@ -24,6 +25,7 @@ const Board = function({ setBoardsData }) {
                 <h3>{col.name}</h3>
                 {tasks}
                 <button type="button">+ Add New Task</button>
+                <CreateTask curCol={col._id} columnsArr={columnsArr} setBoardsData={setBoardsData} />
             </section>
         );
     })
