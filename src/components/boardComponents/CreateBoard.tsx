@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { BoardsContext } from "../../Context";
 
-const CreateBoard = function({ setBoardsData }) {
+const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
     // only the board name will be a controlled input
     const [ boardName, setBoardName ] = useState("");
     const [ numCols, setNumCols ] = useState(2);
@@ -62,17 +62,32 @@ const CreateBoard = function({ setBoardsData }) {
                 // client-generated error message
                 throw new Error("Failed to create board. Please try again later.");
             };
+
+            // close out window/modal and reset controlled and uncontrolled fields
+
+            // need to remove all col fields entirely, because resetting state does not prevent persistence of previous col fields and their data...
+            function removeAllColFields() {
+                const colArr = [...document.getElementsByClassName("columns")];
+                colArr.forEach(col => col.remove());
+            };
+            removeAllColFields();
+            
+            setNumCols(2);
+            setExtraColFields([]);
+            setBoardName("");
+
+            setCreateBoardVis(false);
+
         } catch(err) {
             console.log(err.message);
         };
 
-        // close out window/modal
     };
     
     return (
         <form method="POST" className="create-board" onSubmit={handleSubmit}>
             <h2>Add New Board</h2>
-            <label htmlFor="boardName">Name<input type="text" name="boardName" id="boardName" value={boardName} onChange={handleChange} /></label>
+            <label htmlFor="boardName">Board Name<input type="text" id="boardName" value={boardName} onChange={handleChange} /></label>
             <fieldset>
                 <legend>Columns</legend>
                 <label htmlFor="col0"><input type="text" id="col0" name="columns" className="columns" /></label>

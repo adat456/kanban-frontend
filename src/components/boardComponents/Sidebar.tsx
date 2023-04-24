@@ -1,9 +1,11 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { BoardsContext } from "../../Context";
 
 import CreateBoard from "./CreateBoard";
 
 const Sidebar = function({ setBoardsData, setCurBoardId }) {
+    const [ createBoardVis, setCreateBoardVis ] = useState(false);
+
     const boardsData = useContext(BoardsContext);
 
     function handleClick(e) {
@@ -19,9 +21,12 @@ const Sidebar = function({ setBoardsData, setCurBoardId }) {
             <div className="boards">
                 <h2>{`ALL BOARDS (${boardsData.length})`}</h2>
                 <nav>{boardLinks}</nav>
-                <button type="button">Create new board</button>
+                <button type="button" onClick={() => setCreateBoardVis(true)}>Create new board</button>
             </div>
-            <CreateBoard setBoardsData={setBoardsData} />
+            {createBoardVis ? 
+                <CreateBoard setBoardsData={setBoardsData} setCreateBoardVis={setCreateBoardVis} /> : 
+                <></>
+            }
         </section>
     );  
 };
