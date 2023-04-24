@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { CurBoardIdContext } from "../../Context";
+import { BoardsContext, CurBoardIdContext } from "../../Context";
 
 const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
     const [ task, setTask ] = useState("");
@@ -7,18 +7,13 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
     const [ numSubtasks, setNumSubtasks ] = useState(2);
     const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
 
+    const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
 
     const colOptions = columnsArr.map(col => {
-        if (col._id === curCol) {
-            return (
-                <option key={col._id} value={col._id} selected>{col.name}</option>
-            );
-        } else {
-            return (
-                <option key={col._id} value={col._id}>{col.name}</option>
-            );
-        };
+        return (
+            <option key={col._id} value={col._id}>{col.name}</option>
+        );
     });
 
     function handleAddSubtaskField() {
@@ -76,8 +71,9 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
                 // update context as well, with board ID
                 const res = await fetch(`http://localhost:3000/read-board/${curBoardId}`, {credentials: "include"});
                 const updatedMongoBoard = await res.json();
+                // remove current board and replace it with the updated board in context
                 const filteredBoardsData = boardsData.filter(board => {
-                    return (board._id !== curBoardId)
+                    return (board._id !== curBoardId);
                 })
                 setBoardsData([...filteredBoardsData, updatedMongoBoard]);
             } else {
@@ -87,7 +83,6 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
         } catch(err) {
             console.log(err.message);
         };
-
         // close out window/modal
     };
 
@@ -104,7 +99,7 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
                 <button type="button" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
             </fieldset>
             <label htmlFor="column">Column
-                <select name="column" id="column">
+                <select name="column" id="column" defaultValue={curCol}>
                     {colOptions}
                 </select>
             </label>

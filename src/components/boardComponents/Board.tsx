@@ -1,8 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
 import Task from "./Task";
 import CreateTask from "./CreateTask";
+import EditBoard from "./EditBoard";
 
 const Board = function({ setBoardsData }) {
     const boardsData = useContext(BoardsContext);

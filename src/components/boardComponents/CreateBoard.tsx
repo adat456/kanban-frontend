@@ -13,7 +13,7 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
         // this first setState call will not click in until the next click, which is why the initial value is 2 instead of 1 (0-indexed)
         setNumCols(numCols + 1);
         setExtraColFields(extraColFields => [...extraColFields,
-            <label key={numCols} htmlFor={`col${numCols}`}><input type="text" id={`col${numCols}`} name="columns" className="columns" /></label>
+            <label key={numCols} htmlFor={`col${numCols}`}><input type="text" id={`col${numCols}`} name="columns" className="columns create-brd-cols" /></label>
         ]);
     };
     
@@ -27,7 +27,7 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
 
         let columns = [];      
         function pullColumnNames() {
-            const colArr = [...document.getElementsByClassName("columns")];
+            const colArr = [...document.getElementsByClassName("create-brd-cols")];
             colArr.forEach((col, index) => {
                 if (col.value) {
                     columns.push({
@@ -58,30 +58,15 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
                 const res = await fetch(`http://localhost:3000/read-board/${boardNameUrl}`, {credentials: "include"});
                 const newMongoBoard = await res.json();
                 setBoardsData([...boardsData, newMongoBoard]);
+
+                setCreateBoardVis(false);
             } else {
                 // client-generated error message
                 throw new Error("Failed to create board. Please try again later.");
             };
-
-            // close out window/modal and reset controlled and uncontrolled fields
-
-            // need to remove all col fields entirely, because resetting state does not prevent persistence of previous col fields and their data...
-            function removeAllColFields() {
-                const colArr = [...document.getElementsByClassName("columns")];
-                colArr.forEach(col => col.remove());
-            };
-            removeAllColFields();
-            
-            setNumCols(2);
-            setExtraColFields([]);
-            setBoardName("");
-
-            setCreateBoardVis(false);
-
         } catch(err) {
             console.log(err.message);
         };
-
     };
     
     return (
@@ -90,8 +75,8 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
             <label htmlFor="boardName">Board Name<input type="text" id="boardName" value={boardName} onChange={handleChange} /></label>
             <fieldset>
                 <legend>Columns</legend>
-                <label htmlFor="col0"><input type="text" id="col0" name="columns" className="columns" /></label>
-                <label htmlFor="col1"><input type="text" id="col1" name="columns" className="columns" /></label>
+                <label htmlFor="col0"><input type="text" id="col0" name="columns" className="columns create-brd-cols" /></label>
+                <label htmlFor="col1"><input type="text" id="col1" name="columns" className="columns create-brd-cols" /></label>
                 {extraColFields}
                 <button type="button" onClick={handleAddColField}>+ Add New Column</button>
             </fieldset>

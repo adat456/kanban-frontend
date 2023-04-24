@@ -1,11 +1,13 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../Context";
 
 import Sidebar from "./boardComponents/Sidebar";
+import EditBoard from "../components/boardComponents/EditBoard";
 import Board from "./boardComponents/Board";
 
 const AllBoards = function({ setLiteMode, setSidebarVis, setBoardsData, setCurBoardId }) {
+    const [ editBoardVis, setEditBoardVis ] = useState(false);
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
 
@@ -22,7 +24,10 @@ const AllBoards = function({ setLiteMode, setSidebarVis, setBoardsData, setCurBo
                 </header> :
                 <header>
                     <h1>{curBoardName}</h1>
-                    <button type="button">Modify Board</button>
+                    <button type="button" onClick={() => setEditBoardVis(true)}>Modify Board</button>
+                    {editBoardVis ?
+                        <EditBoard setBoardsData={setBoardsData} setEditBoardVis={setEditBoardVis} /> : <></>
+                    }
                 </header>
             } 
             <hr />
