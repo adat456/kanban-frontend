@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { BoardsContext } from "../../Context";
 
-import CreateBoard from "./CreateBoard";
+import CreateBoard from "../crudComponents/CreateBoard";
 
 const Sidebar = function({ setBoardsData, setCurBoardId }) {
     const [ createBoardVis, setCreateBoardVis ] = useState(false);

@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { BoardsContext, CurBoardIdContext } from "../Context";
 
 import Sidebar from "./boardComponents/Sidebar";
-import EditBoard from "../components/boardComponents/EditBoard";
+import EditBoard from "./crudComponents/EditBoard";
 import Board from "./boardComponents/Board";
 
 const AllBoards = function({ setLiteMode, setSidebarVis, setBoardsData, setCurBoardId }) {

@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
-const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
+const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVis }) {
     const [ task, setTask ] = useState("");
     const [ desc, setDesc ] = useState("");
     const [ numSubtasks, setNumSubtasks ] = useState(2);
@@ -76,6 +76,8 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
                     return (board._id !== curBoardId);
                 })
                 setBoardsData([...filteredBoardsData, updatedMongoBoard]);
+
+                setCreateTaskVis(false);
             } else {
                 // client-generated error message
                 throw new Error("Failed to create board. Please try again later.");
