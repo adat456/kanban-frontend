@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
-const EditBoard = function({ setBoardsData, setEditBoardVis }) {
+const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
 
@@ -11,6 +11,7 @@ const EditBoard = function({ setBoardsData, setEditBoardVis }) {
     const [ boardName, setBoardName ] = useState(curBoard.name);
     const [ numCols, setNumCols ] = useState(curBoard.columns.length);
     const [ extraColFields, setExtraColFields ] = useState([]);
+    const [ deleteMsgVis, setDeleteMsgVis ] = useState(false);
 
     const existingColFields = curBoard.columns.map((col, index) => {
         return (
@@ -46,6 +47,7 @@ const EditBoard = function({ setBoardsData, setEditBoardVis }) {
             });
         };
         pullColumnNames();
+        console.log(columns);
 
         const reqOptions = {
             method: "POST",
@@ -80,6 +82,27 @@ const EditBoard = function({ setBoardsData, setEditBoardVis }) {
         };
     };
 
+    async function handleDelete() {
+        try {
+            const res = await fetch(`http://localhost:3000/delete-board/${curBoardId}`, { method: "DELETE", credentials: "include" });
+            if (res.ok) {
+                const msg = await res.json();
+                console.log(msg);
+
+                // update context as well
+                const filteredBoardsData = boardsData.filter(board => {
+                    return (board._id !== curBoardId);
+                });
+                setBoardsData(filteredBoardsData);         
+                setCurBoardId(null);
+            } else {
+                throw new Error("Unable to delete board.");
+            }
+        } catch(err) {
+            console.log(err.message);
+        };
+    };
+
     return (
         <form method="POST" onSubmit={handleSubmit}>
             <h2>Edit Board</h2>
@@ -91,7 +114,15 @@ const EditBoard = function({ setBoardsData, setEditBoardVis }) {
                 <button type="button" onClick={handleAddColField}>+ Add New Column</button>
             </fieldset>
             <button type="submit">Save Changes</button>
-            <button type="button">Delete Board</button>
+            <button type="button" onClick={() => setDeleteMsgVis(true)}>Delete Board</button>
+            {deleteMsgVis ?
+                <section className="delete-brd-msg">
+                    <h2>Delete this board?</h2>
+                    <p>{`Are you sure you want to delete the '${curBoard.name}' board? This action will remove all columns and tasks and cannot be reversed.`}</p>
+                    <button type="button" onClick={handleDelete}>Delete</button>
+                    <button type="button" onClick={() => setEditBoardVis(false)}>Cancel</button>
+                </section> : <></>
+            }
         </form>
     );
 };

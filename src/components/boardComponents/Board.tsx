@@ -1,11 +1,13 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
 import Task from "./Task";
 import CreateTask from "./CreateTask";
 import EditBoard from "./EditBoard";
 
-const Board = function({ setBoardsData }) {
+const Board = function({ setBoardsData, setCurBoardId }) {
+    const [ editBoardVis, setEditBoardVis ] = useState(false);
+
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
 
@@ -34,7 +36,10 @@ const Board = function({ setBoardsData }) {
     return (
         <main>
             {columns}
-            <button type="button">+ Add New Column</button>
+            <button type="button" onClick={() => setEditBoardVis(true)}>+ Add New Column</button>
+            {editBoardVis ?
+                <EditBoard setBoardsData={setBoardsData} setEditBoardVis={setEditBoardVis} setCurBoardId={setCurBoardId} /> : <></>
+            }
         </main>
     );
 };

@@ -26,12 +26,12 @@ const AllBoards = function({ setLiteMode, setSidebarVis, setBoardsData, setCurBo
                     <h1>{curBoardName}</h1>
                     <button type="button" onClick={() => setEditBoardVis(true)}>Modify Board</button>
                     {editBoardVis ?
-                        <EditBoard setBoardsData={setBoardsData} setEditBoardVis={setEditBoardVis} /> : <></>
+                        <EditBoard setBoardsData={setBoardsData} setEditBoardVis={setEditBoardVis} setCurBoardId={setCurBoardId} /> : <></>
                     }
                 </header>
             } 
             <hr />
-            {!curBoardId ? <p>No board chosen!</p> : <Board setBoardsData={setBoardsData} />}
+            {!curBoardId ? <p>No board chosen!</p> : <Board setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />}
             <hr />
             <Sidebar setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />
         </>
