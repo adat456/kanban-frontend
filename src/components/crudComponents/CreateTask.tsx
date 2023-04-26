@@ -20,7 +20,7 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
         // this first setState call will not click in until the next click, which is why the initial value is 2 instead of 1 (0-indexed)
         setNumSubtasks(numSubtasks + 1);
         setExtraSubtaskFields(extraSubtaskFields => [...extraSubtaskFields,
-            <label key={numSubtasks} htmlFor={`subtask${numSubtasks}`}><input type="text" id={`subtask${numSubtasks}`} name="subtasks" className="subtasks" /></label>
+            <label key={numSubtasks} htmlFor={`subtask${numSubtasks}`}><input type="text" id={`subtask${numSubtasks}`} name="subtasks" className="create-subtasks" /></label>
         ]);
     };
 
@@ -37,7 +37,7 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
 
         let subtasks = [];      
         function pullSubtaskNames() {
-            const subtaskArr = [...document.getElementsByClassName("subtasks")];
+            const subtaskArr = [...document.getElementsByClassName("create-subtasks")];
             subtaskArr.forEach(subtask => {
                 if (subtask.value) {
                     subtasks.push({
@@ -95,8 +95,8 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
             <label htmlFor="desc">Description<textarea id="desc" name="desc" onChange={handleChange} /></label>
             <fieldset>
                 <legend>Subtasks</legend>
-                <label htmlFor="subtask0"><input type="text" id="subtask0" name="subtasks" className="subtasks" /></label>
-                <label htmlFor="subtask1"><input type="text" id="subtask1" name="subtasks" className="subtasks" /></label>
+                <label htmlFor="subtask0"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" /></label>
+                <label htmlFor="subtask1"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" /></label>
                 {extraSubtaskFields}
                 <button type="button" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
             </fieldset>

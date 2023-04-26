@@ -35,7 +35,7 @@ const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
         e.preventDefault();
 
         let columns = [];      
-        function pullColumnNames() {
+        function pullColumns() {
             const colArr = [...document.getElementsByClassName("edit-brd-cols")];
             colArr.forEach((col, index) => {
                 // push all columns regardless of whether field is an emptry string; if it has an id, mongodb will delete that column, if it does not, mongodb will not add another column
@@ -46,8 +46,7 @@ const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
                 });
             });
         };
-        pullColumnNames();
-        console.log(columns);
+        pullColumns();
 
         const reqOptions = {
             method: "POST",

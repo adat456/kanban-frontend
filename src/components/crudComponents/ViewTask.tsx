@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
-const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis, setBoardsData }) {
+const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis, setBoardsData, setEditTaskVis }) {
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
     
@@ -42,9 +42,9 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis,
         e.preventDefault();
 
         // getting subtask IDs and their statuses
-        let subtasksArr = [];
+        let subtasks = [];
         document.getElementsByName("subtasks").forEach(subtask => {
-            subtasksArr.push({
+            subtasks.push({
                 id: subtask.id,
                 status: subtask.checked
             });
@@ -60,12 +60,11 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis,
             body: JSON.stringify({  
                 boardId: curBoardId,
                 colId, taskId,
-                updatedSubtasks: subtasksArr,
+                updatedSubtasks: subtasks,
                 updatedColId
             }),
-            // indicates whether user should receive AND send cookies
             credentials: "include"
-        }
+        };
 
         try {
             const res = await fetch("http://localhost:3000/update-task", reqOptions);
@@ -91,6 +90,7 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis,
     return (
         <form method="POST" className="view-task">
             <h3>{name}</h3>
+            <button type="button" onClick={() => {setEditTaskVis(true); setViewTaskVis(false);}}>Edit Task</button>
             <p>{desc}</p>
             <fieldset>
                 <legend>{`Subtasks (${numCompleteSubtasks} of ${subtasks.length})`}</legend>
