@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
-import Task from "./Task";
+import Column from "./Column";
 import CreateTask from "../crudComponents/CreateTask";
 import EditBoard from "../crudComponents/EditBoard";
 
@@ -25,19 +25,9 @@ const Board = function({ setBoardsData, setCurBoardId }) {
         return curBoard.columns;
     };
     const columnsArr = filterColumns();
-    const columns = columnsArr.map(col => {
-        const tasksArr = col.tasks;
-        const tasks = tasksArr.map(task => 
-            <Task key={task._id} id={task._id} name={task.task} desc={task.desc} order={task.order} subtasks={task.subtasks} colId={col._id} setBoardsData={setBoardsData} />
-        );
-        return (
-            <section className="column" key={col._id}>
-                <h2>{col.name}</h2>
-                {tasks}
-                <button type="button" onClick={() => displayTask(col._id)}>+ Add New Task</button>
-            </section>
-        );
-    })
+    const columns = columnsArr.map(col => 
+        <Column key={col._id} col={col} setCreateTaskVis={setCreateTaskVis} setCurCol={setCurCol} setBoardsData={setBoardsData} />
+    );
 
     return (
         <main>
