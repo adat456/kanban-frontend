@@ -11,17 +11,18 @@ const Task = function({ id, name, desc, order, subtasks, colId, setBoardsData })
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id,
-        data: { colId }
+        data: { name, colId }
     });
 
-    const style = {
-        zIndex: 1,
-        transform: CSS.Translate.toString(transform),
-    };
+    // const style = {
+    //     zIndex: 1,
+    //     transform: CSS.Translate.toString(transform),
+    // };
 
     return (
         <>
-            <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="task" onClick={() => {setViewTaskVis(true)}}>
+            {/* removed style={style} so that OG node will not move */}
+            <div ref={setNodeRef} {...listeners} {...attributes} className="task" onClick={() => {setViewTaskVis(true)}}>
                 <h3>{name}</h3>
             </div>
             {viewTaskVis ?

@@ -12,6 +12,7 @@ const Column = function({ col, setCurCol, setCreateTaskVis, setBoardsData }) {
         <Task key={task._id} id={task._id} name={task.task} desc={task.desc} order={task.order} subtasks={task.subtasks} colId={col._id} setBoardsData={setBoardsData} />
     );
 
+    // sets the id of the current column so that the new task will be created under the right column, and toggles CreateTask visibility
     function displayTask(colId) {
         setCurCol(colId);
         setCreateTaskVis(true);
