@@ -1,0 +1,40 @@
+@use 'base'
+
+.sidebar
+    grid-columns: 1 / 2
+    height: 100vh
+    padding: 3rem 5rem 3rem 3rem
+    border-right: 1px solid base.$outline
+
+.logo
+    height: 2.5rem
+    padding-bottom: 5rem
+
+h2
+    font-weight: bold
+    font-size: 1.2rem
+    letter-spacing: 0.2rem
+    color: base.$grey
+    padding-bottom: 3rem
+
+.board-links-item 
+    display: flex
+    align-items: center
+    padding-bottom: 2rem
+
+    svg
+        width: 1.5rem
+        padding-right: 2rem
+
+    a
+        @include base.m
+        color: base.$grey
+
+    button
+        @include base.m
+        color: base.$drk-blue-inactive
+    
+
+
+    
+

@@ -91,21 +91,21 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
     return (
         <form method="POST" className="create-task" onSubmit={handleSubmit}>
             <h2>Add New Task</h2>
-            <label htmlFor="task">Title<input type="text" id="task" name="task" onChange={handleChange} /></label>
-            <label htmlFor="desc">Description<textarea id="desc" name="desc" onChange={handleChange} /></label>
+            <label htmlFor="task">Title<input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" /></label>
+            <label htmlFor="desc">Description<textarea rows="5" id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." /></label>
             <fieldset>
                 <legend>Subtasks</legend>
-                <label htmlFor="subtask0"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" /></label>
-                <label htmlFor="subtask1"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" /></label>
+                <label htmlFor="subtask0"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" placeholder="e.g., Make coffee" /></label>
+                <label htmlFor="subtask1"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" placeholder="e.g., Drink coffee and smile" /></label>
                 {extraSubtaskFields}
-                <button type="button" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
+                <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
             </fieldset>
             <label htmlFor="column">Column
                 <select name="column" id="column" defaultValue={curCol}>
                     {colOptions}
                 </select>
             </label>
-            <button type="submit">Create Task</button>
+            <button type="submit" className="save-btn">Create Task</button>
         </form>
     );
 };

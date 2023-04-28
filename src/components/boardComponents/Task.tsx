@@ -14,6 +14,14 @@ const Task = function({ id, name, desc, order, subtasks, colId, setBoardsData })
         data: { name, colId }
     });
 
+    let numCompleteSubtasks = 0;
+    if (subtasks) {
+        subtasks.forEach(subtask => {
+            if (subtask.status) numCompleteSubtasks++;;
+        });
+    };
+    
+
     // const style = {
     //     zIndex: 1,
     //     transform: CSS.Translate.toString(transform),
@@ -24,6 +32,9 @@ const Task = function({ id, name, desc, order, subtasks, colId, setBoardsData })
             {/* removed style={style} so that OG node will not move */}
             <div ref={setNodeRef} {...listeners} {...attributes} className="task" onClick={() => {setViewTaskVis(true)}}>
                 <h3>{name}</h3>
+                {subtasks ? 
+                    <p>{`${numCompleteSubtasks} of ${subtasks.length} subtasks`}</p> : <></>
+                }
             </div>
             {viewTaskVis ?
                 <ViewTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setViewTaskVis={setViewTaskVis} setBoardsData={setBoardsData} setEditTaskVis={setEditTaskVis} /> : <></>

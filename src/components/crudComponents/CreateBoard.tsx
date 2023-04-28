@@ -78,9 +78,9 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
                 <label htmlFor="col0"><input type="text" id="col0" name="columns" className="columns create-brd-cols" /></label>
                 <label htmlFor="col1"><input type="text" id="col1" name="columns" className="columns create-brd-cols" /></label>
                 {extraColFields}
-                <button type="button" onClick={handleAddColField}>+ Add New Column</button>
+                <button type="button" className="add-btn" onClick={handleAddColField}>+ Add New Column</button>
             </fieldset>
-            <button type="submit">Create New Board</button>
+            <button type="submit" className="save-btn">Create New Board</button>
         </form>
     );
 };

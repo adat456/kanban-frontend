@@ -1,0 +1,111 @@
+@use 'base'
+
+form
+    position: absolute
+    left: 0
+    right: 0
+    margin: 0 auto
+    width: 500px
+    z-index: 1
+    background-color: white
+    padding: 3rem
+    border-radius: 0.5rem
+
+    h2
+        @include base.l
+        color: black
+        padding: 0
+
+    label, legend
+        @include base.m
+        color: base.$grey
+        width: 100%
+        display: block
+        margin-top: 2rem
+
+    fieldset
+        border: none
+        margin-top: 2rem
+        margin-bottom: 2rem
+
+    input, textarea, select
+        display: block
+        margin-top: 1rem
+        width: 90%
+        border: 1px solid base.$outline
+        padding: 1rem
+        @include base.bold-body
+        border-radius: 0.5rem
+
+    ::placeholder
+        @include base.med-body
+        color: base.$outline
+
+    select
+        width: 100%
+        background-color: white
+        @include base.med-body
+        
+    button
+        display: block
+        width: 100%
+        padding: 1.5rem 0
+        font-size: 1.3rem
+        font-weight: bold
+        border-top-left-radius: 50px
+        border-bottom-left-radius: 50px
+        border-top-right-radius: 50px
+        border-bottom-right-radius: 50px
+
+    .add-btn, .cancel-btn
+        margin-top: 1rem
+        background-color: base.$lite-blue-inactive
+        color: base.$drk-blue-inactive
+
+        &:hover, &:focus
+            background-color: base.$lite-blue-active
+
+    .save-btn
+        background-color: base.$drk-blue-inactive
+        color: white
+        margin-top: 3rem
+        margin-bottom: 1rem
+
+        &:hover, &:focus
+            background-color: base.$drk-blue-active
+    
+    .delete-btn
+        background-color: base.$red-inactive
+        color: white
+
+        &:hover, &:focus
+            background-color: base.$red-active
+
+.delete-brd-msg
+    hr
+        border: 1px solid base.$outline
+        margin: 2rem 0
+
+    h2
+        @include base.l
+        color: base.$red-inactive
+        margin-bottom: 2rem
+
+    p
+        @include base.med-body
+        color: base.$grey
+
+    .delete-btn-cluster
+        margin-top: 2rem
+        display: flex
+        column-gap: 2rem
+
+    .delete-btn
+        margin-top: 1rem
+    
+    
+
+
+
+
+    

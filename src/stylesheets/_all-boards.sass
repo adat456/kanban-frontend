@@ -1,0 +1,67 @@
+@use 'base'
+
+.all-boards   
+    grid-columns: 2 / 3
+
+header
+    padding: 3rem
+    border-bottom: 1px solid base.$outline
+    display: flex
+    justify-content: space-between
+
+    h1
+        @include base.xl
+
+main
+    background-color: base.$board-background
+    height: 100%
+    display: flex
+    flex-wrap: nowrap
+    column-gap: 2rem
+    padding: 2rem
+
+.column
+    flex-grow: 1 
+
+    h2
+        @include base.s 
+        color: base.$grey 
+        padding-bottom: 2rem 
+
+    .add-task-btn
+        width: 100%
+        background-color: base.$add-background
+        color: base.$grey
+        @include base.m
+        box-shadow: none
+
+.task, .add-task-btn
+    background-color: white
+    padding: 2rem 1.5rem
+    margin-bottom: 1.5rem
+    border-radius: 0.5rem
+    box-shadow: 0 0.5rem 0.3rem base.$outline
+
+    h3
+        @include base.m
+        padding-bottom: 1rem
+
+    p
+        @include base.med-body
+        color: base.$grey
+    
+.add-column-btn
+    margin-top: 3.5rem
+    padding: 0 3rem
+    background-color: base.$add-background
+    color: base.$grey
+    @include base.m
+    box-shadow: none
+
+// styles for main when no board has been chosen
+main.no-brd-chosen
+    @include base.center
+
+    p
+        @include base.l
+        color: base.$grey

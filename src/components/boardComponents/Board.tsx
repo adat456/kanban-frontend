@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
-import { restrictToWindowEdges } from "@dnd-kit/modifiers";
+import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor } from "@dnd-kit/core";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
@@ -18,6 +17,7 @@ const Board = function({ setBoardsData, setCurBoardId }) {
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
     const curBoard = boardsData.find(board => board._id === curBoardId);
+    const columnsArr = curBoard.columns;
 
     // rendering columns w/ their tasks
     const columns = curBoard.columns.map(col => 
@@ -29,6 +29,14 @@ const Board = function({ setBoardsData, setCurBoardId }) {
     // 3. when the draggable is dropped into a droppable, the info in activeDragInfo state is sent in a fetch request
     // 4. if the fetch/POST request is successful, then activeDragInfo state is set to null
     // 5. this causes the DragOverlay condition to evaluate to false, and the drag overlay is unmounted/no longer displayed
+
+    const pointerSensor = useSensor(PointerSensor, {
+        activationConstraint: {
+            delay: 1000, 
+            tolerance: 10 
+        },
+    });
+    const sensors = useSensors(pointerSensor);
 
     function handleDragStart(e) {
         setActiveDragInfo({
@@ -83,17 +91,23 @@ const Board = function({ setBoardsData, setCurBoardId }) {
 
     return (
         <main>
-            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {columns}
                 {createTaskVis ?
                     <CreateTask curCol={curCol} columnsArr={columnsArr} setBoardsData={setBoardsData} setCreateTaskVis={setCreateTaskVis} /> : <></>
                 }
-                <button type="button" onClick={() => setEditBoardVis(true)}>+ Add New Column</button>
+                {createTaskVis ?
+                    <div className="backdrop" onClick={() => setCreateTaskVis(false)}/> : null
+                }
+                <button type="button" className="add-column-btn" onClick={() => setEditBoardVis(true)}>+ Add New Column</button>
                 {editBoardVis ?
                     <EditBoard setBoardsData={setBoardsData} setEditBoardVis={setEditBoardVis} setCurBoardId={setCurBoardId} /> : <></>
                 }
+                {editBoardVis ?
+                    <div className="backdrop" onClick={() => setEditBoardVis(false)}/> : null
+                }
                 {/* dropAnimation={null} prevents dragOverlay from sliiiiding back to where it came from before the context/data is updated --> makes it look cleaner */}
-                <DragOverlay dropAnimation={null}>
+                <DragOverlay dropAnimation={null} >
                     {activeDragInfo ?
                         <Task name={activeDragInfo.name} /> : null
                     }

@@ -20,9 +20,9 @@ const Column = function({ col, setCurCol, setCreateTaskVis, setBoardsData }) {
 
     return (
         <section ref={setNodeRef} className="column" key={col._id}>
-            <h2>{col.name}</h2>
+            <h2>{`${col.name} (${col.tasks.length})`}</h2>
             {tasks}
-            <button type="button" onClick={() => displayTask(col._id)}>+ Add New Task</button>
+            <button type="button" className="add-task-btn" onClick={() => displayTask(col._id)}>+ Add New Task</button>
         </section>
     );
 };

@@ -103,23 +103,26 @@ const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
     };
 
     return (
-        <form method="POST" onSubmit={handleSubmit}>
+        <form method="POST" className="edit-brd-form" onSubmit={handleSubmit}>
             <h2>Edit Board</h2>
             <label htmlFor="boardName">Board Name<input type="text" id="boardName" value={boardName} onChange={handleChange} /></label>
             <fieldset>
                 <legend>Columns</legend>
                 {existingColFields}
                 {extraColFields}
-                <button type="button" onClick={handleAddColField}>+ Add New Column</button>
+                <button type="button" className="add-btn" onClick={handleAddColField}>+ Add New Column</button>
             </fieldset>
-            <button type="submit">Save Changes</button>
-            <button type="button" onClick={() => setDeleteMsgVis(true)}>Delete Board</button>
+            <button className="save-btn" type="submit">Save Changes</button>
+            <button className="delete-btn" type="button" onClick={() => setDeleteMsgVis(true)}>Delete Board</button>
             {deleteMsgVis ?
                 <section className="delete-brd-msg">
+                    <hr />
                     <h2>Delete this board?</h2>
                     <p>{`Are you sure you want to delete the '${curBoard.name}' board? This action will remove all columns and tasks and cannot be reversed.`}</p>
-                    <button type="button" onClick={handleDelete}>Delete</button>
-                    <button type="button" onClick={() => setEditBoardVis(false)}>Cancel</button>
+                    <div className="delete-btn-cluster">
+                        <button type="button" className="delete-btn" onClick={handleDelete}>Delete</button>
+                        <button type="button" className="cancel-btn" onClick={() => setEditBoardVis(false)}>Cancel</button>
+                    </div>
                 </section> : <></>
             }
         </form>

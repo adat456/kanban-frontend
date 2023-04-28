@@ -1,69 +1,288 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&display=swap");
+#root {
+  width: 100%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
+* {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  padding: 0;
+  font-size: 10px;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  border: none;
+  background-color: white;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.App {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
 }
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hidden {
+  display: none;
+}
+
+.all-boards {
+  grid-columns: 2/3;
+}
+
+header {
+  padding: 3rem;
+  border-bottom: 1px solid #E4EBFA;
+  display: flex;
+  justify-content: space-between;
+}
+header h1 {
+  font-size: 2.4rem;
+  line-height: 3rem;
+  font-weight: 700;
+}
+
+main {
+  background-color: #F4F7FD;
+  height: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  column-gap: 2rem;
+  padding: 2rem;
+}
+
+.column {
+  flex-grow: 1;
+}
+.column h2 {
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.25rem;
+  color: #828FA3;
+  padding-bottom: 2rem;
+}
+.column .add-task-btn {
+  width: 100%;
+  background-color: #E9EFFA;
+  color: #828FA3;
+  font-size: 1.5rem;
+  line-height: 1.9rem;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.task, .add-task-btn {
+  background-color: white;
+  padding: 2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 0.3rem #E4EBFA;
+}
+.task h3, .add-task-btn h3 {
+  font-size: 1.5rem;
+  line-height: 1.9rem;
+  font-weight: 700;
+  padding-bottom: 1rem;
+}
+.task p, .add-task-btn p {
+  font-size: 1.3rem;
+  line-height: 2.3rem;
+  font-weight: 500;
+  color: #828FA3;
+}
+
+.add-column-btn {
+  margin-top: 3.5rem;
+  padding: 0 3rem;
+  background-color: #E9EFFA;
+  color: #828FA3;
+  font-size: 1.5rem;
+  line-height: 1.9rem;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+main.no-brd-chosen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+main.no-brd-chosen p {
+  font-size: 1.8rem;
+  line-height: 2.3rem;
+  font-weight: 700;
+  letter-spacing: 0.05rem;
+  color: #828FA3;
+}
+
+.sidebar {
+  grid-columns: 1/2;
+  height: 100vh;
+  padding: 3rem 5rem 3rem 3rem;
+  border-right: 1px solid #E4EBFA;
+}
+
+.logo {
+  height: 2.5rem;
+  padding-bottom: 5rem;
+}
+
+h2 {
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: 0.2rem;
+  color: #828FA3;
+  padding-bottom: 3rem;
+}
+
+.board-links-item {
+  display: flex;
+  align-items: center;
+  padding-bottom: 2rem;
+}
+.board-links-item svg {
+  width: 1.5rem;
+  padding-right: 2rem;
+}
+.board-links-item a {
+  font-size: 1.5rem;
+  line-height: 1.9rem;
+  font-weight: 700;
+  color: #828FA3;
+}
+.board-links-item button {
+  font-size: 1.5rem;
+  line-height: 1.9rem;
+  font-weight: 700;
+  color: #635FC7;
+}
+
+form {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 500px;
+  z-index: 1;
+  background-color: white;
+  padding: 3rem;
+  border-radius: 0.5rem;
+}
+form h2 {
+  font-size: 1.8rem;
+  line-height: 2.3rem;
+  font-weight: 700;
+  letter-spacing: 0.05rem;
+  color: black;
+  padding: 0;
+}
+form label, form legend {
+  font-size: 1.5rem;
+  line-height: 1.9rem;
+  font-weight: 700;
+  color: #828FA3;
+  width: 100%;
+  display: block;
+  margin-top: 2rem;
+}
+form fieldset {
+  border: none;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+form input, form textarea, form select {
+  display: block;
+  margin-top: 1rem;
+  width: 90%;
+  border: 1px solid #E4EBFA;
+  padding: 1rem;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  font-weight: 700;
+  border-radius: 0.5rem;
+}
+form ::placeholder {
+  font-size: 1.3rem;
+  line-height: 2.3rem;
+  font-weight: 500;
+  color: #E4EBFA;
+}
+form select {
+  width: 100%;
+  background-color: white;
+  font-size: 1.3rem;
+  line-height: 2.3rem;
+  font-weight: 500;
+}
+form button {
+  display: block;
+  width: 100%;
+  padding: 1.5rem 0;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+form .add-btn, form .cancel-btn {
+  margin-top: 1rem;
+  background-color: #E4EBFA;
+  color: #635FC7;
+}
+form .add-btn:hover, form .add-btn:focus, form .cancel-btn:hover, form .cancel-btn:focus {
+  background-color: #F4F7FD;
+}
+form .save-btn {
+  background-color: #635FC7;
+  color: white;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+form .save-btn:hover, form .save-btn:focus {
+  background-color: #A8A4FF;
+}
+form .delete-btn {
+  background-color: #EA5555;
+  color: white;
+}
+form .delete-btn:hover, form .delete-btn:focus {
+  background-color: #FF9898;
+}
+
+.delete-brd-msg hr {
+  border: 1px solid #E4EBFA;
+  margin: 2rem 0;
+}
+.delete-brd-msg h2 {
+  font-size: 1.8rem;
+  line-height: 2.3rem;
+  font-weight: 700;
+  letter-spacing: 0.05rem;
+  color: #EA5555;
+  margin-bottom: 2rem;
+}
+.delete-brd-msg p {
+  font-size: 1.3rem;
+  line-height: 2.3rem;
+  font-weight: 500;
+  color: #828FA3;
+}
+.delete-brd-msg .delete-btn-cluster {
+  margin-top: 2rem;
+  display: flex;
+  column-gap: 2rem;
+}
+.delete-brd-msg .delete-btn {
+  margin-top: 1rem;
+}
+
+/*# sourceMappingURL=index.css.map */
