@@ -1,9 +1,10 @@
 @use 'base'
 
-form
+form, .edit-task
     position: absolute
     left: 0
     right: 0
+    top: 100px
     margin: 0 auto
     width: 500px
     z-index: 1
@@ -15,6 +16,10 @@ form
         @include base.l
         color: black
         padding: 0
+
+    p
+        @include base.med-body
+        color: base.$grey
 
     label, legend
         @include base.m
@@ -37,6 +42,23 @@ form
         @include base.bold-body
         border-radius: 0.5rem
 
+    .checkboxes-field
+        .checked-subtask
+            text-decoration: line-through
+
+        label
+            padding: 1.5rem
+            margin: 1rem 0
+            width: 94%
+            background-color: base.$lite-blue-active
+            border-radius: 0.5rem
+
+        input
+            display: inline
+            width: auto
+            margin: 0
+            margin-right: 1.5rem
+
     ::placeholder
         @include base.med-body
         color: base.$outline
@@ -52,10 +74,10 @@ form
         padding: 1.5rem 0
         font-size: 1.3rem
         font-weight: bold
-        border-top-left-radius: 50px
-        border-bottom-left-radius: 50px
-        border-top-right-radius: 50px
-        border-bottom-right-radius: 50px
+        border-top-left-radius: 1rem
+        border-bottom-left-radius: 1rem
+        border-top-right-radius: 1rem
+        border-bottom-right-radius: 1rem
 
     .add-btn, .cancel-btn
         margin-top: 1rem
@@ -81,7 +103,19 @@ form
         &:hover, &:focus
             background-color: base.$red-active
 
-.delete-brd-msg
+.view-task-header
+    display: flex
+    justify-content: space-between
+    align-items: center
+
+    h2
+        @include base.l
+        color: black
+
+    button  
+        width: auto
+
+.delete-brd-msg, .delete-task-msg
     hr
         border: 1px solid base.$outline
         margin: 2rem 0

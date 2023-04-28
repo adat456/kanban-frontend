@@ -21,6 +21,10 @@ const Task = function({ id, name, desc, order, subtasks, colId, setBoardsData })
         });
     };
     
+    function handleBackdrop() {
+        if (viewTaskVis) setViewTaskVis(false);
+        if (editTaskVis) setEditTaskVis(false);
+    };
 
     // const style = {
     //     zIndex: 1,
@@ -37,10 +41,16 @@ const Task = function({ id, name, desc, order, subtasks, colId, setBoardsData })
                 }
             </div>
             {viewTaskVis ?
-                <ViewTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setViewTaskVis={setViewTaskVis} setBoardsData={setBoardsData} setEditTaskVis={setEditTaskVis} /> : <></>
+                <>
+                    <ViewTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setViewTaskVis={setViewTaskVis} setBoardsData={setBoardsData} setEditTaskVis={setEditTaskVis} /> 
+                    <div className="backdrop" onClick={() => setViewTaskVis(false)} />
+                </>: <></>
             }
             {editTaskVis ?
-                <EditTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setEditTaskVis={setEditTaskVis} setBoardsData={setBoardsData} /> : <></>
+                <>
+                    <EditTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setEditTaskVis={setEditTaskVis} setBoardsData={setBoardsData} />
+                    <div className="backdrop" onClick={() => setEditTaskVis(false)} />
+                </> : null
             }
         </>
     );

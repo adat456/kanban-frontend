@@ -118,26 +118,27 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setEditTaskVis,
         <form method="POST" className="edit-task" onSubmit={handleSubmit}>
             <h2>Edit Task</h2>
             <label htmlFor="task">Title<input type="text" id="task" name="task" value={task} onChange={handleChange} /></label>
-            <label htmlFor="description">Description<textarea id="description" name="description" value={description} onChange={handleChange} /></label>
+            <label htmlFor="description">Description<textarea id="description" name="description" value={description} onChange={handleChange} rows="5" /></label>
             <fieldset>
                 <legend>Subtasks</legend>
                 {existingSubtaskFields}
                 {extraSubtaskFields}
-                <button type="button" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
+                <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
             </fieldset>
             <label htmlFor="column">Column
                 <select name="column" id="column" defaultValue={colId}>
                     {colOptions}
                 </select>
             </label>
-            <button type="submit">Save Changes</button>
-            <button type="button" onClick={() => setDeleteTaskVis(true)}>Delete Task</button>
+            <button type="submit" className="save-btn">Save Changes</button>
+            <button type="button" className="delete-btn" onClick={() => setDeleteTaskVis(true)}>Delete Task</button>
             {deleteTaskVis ?
                 <section className="delete-task-msg">
+                    <hr />
                     <h2>Delete this task?</h2>
                     <p>{`Are you sure you want to delete the '${name}' task and its subtasks? This action cannot be reversed.`}</p>
-                    <button type="button" onClick={handleDelete}>Delete</button>
-                    <button type="button" onClick={() => setEditTaskVis(false)}>Cancel</button>
+                    <button type="button" onClick={handleDelete} className="delete-btn">Delete</button>
+                    <button type="button" onClick={() => setEditTaskVis(false)} className="add-btn">Cancel</button>
                 </section> : <></>
             }
         </form>

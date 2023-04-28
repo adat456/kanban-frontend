@@ -30,6 +30,7 @@ const Board = function({ setBoardsData, setCurBoardId }) {
     // 4. if the fetch/POST request is successful, then activeDragInfo state is set to null
     // 5. this causes the DragOverlay condition to evaluate to false, and the drag overlay is unmounted/no longer displayed
 
+    // although pointer sensor is one of the default sensors, I imported it along with useSensor and useSensors (both necessary) to be passed along to DndContext so that an activation constraint could be added, and a simple click on a task/draggable could open the task preview instead of kicking off a dragstart event
     const pointerSensor = useSensor(PointerSensor, {
         activationConstraint: {
             delay: 1000, 

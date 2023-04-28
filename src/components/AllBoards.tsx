@@ -6,7 +6,7 @@ import Sidebar from "./boardComponents/Sidebar";
 import EditBoard from "./crudComponents/EditBoard";
 import Board from "./boardComponents/Board";
 
-const AllBoards = function({ setLiteMode, setSidebarVis, setBoardsData, setCurBoardId }) {
+const AllBoards = function({ setMode, setSidebarVis, setBoardsData, setCurBoardId }) {
     const [ editBoardVis, setEditBoardVis ] = useState(false);
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
@@ -18,7 +18,7 @@ const AllBoards = function({ setLiteMode, setSidebarVis, setBoardsData, setCurBo
 
     return (
         <>
-            <Sidebar setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />
+            <Sidebar setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} setMode={setMode} />
             {!curBoardId ?
                 <div className="all-boards">
                     <header>
@@ -33,13 +33,13 @@ const AllBoards = function({ setLiteMode, setSidebarVis, setBoardsData, setCurBo
                         <h1>{curBoardName}</h1>
                         <button type="button" onClick={() => setEditBoardVis(true)}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
                         {editBoardVis ?
-                            <EditBoard setBoardsData={setBoardsData} setEditBoardVis={setEditBoardVis} setCurBoardId={setCurBoardId} /> : null
+                            <>
+                                <EditBoard setBoardsData={setBoardsData} setEditBoardVis={setEditBoardVis} setCurBoardId={setCurBoardId} />
+                                <div className="backdrop" onClick={() => setEditBoardVis(false)} />
+                            </> : null
                         }
                     </header>
                     <Board setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />
-                    {editBoardVis ?
-                        <div className="backdrop" onClick={() => setEditBoardVis(false)}/> : null
-                    }
                 </div>
             }
         </>

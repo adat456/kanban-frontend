@@ -1,23 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&display=swap");
-#root {
-  width: 100%;
-}
-
-* {
+*, body {
   margin: 0;
   padding: 0;
   font-size: 10px;
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 
+.App {
+  display: grid;
+  grid-template-columns: 30rem auto;
+  grid-template-rows: 1fr auto;
+}
+
 button {
   border: none;
   background-color: white;
-}
-
-.App {
-  display: grid;
-  grid-template-columns: 1fr 4fr;
 }
 
 .backdrop {
@@ -27,10 +24,6 @@ button {
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
-}
-
-.hidden {
-  display: none;
 }
 
 .all-boards {
@@ -51,15 +44,15 @@ header h1 {
 
 main {
   background-color: #F4F7FD;
-  height: 100%;
   display: flex;
+  height: 100%;
   flex-wrap: nowrap;
   column-gap: 2rem;
   padding: 2rem;
 }
 
 .column {
-  flex-grow: 1;
+  width: 250px;
 }
 .column h2 {
   font-size: 1.2rem;
@@ -125,22 +118,23 @@ main.no-brd-chosen p {
 
 .sidebar {
   grid-columns: 1/2;
-  height: 100vh;
-  padding: 3rem 5rem 3rem 3rem;
+  padding: 3rem;
   border-right: 1px solid #E4EBFA;
+  min-height: 100vh;
 }
-
-.logo {
+.sidebar .logo {
   height: 2.5rem;
   padding-bottom: 5rem;
 }
-
-h2 {
+.sidebar h2 {
   font-weight: bold;
   font-size: 1.2rem;
   letter-spacing: 0.2rem;
   color: #828FA3;
   padding-bottom: 3rem;
+}
+.sidebar hr {
+  border: 1px solid #F4F7FD;
 }
 
 .board-links-item {
@@ -150,7 +144,7 @@ h2 {
 }
 .board-links-item svg {
   width: 1.5rem;
-  padding-right: 2rem;
+  padding-right: 1.5rem;
 }
 .board-links-item a {
   font-size: 1.5rem;
@@ -165,10 +159,86 @@ h2 {
   color: #635FC7;
 }
 
-form {
+.sidebar-btm-cluster {
+  position: relative;
+  top: 45vh;
+}
+
+.mode-toggle {
+  background-color: #F4F7FD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+.mode-toggle svg {
+  height: 2rem;
+}
+.mode-toggle svg.dark-mode {
+  height: 1.75rem;
+}
+
+.toggler {
+  height: 2rem;
+  width: 4rem;
+  background-color: #635FC7;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  position: relative;
+}
+.toggler #circle {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  top: 0.25rem;
+}
+.toggler .light {
+  left: 0.25rem;
+}
+.toggler .dark {
+  right: 0.25rem;
+}
+
+.hide-sidebar {
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  column-gap: 2rem;
+  color: #828FA3;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+.hide-sidebar svg {
+  width: 2rem;
+}
+
+.log-out-btn {
+  margin-top: 2rem;
+  padding: 1.5rem 0;
+  font-size: 1.3rem;
+  font-weight: bold;
+  background-color: #635FC7;
+  border-radius: 0.5rem;
+  color: white;
+  width: 100%;
+}
+.log-out-btn:hover, .log-out-btn:focus {
+  background-color: #A8A4FF;
+}
+
+form, .edit-task {
   position: absolute;
   left: 0;
   right: 0;
+  top: 100px;
   margin: 0 auto;
   width: 500px;
   z-index: 1;
@@ -176,7 +246,7 @@ form {
   padding: 3rem;
   border-radius: 0.5rem;
 }
-form h2 {
+form h2, .edit-task h2 {
   font-size: 1.8rem;
   line-height: 2.3rem;
   font-weight: 700;
@@ -184,7 +254,13 @@ form h2 {
   color: black;
   padding: 0;
 }
-form label, form legend {
+form p, .edit-task p {
+  font-size: 1.3rem;
+  line-height: 2.3rem;
+  font-weight: 500;
+  color: #828FA3;
+}
+form label, form legend, .edit-task label, .edit-task legend {
   font-size: 1.5rem;
   line-height: 1.9rem;
   font-weight: 700;
@@ -193,12 +269,12 @@ form label, form legend {
   display: block;
   margin-top: 2rem;
 }
-form fieldset {
+form fieldset, .edit-task fieldset {
   border: none;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
-form input, form textarea, form select {
+form input, form textarea, form select, .edit-task input, .edit-task textarea, .edit-task select {
   display: block;
   margin-top: 1rem;
   width: 90%;
@@ -209,60 +285,92 @@ form input, form textarea, form select {
   font-weight: 700;
   border-radius: 0.5rem;
 }
-form ::placeholder {
+form .checkboxes-field .checked-subtask, .edit-task .checkboxes-field .checked-subtask {
+  text-decoration: line-through;
+}
+form .checkboxes-field label, .edit-task .checkboxes-field label {
+  padding: 1.5rem;
+  margin: 1rem 0;
+  width: 94%;
+  background-color: #F4F7FD;
+  border-radius: 0.5rem;
+}
+form .checkboxes-field input, .edit-task .checkboxes-field input {
+  display: inline;
+  width: auto;
+  margin: 0;
+  margin-right: 1.5rem;
+}
+form ::placeholder, .edit-task ::placeholder {
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
   color: #E4EBFA;
 }
-form select {
+form select, .edit-task select {
   width: 100%;
   background-color: white;
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
 }
-form button {
+form button, .edit-task button {
   display: block;
   width: 100%;
   padding: 1.5rem 0;
   font-size: 1.3rem;
   font-weight: bold;
-  border-top-left-radius: 50px;
-  border-bottom-left-radius: 50px;
-  border-top-right-radius: 50px;
-  border-bottom-right-radius: 50px;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
 }
-form .add-btn, form .cancel-btn {
+form .add-btn, form .cancel-btn, .edit-task .add-btn, .edit-task .cancel-btn {
   margin-top: 1rem;
   background-color: #E4EBFA;
   color: #635FC7;
 }
-form .add-btn:hover, form .add-btn:focus, form .cancel-btn:hover, form .cancel-btn:focus {
+form .add-btn:hover, form .add-btn:focus, form .cancel-btn:hover, form .cancel-btn:focus, .edit-task .add-btn:hover, .edit-task .add-btn:focus, .edit-task .cancel-btn:hover, .edit-task .cancel-btn:focus {
   background-color: #F4F7FD;
 }
-form .save-btn {
+form .save-btn, .edit-task .save-btn {
   background-color: #635FC7;
   color: white;
   margin-top: 3rem;
   margin-bottom: 1rem;
 }
-form .save-btn:hover, form .save-btn:focus {
+form .save-btn:hover, form .save-btn:focus, .edit-task .save-btn:hover, .edit-task .save-btn:focus {
   background-color: #A8A4FF;
 }
-form .delete-btn {
+form .delete-btn, .edit-task .delete-btn {
   background-color: #EA5555;
   color: white;
 }
-form .delete-btn:hover, form .delete-btn:focus {
+form .delete-btn:hover, form .delete-btn:focus, .edit-task .delete-btn:hover, .edit-task .delete-btn:focus {
   background-color: #FF9898;
 }
 
-.delete-brd-msg hr {
+.view-task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.view-task-header h2 {
+  font-size: 1.8rem;
+  line-height: 2.3rem;
+  font-weight: 700;
+  letter-spacing: 0.05rem;
+  color: black;
+}
+.view-task-header button {
+  width: auto;
+}
+
+.delete-brd-msg hr, .delete-task-msg hr {
   border: 1px solid #E4EBFA;
   margin: 2rem 0;
 }
-.delete-brd-msg h2 {
+.delete-brd-msg h2, .delete-task-msg h2 {
   font-size: 1.8rem;
   line-height: 2.3rem;
   font-weight: 700;
@@ -270,18 +378,18 @@ form .delete-btn:hover, form .delete-btn:focus {
   color: #EA5555;
   margin-bottom: 2rem;
 }
-.delete-brd-msg p {
+.delete-brd-msg p, .delete-task-msg p {
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
   color: #828FA3;
 }
-.delete-brd-msg .delete-btn-cluster {
+.delete-brd-msg .delete-btn-cluster, .delete-task-msg .delete-btn-cluster {
   margin-top: 2rem;
   display: flex;
   column-gap: 2rem;
 }
-.delete-brd-msg .delete-btn {
+.delete-brd-msg .delete-btn, .delete-task-msg .delete-btn {
   margin-top: 1rem;
 }
 

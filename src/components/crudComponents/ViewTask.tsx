@@ -11,16 +11,14 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis,
         if (subtask.status) {
             numCompleteSubtasks++;
             return (
-                <div key={subtask._id}>
-                    <input type="checkbox" name="subtasks" id={subtask._id} defaultChecked />
-                    <label htmlFor={subtask._id}>{subtask.subtask}</label>
+                <div className="subtask checked-subtask" key={subtask._id}>
+                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} defaultChecked />{subtask.subtask}</label>
                 </div>
             );
         } else {
             return (
-                <div key={subtask._id}>
-                    <input type="checkbox" name="subtasks" id={subtask._id} />
-                    <label htmlFor={subtask._id}>{subtask.subtask}</label>
+                <div className="subtask" key={subtask._id}>
+                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} />{subtask.subtask}</label>
                 </div>
             );
         };
@@ -89,10 +87,12 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis,
 
     return (
         <form method="POST" className="view-task">
-            <h3>{name}</h3>
-            <button type="button" onClick={() => {setEditTaskVis(true); setViewTaskVis(false);}}>Edit Task</button>
+            <div className="view-task-header">
+                <h2>{name}</h2>
+                <button type="button" onClick={() => {setEditTaskVis(true); setViewTaskVis(false);}}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
+            </div>   
             <p>{desc}</p>
-            <fieldset>
+            <fieldset className="checkboxes-field">
                 <legend>{`Subtasks (${numCompleteSubtasks} of ${subtasks.length})`}</legend>
                 {subtasksArr}
             </fieldset>
@@ -101,7 +101,7 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis,
                     {colOptions}
                 </select>
             </label>
-            <button type="submit" onClick={handleSubmitUpdates}>Save Changes</button>
+            <button type="submit" className="save-btn" onClick={handleSubmitUpdates}>Save Changes</button>
         </form>
     );
 };

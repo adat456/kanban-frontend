@@ -2,20 +2,23 @@
 
 .sidebar
     grid-columns: 1 / 2
-    height: 100vh
-    padding: 3rem 5rem 3rem 3rem
+    padding: 3rem
     border-right: 1px solid base.$outline
+    min-height: 100vh
 
-.logo
-    height: 2.5rem
-    padding-bottom: 5rem
+    .logo
+        height: 2.5rem
+        padding-bottom: 5rem
 
-h2
-    font-weight: bold
-    font-size: 1.2rem
-    letter-spacing: 0.2rem
-    color: base.$grey
-    padding-bottom: 3rem
+    h2
+        font-weight: bold
+        font-size: 1.2rem
+        letter-spacing: 0.2rem
+        color: base.$grey
+        padding-bottom: 3rem
+
+    hr
+        border: 1px solid base.$board-background
 
 .board-links-item 
     display: flex
@@ -24,7 +27,7 @@ h2
 
     svg
         width: 1.5rem
-        padding-right: 2rem
+        padding-right: 1.5rem
 
     a
         @include base.m
@@ -33,6 +36,75 @@ h2
     button
         @include base.m
         color: base.$drk-blue-inactive
+
+.sidebar-btm-cluster
+    position: relative
+    top: 45vh
+
+.mode-toggle
+    background-color: base.$board-background
+    @include base.center
+    column-gap: 1.5rem
+    padding: 1.5rem
+    border-radius: 0.5rem
+
+    svg
+        height: 2rem
+
+    svg.dark-mode
+        height: 1.75rem
+
+.toggler
+    height: 2rem
+    width: 4rem
+    background-color: base.$drk-blue-inactive
+    border-top-left-radius: 1rem
+    border-bottom-left-radius: 1rem
+    border-top-right-radius: 1rem
+    border-bottom-right-radius: 1rem
+    position: relative
+
+    #circle
+        width: 1.5rem
+        height: 1.5rem
+        border-radius: 50%
+        background-color: white
+        position: absolute
+        top: 0.25rem
+
+    .light
+        left: 0.25rem
+
+    .dark
+        right: 0.25rem
+
+
+.hide-sidebar
+    margin: 2rem 0
+    @include base.center
+    width: 100%
+    column-gap: 2rem
+    color: base.$grey
+    font-weight: 700
+    font-size: 1.3rem  
+
+    svg
+        width: 2rem
+
+.log-out-btn
+    margin-top: 2rem
+    padding: 1.5rem 0
+    font-size: 1.3rem
+    font-weight: bold
+    background-color: base.$drk-blue-inactive
+    border-radius: 0.5rem
+    color: white
+    width: 100%
+
+    &:hover, &:focus
+        background-color: base.$drk-blue-active
+
+    
     
 
 
