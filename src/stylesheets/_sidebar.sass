@@ -23,7 +23,7 @@
 .board-links-item 
     display: flex
     align-items: center
-    padding-bottom: 2rem
+    z-index: 2
 
     svg
         width: 1.5rem
@@ -36,6 +36,17 @@
     button
         @include base.m
         color: base.$drk-blue-inactive
+
+.cur-board-link
+    background-color: base.$drk-blue-inactive
+    border-top-right-radius: 10rem
+    border-bottom-right-radius: 10rem
+    height: 4rem
+    width: 4rem
+    padding: 1rem 0
+    position: absolute
+    left: 0
+    z-index: 1
 
 .sidebar-btm-cluster
     position: relative
@@ -103,6 +114,22 @@
 
     &:hover, &:focus
         background-color: base.$drk-blue-active
+
+
+// dark styles
+
+.App.dark > .sidebar
+    background-color: base.$dark-background-2
+    border-right-color: base.$dark-outline
+
+    hr
+        border-color: base.$dark-outline
+
+    .mode-toggle
+        background-color: base.$dark-background-1
+
+    .hide-sidebar, .create-brd-btn
+        background-color: base.$dark-background-2
 
     
     

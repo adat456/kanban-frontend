@@ -137,8 +137,10 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setEditTaskVis,
                     <hr />
                     <h2>Delete this task?</h2>
                     <p>{`Are you sure you want to delete the '${name}' task and its subtasks? This action cannot be reversed.`}</p>
-                    <button type="button" onClick={handleDelete} className="delete-btn">Delete</button>
-                    <button type="button" onClick={() => setEditTaskVis(false)} className="add-btn">Cancel</button>
+                    <div className="delete-btn-cluster">
+                        <button type="button" onClick={handleDelete} className="delete-btn">Delete</button>
+                        <button type="button" onClick={() => setEditTaskVis(false)} className="add-btn">Cancel</button>
+                    </div>
                 </section> : <></>
             }
         </form>

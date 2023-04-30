@@ -74,10 +74,10 @@ form, .edit-task
         padding: 1.5rem 0
         font-size: 1.3rem
         font-weight: bold
-        border-top-left-radius: 1rem
-        border-bottom-left-radius: 1rem
-        border-top-right-radius: 1rem
-        border-bottom-right-radius: 1rem
+        border-top-left-radius: 10rem
+        border-bottom-left-radius: 10rem
+        border-top-right-radius: 10rem
+        border-bottom-right-radius: 10rem
 
     .add-btn, .cancel-btn
         margin-top: 1rem
@@ -114,6 +114,7 @@ form, .edit-task
 
     button  
         width: auto
+        padding: 1rem
 
 .delete-brd-msg, .delete-task-msg
     hr
@@ -137,9 +138,31 @@ form, .edit-task
     .delete-btn
         margin-top: 1rem
     
-    
 
+.App.dark form, .App.dark .edit-task
+    background-color: base.$dark-background-2
 
+    .view-task-header button
+        background-color: base.$dark-background-2
 
+    h2, label, legend
+        color: white
 
+    input, textarea, select
+        background-color: base.$dark-background-2
+        border-color: base.$dark-outline
+        color: white
+
+    ::placeholder
+        color: base.$dark-outline
+
+    .checkboxes-field 
+        label
+            background-color: base.$dark-background-1
+
+    hr
+        border-color: base.$dark-outline
+
+    .add-btn
+        background-color: white
     

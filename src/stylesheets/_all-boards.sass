@@ -12,6 +12,9 @@ header
     h1
         @include base.xl
 
+    button
+        padding: 1rem
+
 main
     background-color: base.$board-background
     display: flex
@@ -57,6 +60,7 @@ main
     color: base.$grey
     @include base.m
     box-shadow: none
+    border-radius: 0.5rem
 
 // styles for main when no board has been chosen
 main.no-brd-chosen
@@ -65,3 +69,28 @@ main.no-brd-chosen
     p
         @include base.l
         color: base.$grey
+
+
+.App.dark header
+    background-color: base.$dark-background-2
+    border-bottom-color: base.$dark-outline
+
+    h1
+        color: white
+
+    .edit-brd-button
+        background-color: base.$dark-background-2
+
+.App.dark main
+    background-color: base.$dark-background-1
+
+    .task
+        background-color: base.$dark-background-2
+        box-shadow: none
+
+        h3
+            color: white
+
+    .add-column-btn, .add-task-btn
+        background-color: base.$dark-background-2
+        opacity: 0.3

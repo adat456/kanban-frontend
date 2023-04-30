@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { BoardsContext, CurBoardIdContext, ModeContext } from "./Context";
 
@@ -11,6 +11,12 @@ function App() {
   const [ sidebarVis, setSidebarVis ] = useState(true);
   const [ boardsData, setBoardsData ] = useState({});
   const [ curBoardId, setCurBoardId ] = useState("");
+
+  useEffect(() => {
+    const app = document.querySelector(".App");
+    if (mode === "light") app?.classList.remove("dark");
+    if (mode === "dark") app?.classList.add("dark");
+  }, [mode]);
 
   return (
     <div className="App">
