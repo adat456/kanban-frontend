@@ -23,8 +23,8 @@ const Board = function({ setBoardsData, setCurBoardId }) {
     const columnsArr = curBoard.columns;
 
     // rendering columns w/ their tasks
-    const columns = columnsArr.map(col => 
-        <Column key={col._id} col={col} setCreateTaskVis={setCreateTaskVis} setCurCol={setCurCol} setBoardsData={setBoardsData} />
+    const columns = columnsArr.map((col, index) => 
+        <Column key={col._id} order={index} col={col} setCreateTaskVis={setCreateTaskVis} setCurCol={setCurCol} setBoardsData={setBoardsData} />
     );
 
     // although pointer sensor is one of the default sensors, I imported it with useSensor and useSensors to be passed along to DndContext so that an activation constraint could be added, and a simple click on a draggable opens the task preview instead of initiating a dragstart event
@@ -107,7 +107,7 @@ const Board = function({ setBoardsData, setCurBoardId }) {
                 {createTaskVis ?
                     <div className="backdrop" onClick={() => setCreateTaskVis(false)}/> : null
                 }
-                <button type="button" className="add-column-btn" onClick={() => setEditBoardVis(true)}>+ Add New Column</button>
+                <button type="button" className="add-column-btn" onClick={() => setEditBoardVis(true)}>+ New Column</button>
                 {editBoardVis ?
                     <EditBoard setBoardsData={setBoardsData} setEditBoardVis={setEditBoardVis} setCurBoardId={setCurBoardId} /> : <></>
                 }

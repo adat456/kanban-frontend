@@ -28,6 +28,7 @@ const Task = function({ id, name, desc, order, subtasks, colId, setBoardsData })
 
     const style = {
         transform: CSS.Translate.toString(transform),
+        touchAction: "none"
     };
 
     function handleDragHandleVis(boolean) {

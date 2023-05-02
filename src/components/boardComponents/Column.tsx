@@ -1,10 +1,15 @@
-import { useDroppable } from "@dnd-kit/core";
+import { useDroppable, useDraggable } from "@dnd-kit/core";
 
 import Task from "./Task";
 
-const Column = function({ col, setCurCol, setCreateTaskVis, setBoardsData }) {
+const Column = function({ col, order, setCurCol, setCreateTaskVis, setBoardsData }) {
     // each column is a droppable...
     const { isOver, setNodeRef } = useDroppable({ id: col._id });
+    // const { attributes, listeners, transform } = useDraggable({
+    //     // all of this data is sent to DndContext in Board.tsx to be processed by onDragStart (and onDragEnd)
+    //     id: `col${col._id}`,
+    //     data: { order }
+    // });
     const style = isOver ? 
         {
             backgroundColor: "#E9EFFA",
@@ -31,7 +36,7 @@ const Column = function({ col, setCurCol, setCreateTaskVis, setBoardsData }) {
             <h2>{`${col.name} (${col.tasks.length})`}</h2>
             {(tasks.length > 0) ? <DroppableSpace id={`${col._id}0`} /> : null }
             {tasks}
-            <button type="button" className="add-task-btn" onClick={() => displayTask(col._id)}>+ Add New Task</button>
+            <button type="button" className="add-task-btn" onClick={() => displayTask(col._id)}>+ New Task</button>
         </section>
     );
 };

@@ -6,10 +6,8 @@
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 
-.App {
-  display: grid;
-  grid-template-columns: 30rem auto;
-  grid-template-rows: 1fr auto;
+#app {
+  display: flex;
 }
 
 button {
@@ -19,6 +17,7 @@ button {
 
 .backdrop {
   position: fixed;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100vw;
@@ -31,7 +30,8 @@ button {
 }
 
 .all-boards {
-  grid-columns: 2/3;
+  flex-grow: 1;
+  min-height: 100vh;
 }
 
 header {
@@ -170,64 +170,102 @@ main.no-brd-chosen p {
   opacity: 0.3;
 }
 
+.sidebar-vis-btn {
+  position: fixed;
+  bottom: 3rem;
+  left: 0;
+  padding: 2rem 2rem 2rem 3rem;
+  background-color: #635FC7;
+  border-top-right-radius: 10rem;
+  border-bottom-right-radius: 10rem;
+}
+.sidebar-vis-btn svg {
+  height: 1.5rem;
+  margin-right: 1rem;
+}
+
 .sidebar {
-  grid-columns: 1/2;
-  padding: 3rem;
+  width: 300px;
+  flex-shrink: 0;
+  padding-top: 3rem;
   border-right: 1px solid #E4EBFA;
   min-height: 100vh;
 }
 .sidebar .logo {
   height: 2.5rem;
-  padding-bottom: 5rem;
+  padding: 0 3rem 5rem 3rem;
 }
 .sidebar h2 {
   font-weight: bold;
   font-size: 1.2rem;
   letter-spacing: 0.2rem;
   color: #828FA3;
-  padding-bottom: 3rem;
+  padding: 0 3rem 3rem 3rem;
 }
 .sidebar hr {
   border: 1px solid #F4F7FD;
 }
 
-.board-links-item {
+.board-container {
+  padding: 1.25rem 0 1.25rem 3rem;
+  margin: 1rem 3.5rem 1rem 0;
+  border-top-right-radius: 10rem;
+  border-bottom-right-radius: 10rem;
+}
+.board-container#current {
+  background-color: #635FC7;
+}
+.board-container#current a {
+  color: white;
+}
+.board-container#current svg {
+  fill: white;
+}
+.board-container:hover, .board-container:focus {
+  background-color: #F4F7FD;
+}
+.board-container:hover a, .board-container:focus a {
+  color: #635FC7;
+}
+.board-container:hover svg, .board-container:focus svg {
+  fill: #A8A4FF;
+}
+
+.board-links-item, .create-brd-container {
   display: flex;
   align-items: center;
-  z-index: 2;
 }
-.board-links-item svg {
+.board-links-item svg, .create-brd-container svg {
   width: 1.5rem;
   padding-right: 1.5rem;
+  fill: #828FA3;
 }
-.board-links-item a {
+.board-links-item a, .create-brd-container a {
   font-size: 1.5rem;
   line-height: 1.9rem;
   font-weight: 700;
   color: #828FA3;
+  width: 100%;
 }
-.board-links-item button {
+.board-links-item button, .create-brd-container button {
   font-size: 1.5rem;
   line-height: 1.9rem;
   font-weight: 700;
   color: #635FC7;
 }
 
-.cur-board-link {
-  background-color: #635FC7;
-  border-top-right-radius: 10rem;
-  border-bottom-right-radius: 10rem;
-  height: 4rem;
-  width: 4rem;
-  padding: 1rem 0;
-  position: absolute;
-  left: 0;
-  z-index: 1;
+.create-brd-container {
+  padding: 1.25rem 3rem;
+}
+.create-brd-container svg {
+  fill: #635FC7;
 }
 
 .sidebar-btm-cluster {
   position: relative;
+  z-index: 0;
   top: 45vh;
+  padding: 0 3rem;
 }
 
 .mode-toggle {
@@ -255,6 +293,9 @@ main.no-brd-chosen p {
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
   position: relative;
+}
+.toggler:hover, .toggler:focus {
+  background-color: #A8A4FF;
 }
 .toggler #circle {
   width: 1.5rem;
@@ -321,7 +362,7 @@ form, .edit-task {
   top: 100px;
   margin: 0 auto;
   width: 500px;
-  z-index: 1;
+  z-index: 2;
   background-color: white;
   padding: 3rem;
   border-radius: 0.5rem;

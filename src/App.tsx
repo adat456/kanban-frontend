@@ -8,7 +8,6 @@ import AllBoards from "./components/AllBoards";
 
 function App() {
   const [ mode, setMode ] = useState("light");
-  const [ sidebarVis, setSidebarVis ] = useState(true);
   const [ boardsData, setBoardsData ] = useState({});
   const [ curBoardId, setCurBoardId ] = useState("");
 
@@ -27,7 +26,7 @@ function App() {
               <Routes>
                 <Route path="/log-in" element={<Login setBoardsData={setBoardsData} />} />
                 <Route path="/sign-up" element={<Signup />} />
-                <Route path="/boards" element={<AllBoards setMode={setMode} setSidebarVis={setSidebarVis} setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />} />
+                <Route path="/boards" element={<AllBoards setMode={setMode} setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />} />
               </Routes>
             </BrowserRouter>
           </ModeContext.Provider>
