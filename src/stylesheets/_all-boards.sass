@@ -45,6 +45,8 @@ main
     margin-bottom: 1.5rem
     border-radius: 0.5rem
     box-shadow: 0 0.5rem 0.3rem base.$outline
+    display: grid
+    grid-template-columns: 5fr 1fr
 
     h3
         @include base.m
@@ -53,6 +55,12 @@ main
     p
         @include base.med-body
         color: base.$grey
+
+    .dragHandle
+       @include base.center
+
+    svg
+        height: 2rem
 
     &:hover, &:focus
         color: base.$drk-blue-inactive

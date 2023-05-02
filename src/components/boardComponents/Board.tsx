@@ -49,6 +49,7 @@ const Board = function({ setBoardsData, setCurBoardId }) {
     async function handleDragEnd(e) {
         // information about the droppable
         const { over } = e;
+        console.log(e);
 
         // if it's being dropped into a column (no order specified) that is different from the current column
         if (over.id.length === 24 && over.id !== draggableInfo.colId) {

@@ -26,6 +26,10 @@ button {
   background-color: rgba(0, 0, 0, 0.6);
 }
 
+.hidden {
+  display: none;
+}
+
 .all-boards {
   grid-columns: 2/3;
 }
@@ -82,6 +86,8 @@ main {
   margin-bottom: 1.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.5rem 0.3rem #E4EBFA;
+  display: grid;
+  grid-template-columns: 5fr 1fr;
 }
 .task h3, .add-task-btn h3 {
   font-size: 1.5rem;
@@ -94,6 +100,14 @@ main {
   line-height: 2.3rem;
   font-weight: 500;
   color: #828FA3;
+}
+.task .dragHandle, .add-task-btn .dragHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.task svg, .add-task-btn svg {
+  height: 2rem;
 }
 .task:hover, .task:focus, .add-task-btn:hover, .add-task-btn:focus {
   color: #635FC7;

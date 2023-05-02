@@ -1,21 +1,8 @@
 import { useDroppable } from "@dnd-kit/core";
 
 import Task from "./Task";
-import DroppableSpace from "./DroppableSpace";
 
 const Column = function({ col, setCurCol, setCreateTaskVis, setBoardsData }) {
-    const items = [
-        `${col._id}0`,
-        `${col._id}1`,
-        `${col._id}2`,
-        `${col._id}3`,
-        `${col._id}4`,
-        `${col._id}5`,
-        `${col._id}6`,
-        `${col._id}7`,
-        `${col._id}8`,
-        `${col._id}9`,
-    ];
     // each column is a droppable...
     const { isOver, setNodeRef } = useDroppable({ id: col._id });
     const style = isOver ? 
@@ -29,7 +16,7 @@ const Column = function({ col, setCurCol, setCreateTaskVis, setBoardsData }) {
     const tasks = tasksArr.map((task, index) => 
         <div key={task._id}>
             <Task id={task._id} name={task.task} desc={task.desc} order={index} subtasks={task.subtasks} colId={col._id} setBoardsData={setBoardsData} />
-            <DroppableSpace id={items[index + 1]} />
+            <DroppableSpace id={`${col._id}${index + 1}`} />
         </div>
     );
 
@@ -42,10 +29,46 @@ const Column = function({ col, setCurCol, setCreateTaskVis, setBoardsData }) {
     return (
         <section style={style} ref={setNodeRef} className="column">
             <h2>{`${col.name} (${col.tasks.length})`}</h2>
-            {(tasks.length > 0) ? <DroppableSpace id={items[0]} /> : null }
+            {(tasks.length > 0) ? <DroppableSpace id={`${col._id}0`} /> : null }
             {tasks}
             <button type="button" className="add-task-btn" onClick={() => displayTask(col._id)}>+ Add New Task</button>
         </section>
+    );
+};
+
+const DroppableSpace = function({ id }) {
+    const { isOver, setNodeRef } = useDroppable({ id });
+
+    // style (making the droppable space/line visible) is only applied when the task/droppable is over the element
+    const lineStyle = isOver ? 
+        {
+            backgroundColor: "#E4EBFA",
+            width: "100%",
+            height: "2px",
+            margin: "2rem 0",
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center"
+        } : null;
+
+    const numStyle = isOver ?
+        {
+            backgroundColor: "#E4EBFA",
+            width: "2rem",
+            height: "2rem",
+            borderRadius: "50%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+        } : 
+        {
+            display: "none"
+        };
+
+    return (
+        <div ref={setNodeRef} style={lineStyle} className="droppable-task-space">
+            <div style={numStyle}>{Number(id.slice(-1)) + 1}</div>
+        </div>
     );
 };
 
