@@ -5,15 +5,18 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
     // only the board name will be a controlled input
     const [ boardName, setBoardName ] = useState("");
     const [ numCols, setNumCols ] = useState(2);
-    const [ extraColFields, setExtraColFields ] = useState([]);
+    const [ colFields, setColFields ] = useState([
+        <label key={0} htmlFor="col0" className="col-label"><input type="text" id="col0 "name="columns" className="columns create-brd-cols" /><svg viewBox="0 0 15 15" onClick={handleRemoveColField} xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>,
+        <label key={1} htmlFor="col1" className="col-label"><input type="text" id="col1 "name="columns" className="columns create-brd-cols" /><svg viewBox="0 0 15 15" onClick={handleRemoveColField} xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
+    ]);
 
     const boardsData = useContext(BoardsContext);
 
     function handleAddColField() {
         // this first setState call will not click in until the next click, which is why the initial value is 2 instead of 1 (0-indexed)
         setNumCols(numCols + 1);
-        setExtraColFields(extraColFields => [...extraColFields,
-            <label key={numCols} htmlFor={`col${numCols}`}><input type="text" id={`col${numCols}`} name="columns" className="columns create-brd-cols" /></label>
+        setColFields(colFields => [...colFields,
+            <label key={numCols} htmlFor={`col${numCols}`} className="col-label"><input type="text" id={`col${numCols}`} name="columns" className="columns create-brd-cols" /><svg viewBox="0 0 15 15" onClick={handleRemoveColField} xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
         ]);
     };
     
@@ -22,19 +25,36 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
         setBoardName(input.value);
     };
 
+    function handleRemoveColField(e) {;
+        // const parentColField = e.target.closest(".col-label");
+        // const colName = parentColField.getAttribute("for");
+        // const colIndex = Number(colName.slice(-1));
+        // console.log(colIndex);
+        
+        // const firstHalfColFields = colFields.slice(0, colIndex);
+        // const secondHalfColFields = colFields.slice(colIndex + 1);
+        // setColFields([...firstHalfColFields, ...secondHalfColFields]);
+        // // const parentColField = cross.closest(".col-label");
+        // // const allColFields = document.querySelectorAll(".col-label");
+        // // const allColFieldsArr = [...allColFields];
+        // // const updatedColFields = allColFieldsArr.filter(colField => {
+        // //     return (!parentColField.isEqualNode(colField));
+        // // });
+        // // setColFields(updatedColFields);
+        // // const updatedColFields = colFields.filter(colField => {
+        // //     return (JSON.stringify(colField) !== JSON.stringify(parentLabel));
+        // // });
+        // // console.log(updatedColFields);
+    };
+
     async function handleSubmit(e) {
         e.preventDefault();
 
         let columns = [];      
         function pullColumnNames() {
             const colArr = [...document.getElementsByClassName("create-brd-cols")];
-            colArr.forEach((col, index) => {
-                if (col.value) {
-                    columns.push({
-                        name: col.value,
-                        order: index,
-                    });
-                };
+            colArr.forEach(col => {
+                if (col.value) columns.push({ name: col.value });
             });
         };
         pullColumnNames();
@@ -72,12 +92,11 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
     return (
         <form method="POST" className="create-board" onSubmit={handleSubmit}>
             <h2>Add New Board</h2>
-            <label htmlFor="boardName">Board Name<input type="text" id="boardName" value={boardName} onChange={handleChange} /></label>
+            <label htmlFor="boardName">Board Name</label>
+            <input type="text" id="boardName" value={boardName} onChange={handleChange} />
             <fieldset>
                 <legend>Columns</legend>
-                <label htmlFor="col0"><input type="text" id="col0" name="columns" className="columns create-brd-cols" /></label>
-                <label htmlFor="col1"><input type="text" id="col1" name="columns" className="columns create-brd-cols" /></label>
-                {extraColFields}
+                {colFields}
                 <button type="button" className="add-btn" onClick={handleAddColField}>+ Add New Column</button>
             </fieldset>
             <button type="submit" className="save-btn">Create New Board</button>

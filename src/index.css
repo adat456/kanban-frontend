@@ -45,7 +45,7 @@ header h1 {
   line-height: 3rem;
   font-weight: 700;
 }
-header button {
+header .edit-brd-btn {
   padding: 1rem;
 }
 
@@ -60,6 +60,7 @@ main {
 
 .column {
   width: 250px;
+  flex-shrink: 0;
   padding-top: 2rem;
 }
 .column h2 {
@@ -109,15 +110,14 @@ main {
 .task svg, .add-task-btn svg {
   height: 2rem;
 }
-.task:hover, .task:focus, .add-task-btn:hover, .add-task-btn:focus {
-  color: #635FC7;
-}
 .task:hover h3, .task:focus h3, .add-task-btn:hover h3, .add-task-btn:focus h3 {
   color: #635FC7;
 }
 
 .add-column-btn {
-  margin-top: 3.5rem;
+  width: 250px;
+  flex-shrink: 0;
+  margin-top: 5.5rem;
   padding: 0 3rem;
   background-color: #E9EFFA;
   color: #828FA3;
@@ -144,30 +144,35 @@ main.no-brd-chosen p {
   color: #828FA3;
 }
 
-.App.dark header {
+#app.dark header {
   background-color: #2B2C37;
   border-bottom-color: #3E3F4E;
 }
-.App.dark header h1 {
+#app.dark header h1 {
   color: white;
 }
-.App.dark header .edit-brd-button {
+#app.dark header .edit-brd-btn {
   background-color: #2B2C37;
 }
 
-.App.dark main {
+#app.dark main {
   background-color: #20212C;
 }
-.App.dark main .task {
+#app.dark main .task {
   background-color: #2B2C37;
   box-shadow: none;
 }
-.App.dark main .task h3 {
+#app.dark main .task h3 {
   color: white;
 }
-.App.dark main .add-column-btn, .App.dark main .add-task-btn {
-  background-color: #2B2C37;
-  opacity: 0.3;
+#app.dark main .task:hover h3, #app.dark main .task:focus h3 {
+  color: #635FC7;
+}
+#app.dark main .add-column-btn, #app.dark main .add-task-btn {
+  background-color: rgba(43, 44, 55, 0.3);
+}
+#app.dark main .add-column-btn:hover, #app.dark main .add-column-btn:focus, #app.dark main .add-task-btn:hover, #app.dark main .add-task-btn:focus {
+  color: #635FC7;
 }
 
 .sidebar-vis-btn {
@@ -178,6 +183,9 @@ main.no-brd-chosen p {
   background-color: #635FC7;
   border-top-right-radius: 10rem;
   border-bottom-right-radius: 10rem;
+}
+.sidebar-vis-btn:hover, .sidebar-vis-btn:focus {
+  background-color: #A8A4FF;
 }
 .sidebar-vis-btn svg {
   height: 1.5rem;
@@ -341,25 +349,25 @@ main.no-brd-chosen p {
   background-color: #A8A4FF;
 }
 
-.App.dark > .sidebar {
+#app.dark > .sidebar {
   background-color: #2B2C37;
   border-right-color: #3E3F4E;
 }
-.App.dark > .sidebar hr {
+#app.dark > .sidebar hr {
   border-color: #3E3F4E;
 }
-.App.dark > .sidebar .mode-toggle {
+#app.dark > .sidebar .mode-toggle {
   background-color: #20212C;
 }
-.App.dark > .sidebar .hide-sidebar, .App.dark > .sidebar .create-brd-btn {
+#app.dark > .sidebar .hide-sidebar, #app.dark > .sidebar .create-brd-btn {
   background-color: #2B2C37;
 }
 
-form, .edit-task {
+form, .create-board, .edit-task {
   position: absolute;
   left: 0;
   right: 0;
-  top: 100px;
+  top: 50px;
   margin: 0 auto;
   width: 500px;
   z-index: 2;
@@ -367,37 +375,58 @@ form, .edit-task {
   padding: 3rem;
   border-radius: 0.5rem;
 }
-form h2, .edit-task h2 {
+form h2, .create-board h2, .edit-task h2 {
   font-size: 1.8rem;
   line-height: 2.3rem;
   font-weight: 700;
   letter-spacing: 0.05rem;
   color: black;
   padding: 0;
+  margin-bottom: 2rem;
 }
-form p, .edit-task p {
+form p, .create-board p, .edit-task p {
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
   color: #828FA3;
 }
-form label, form legend, .edit-task label, .edit-task legend {
+form legend, .create-board legend, .edit-task legend {
+  font-size: 1.5rem;
+  line-height: 1.9rem;
+  font-weight: 700;
+  color: #828FA3;
+  display: block;
+}
+form label, .create-board label, .edit-task label {
   font-size: 1.5rem;
   line-height: 1.9rem;
   font-weight: 700;
   color: #828FA3;
   width: 100%;
   display: block;
-  margin-top: 2rem;
+  margin: 1.5rem 0;
 }
-form fieldset, .edit-task fieldset {
+form label.col-label, form label.subtask-label, .create-board label.col-label, .create-board label.subtask-label, .edit-task label.col-label, .edit-task label.subtask-label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+form label.col-label svg, form label.subtask-label svg, .create-board label.col-label svg, .create-board label.subtask-label svg, .edit-task label.col-label svg, .edit-task label.subtask-label svg {
+  height: 2rem;
+  padding-left: 2rem;
+  fill: #828FA3;
+}
+form label.col-label svg:hover, form label.col-label svg:focus, form label.subtask-label svg:hover, form label.subtask-label svg:focus, .create-board label.col-label svg:hover, .create-board label.col-label svg:focus, .create-board label.subtask-label svg:hover, .create-board label.subtask-label svg:focus, .edit-task label.col-label svg:hover, .edit-task label.col-label svg:focus, .edit-task label.subtask-label svg:hover, .edit-task label.subtask-label svg:focus {
+  fill: #EA5555;
+}
+form fieldset, .create-board fieldset, .edit-task fieldset {
   border: none;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
-form input, form textarea, form select, .edit-task input, .edit-task textarea, .edit-task select {
+form input, form textarea, form select, .create-board input, .create-board textarea, .create-board select, .edit-task input, .edit-task textarea, .edit-task select {
   display: block;
-  margin-top: 1rem;
   width: 90%;
   border: 1px solid #E4EBFA;
   padding: 1rem;
@@ -406,36 +435,36 @@ form input, form textarea, form select, .edit-task input, .edit-task textarea, .
   font-weight: 700;
   border-radius: 0.5rem;
 }
-form .checkboxes-field .checked-subtask, .edit-task .checkboxes-field .checked-subtask {
+form .checkboxes-field .checked-subtask, .create-board .checkboxes-field .checked-subtask, .edit-task .checkboxes-field .checked-subtask {
   text-decoration: line-through;
 }
-form .checkboxes-field label, .edit-task .checkboxes-field label {
+form .checkboxes-field label, .create-board .checkboxes-field label, .edit-task .checkboxes-field label {
   padding: 1.5rem;
   margin: 1rem 0;
   width: 94%;
   background-color: #F4F7FD;
   border-radius: 0.5rem;
 }
-form .checkboxes-field input, .edit-task .checkboxes-field input {
+form .checkboxes-field input, .create-board .checkboxes-field input, .edit-task .checkboxes-field input {
   display: inline;
   width: auto;
   margin: 0;
   margin-right: 1.5rem;
 }
-form ::placeholder, .edit-task ::placeholder {
+form ::placeholder, .create-board ::placeholder, .edit-task ::placeholder {
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
   color: #E4EBFA;
 }
-form select, .edit-task select {
+form select, .create-board select, .edit-task select {
   width: 100%;
   background-color: white;
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
 }
-form button, .edit-task button {
+form button, .create-board button, .edit-task button {
   display: block;
   width: 100%;
   padding: 1.5rem 0;
@@ -446,28 +475,28 @@ form button, .edit-task button {
   border-top-right-radius: 10rem;
   border-bottom-right-radius: 10rem;
 }
-form .add-btn, form .cancel-btn, .edit-task .add-btn, .edit-task .cancel-btn {
+form .add-btn, form .cancel-btn, .create-board .add-btn, .create-board .cancel-btn, .edit-task .add-btn, .edit-task .cancel-btn {
   margin-top: 1rem;
   background-color: #E4EBFA;
   color: #635FC7;
 }
-form .add-btn:hover, form .add-btn:focus, form .cancel-btn:hover, form .cancel-btn:focus, .edit-task .add-btn:hover, .edit-task .add-btn:focus, .edit-task .cancel-btn:hover, .edit-task .cancel-btn:focus {
+form .add-btn:hover, form .add-btn:focus, form .cancel-btn:hover, form .cancel-btn:focus, .create-board .add-btn:hover, .create-board .add-btn:focus, .create-board .cancel-btn:hover, .create-board .cancel-btn:focus, .edit-task .add-btn:hover, .edit-task .add-btn:focus, .edit-task .cancel-btn:hover, .edit-task .cancel-btn:focus {
   background-color: #F4F7FD;
 }
-form .save-btn, .edit-task .save-btn {
+form .save-btn, .create-board .save-btn, .edit-task .save-btn {
   background-color: #635FC7;
   color: white;
   margin-top: 3rem;
   margin-bottom: 1rem;
 }
-form .save-btn:hover, form .save-btn:focus, .edit-task .save-btn:hover, .edit-task .save-btn:focus {
+form .save-btn:hover, form .save-btn:focus, .create-board .save-btn:hover, .create-board .save-btn:focus, .edit-task .save-btn:hover, .edit-task .save-btn:focus {
   background-color: #A8A4FF;
 }
-form .delete-btn, .edit-task .delete-btn {
+form .delete-btn, .create-board .delete-btn, .edit-task .delete-btn {
   background-color: #EA5555;
   color: white;
 }
-form .delete-btn:hover, form .delete-btn:focus, .edit-task .delete-btn:hover, .edit-task .delete-btn:focus {
+form .delete-btn:hover, form .delete-btn:focus, .create-board .delete-btn:hover, .create-board .delete-btn:focus, .edit-task .delete-btn:hover, .edit-task .delete-btn:focus {
   background-color: #FF9898;
 }
 
@@ -515,30 +544,30 @@ form .delete-btn:hover, form .delete-btn:focus, .edit-task .delete-btn:hover, .e
   margin-top: 1rem;
 }
 
-.App.dark form, .App.dark .edit-task {
+#app.dark form, #app.dark .edit-task {
   background-color: #2B2C37;
 }
-.App.dark form .view-task-header button, .App.dark .edit-task .view-task-header button {
+#app.dark form .view-task-header button, #app.dark .edit-task .view-task-header button {
   background-color: #2B2C37;
 }
-.App.dark form h2, .App.dark form label, .App.dark form legend, .App.dark .edit-task h2, .App.dark .edit-task label, .App.dark .edit-task legend {
+#app.dark form h2, #app.dark form label, #app.dark form legend, #app.dark .edit-task h2, #app.dark .edit-task label, #app.dark .edit-task legend {
   color: white;
 }
-.App.dark form input, .App.dark form textarea, .App.dark form select, .App.dark .edit-task input, .App.dark .edit-task textarea, .App.dark .edit-task select {
+#app.dark form input, #app.dark form textarea, #app.dark form select, #app.dark .edit-task input, #app.dark .edit-task textarea, #app.dark .edit-task select {
   background-color: #2B2C37;
   border-color: #3E3F4E;
   color: white;
 }
-.App.dark form ::placeholder, .App.dark .edit-task ::placeholder {
+#app.dark form ::placeholder, #app.dark .edit-task ::placeholder {
   color: #3E3F4E;
 }
-.App.dark form .checkboxes-field label, .App.dark .edit-task .checkboxes-field label {
+#app.dark form .checkboxes-field label, #app.dark .edit-task .checkboxes-field label {
   background-color: #20212C;
 }
-.App.dark form hr, .App.dark .edit-task hr {
+#app.dark form hr, #app.dark .edit-task hr {
   border-color: #3E3F4E;
 }
-.App.dark form .add-btn, .App.dark .edit-task .add-btn {
+#app.dark form .add-btn, #app.dark .edit-task .add-btn {
   background-color: white;
 }
 

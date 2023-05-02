@@ -15,14 +15,14 @@ const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
 
     const existingColFields = curBoard.columns.map((col, index) => {
         return (
-            <label key={index} htmlFor={`col${index}`}><input type="text" name="columns" className="columns edit-brd-cols" id={`col${index}`} data-id={col._id} defaultValue={col.name} /></label>
+            <label key={index} htmlFor={`col${index}`} className="col-label"><input type="text" name="columns" className="columns edit-brd-cols" id={`col${index}`} data-id={col._id} defaultValue={col.name} /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
         );
     });
 
     function handleAddColField() {
         setNumCols(numCols + 1);
         setExtraColFields(extraColFields => [...extraColFields,
-            <label key={numCols} htmlFor={`col${numCols}`}><input type="text" id={`col${numCols}`} name="columns" className="columns edit-brd-cols" /></label>
+            <label key={numCols} htmlFor={`col${numCols}`} className="col-label"><input type="text" id={`col${numCols}`} name="columns" className="columns edit-brd-cols" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
         ]);
     };
 

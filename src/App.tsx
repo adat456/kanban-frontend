@@ -12,7 +12,7 @@ function App() {
   const [ curBoardId, setCurBoardId ] = useState("");
 
   useEffect(() => {
-    const app = document.querySelector(".App");
+    const app = document.querySelector("#app");
     if (mode === "light") app?.classList.remove("dark");
     if (mode === "dark") app?.classList.add("dark");
   }, [mode]);

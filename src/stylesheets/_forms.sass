@@ -1,10 +1,10 @@
 @use 'base'
 
-form, .edit-task
+form, .create-board, .edit-task
     position: absolute
     left: 0
     right: 0
-    top: 100px
+    top: 50px
     margin: 0 auto
     width: 500px
     z-index: 2
@@ -16,17 +16,35 @@ form, .edit-task
         @include base.l
         color: black
         padding: 0
+        margin-bottom: 2rem
 
     p
         @include base.med-body
         color: base.$grey
 
-    label, legend
+    legend
+        @include base.m
+        color: base.$grey
+        display: block
+
+    label
         @include base.m
         color: base.$grey
         width: 100%
         display: block
-        margin-top: 2rem
+        margin: 1.5rem 0
+
+    label.col-label, label.subtask-label
+        width: 100%
+        @include base.center
+
+        svg
+            height: 2rem
+            padding-left: 2rem
+            fill: base.$grey
+
+            &:hover, &:focus
+                fill: base.$red-inactive
 
     fieldset
         border: none
@@ -35,7 +53,6 @@ form, .edit-task
 
     input, textarea, select
         display: block
-        margin-top: 1rem
         width: 90%
         border: 1px solid base.$outline
         padding: 1rem
@@ -139,7 +156,7 @@ form, .edit-task
         margin-top: 1rem
     
 
-.App.dark form, .App.dark .edit-task
+#app.dark form, #app.dark .edit-task
     background-color: base.$dark-background-2
 
     .view-task-header button

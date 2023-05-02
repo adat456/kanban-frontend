@@ -21,7 +21,7 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
         // this first setState call will not click in until the next click, which is why the initial value is 2 instead of 1 (0-indexed)
         setNumSubtasks(numSubtasks + 1);
         setExtraSubtaskFields(extraSubtaskFields => [...extraSubtaskFields,
-            <label key={numSubtasks} htmlFor={`subtask${numSubtasks}`}><input type="text" id={`subtask${numSubtasks}`} name="subtasks" className="create-subtasks" /></label>
+            <label key={numSubtasks} htmlFor={`subtask${numSubtasks}`}className="subtask-label"><input type="text" id={`subtask${numSubtasks}`} name="subtasks" className="create-subtasks" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
         ]);
     };
 
@@ -110,8 +110,8 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
             <label htmlFor="desc">Description<textarea rows="5" id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." /></label>
             <fieldset>
                 <legend>Subtasks</legend>
-                <label htmlFor="subtask0"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" placeholder="e.g., Make coffee" /></label>
-                <label htmlFor="subtask1"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" placeholder="e.g., Drink coffee and smile" /></label>
+                <label htmlFor="subtask0" className="subtask-label"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" placeholder="e.g., Make coffee" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
+                <label htmlFor="subtask1" className="subtask-label"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" placeholder="e.g., Drink coffee and smile" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
                 {extraSubtaskFields}
                 <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
             </fieldset>

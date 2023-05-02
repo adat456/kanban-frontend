@@ -13,7 +13,7 @@ header
     h1
         @include base.xl
 
-    button
+    .edit-brd-btn
         padding: 1rem
 
 main
@@ -26,6 +26,7 @@ main
 
 .column
     width: 250px
+    flex-shrink: 0
     padding-top: 2rem
 
     h2
@@ -64,13 +65,13 @@ main
         height: 2rem
 
     &:hover, &:focus
-        color: base.$drk-blue-inactive
-
         h3
             color: base.$drk-blue-inactive
     
 .add-column-btn
-    margin-top: 3.5rem
+    width: 250px
+    flex-shrink: 0
+    margin-top: 5.5rem
     padding: 0 3rem
     background-color: base.$add-background
     color: base.$grey
@@ -90,17 +91,17 @@ main.no-brd-chosen
         color: base.$grey
 
 
-.App.dark header
+#app.dark header
     background-color: base.$dark-background-2
     border-bottom-color: base.$dark-outline
 
     h1
         color: white
 
-    .edit-brd-button
+    .edit-brd-btn
         background-color: base.$dark-background-2
 
-.App.dark main
+#app.dark main
     background-color: base.$dark-background-1
 
     .task
@@ -110,6 +111,12 @@ main.no-brd-chosen
         h3
             color: white
 
+        &:hover, &:focus
+            h3
+                color: base.$drk-blue-inactive
+
     .add-column-btn, .add-task-btn
-        background-color: base.$dark-background-2
-        opacity: 0.3
+        background-color: rgba(43, 44, 55, 0.3)
+
+        &:hover, &:focus    
+            color: base.$drk-blue-inactive
