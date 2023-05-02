@@ -51,11 +51,12 @@ main {
   height: 100%;
   flex-wrap: nowrap;
   column-gap: 2rem;
-  padding: 2rem;
+  padding: 0 2rem 2rem 2rem;
 }
 
 .column {
   width: 250px;
+  padding-top: 2rem;
 }
 .column h2 {
   font-size: 1.2rem;
@@ -94,6 +95,12 @@ main {
   font-weight: 500;
   color: #828FA3;
 }
+.task:hover, .task:focus, .add-task-btn:hover, .add-task-btn:focus {
+  color: #635FC7;
+}
+.task:hover h3, .task:focus h3, .add-task-btn:hover h3, .add-task-btn:focus h3 {
+  color: #635FC7;
+}
 
 .add-column-btn {
   margin-top: 3.5rem;
@@ -105,6 +112,9 @@ main {
   font-weight: 700;
   box-shadow: none;
   border-radius: 0.5rem;
+}
+.add-column-btn:hover, .add-column-btn:focus {
+  color: #635FC7;
 }
 
 main.no-brd-chosen {

@@ -9,6 +9,7 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
 
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
+    const curBoard = boardsData.find(board => board._id === curBoardId);
 
     const colOptions = columnsArr.map(col => {
         return (
@@ -35,6 +36,7 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
     async function handleSubmit(e) {
         e.preventDefault();
 
+        // get subtasks and format in arr
         let subtasks = [];      
         function pullSubtaskNames() {
             const subtaskArr = [...document.getElementsByClassName("create-subtasks")];
@@ -49,15 +51,28 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
         };
         pullSubtaskNames();
 
+        // get id of column that task will be assigned to
         const selElement = document.getElementById("column");
         const columnId = selElement.value;
+
+        // get order of task based on number of existing tasks in that column
+        let numTasksinCol;
+        curBoard.columns.forEach(col => {
+            if (col._id === columnId) {
+                numTasksinCol = col.tasks.length;
+            };
+        });
 
         const reqOptions = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({ 
                 boardId: curBoardId, 
-                columnId, task, desc, subtasks
+                columnId, 
+                task, 
+                order: numTasksinCol,
+                desc, 
+                subtasks
             }),
             credentials: "include"
         };

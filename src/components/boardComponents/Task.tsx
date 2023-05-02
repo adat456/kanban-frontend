@@ -10,8 +10,12 @@ const Task = function({ id, name, desc, order, subtasks, colId, setBoardsData })
     const [ editTaskVis, setEditTaskVis ] = useState(false);
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
+        // all of this data is sent to DndContext in Board.tsx to be processed by onDragStart (and onDragEnd)
         id,
-        data: { name, colId }
+        data: {
+            order,
+            colId
+        }
     });
 
     let numCompleteSubtasks = 0;
@@ -20,21 +24,14 @@ const Task = function({ id, name, desc, order, subtasks, colId, setBoardsData })
             if (subtask.status) numCompleteSubtasks++;;
         });
     };
-    
-    function handleBackdrop() {
-        if (viewTaskVis) setViewTaskVis(false);
-        if (editTaskVis) setEditTaskVis(false);
-    };
 
-    // const style = {
-    //     zIndex: 1,
-    //     transform: CSS.Translate.toString(transform),
-    // };
+    const style = {
+        transform: CSS.Translate.toString(transform),
+    };
 
     return (
         <>
-            {/* removed style={style} so that OG node will not move */}
-            <div ref={setNodeRef} {...listeners} {...attributes} className="task" onClick={() => {setViewTaskVis(true)}}>
+            <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="task" onClick={() => {setViewTaskVis(true)}}>
                 <h3>{name}</h3>
                 {subtasks ? 
                     <p>{`${numCompleteSubtasks} of ${subtasks.length} subtasks`}</p> : <></>

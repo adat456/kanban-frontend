@@ -21,10 +21,11 @@ main
     height: 100%
     flex-wrap: nowrap
     column-gap: 2rem
-    padding: 2rem
+    padding: 0 2rem 2rem 2rem
 
 .column
     width: 250px
+    padding-top: 2rem
 
     h2
         @include base.s 
@@ -52,6 +53,12 @@ main
     p
         @include base.med-body
         color: base.$grey
+
+    &:hover, &:focus
+        color: base.$drk-blue-inactive
+
+        h3
+            color: base.$drk-blue-inactive
     
 .add-column-btn
     margin-top: 3.5rem
@@ -61,6 +68,9 @@ main
     @include base.m
     box-shadow: none
     border-radius: 0.5rem
+
+    &:hover, &:focus
+        color: base.$drk-blue-inactive
 
 // styles for main when no board has been chosen
 main.no-brd-chosen
