@@ -53,7 +53,7 @@ const Signup = function() {
     };
 
     return (
-        <form method="POST" onSubmit={handleSubmit}>
+        <form method="POST" className="signup-form" onSubmit={handleSubmit}>
             <h1>Sign up</h1>
             <label htmlFor="firstName">First name<input type="text" name="firstName" id="firstName" value={firstName} onChange={handleChange} /></label>
             <label htmlFor="lastName">Last name<input type="text" name="lastName" id="lastName" value={lastName} onChange={handleChange} /></label>

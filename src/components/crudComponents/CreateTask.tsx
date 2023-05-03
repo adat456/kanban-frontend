@@ -33,6 +33,11 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
         if (field === "desc") setDesc(input.value);
     };
 
+    function handleCreateTaskModal() {
+        const createTaskModal = document.querySelector("#create-task-modal");
+        createTaskModal.close();
+    };
+
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -92,7 +97,7 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
                 })
                 setBoardsData([...filteredBoardsData, updatedMongoBoard]);
 
-                setCreateTaskVis(false);
+                handleCreateTaskModal();
             } else {
                 // client-generated error message
                 throw new Error("Failed to create board. Please try again later.");
@@ -104,24 +109,29 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
     };
 
     return (
-        <form method="POST" className="create-task" onSubmit={handleSubmit}>
-            <h2>Add New Task</h2>
-            <label htmlFor="task">Title<input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" /></label>
-            <label htmlFor="desc">Description<textarea rows="5" id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." /></label>
-            <fieldset>
-                <legend>Subtasks</legend>
-                <label htmlFor="subtask0" className="subtask-label"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" placeholder="e.g., Make coffee" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-                <label htmlFor="subtask1" className="subtask-label"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" placeholder="e.g., Drink coffee and smile" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-                {extraSubtaskFields}
-                <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
-            </fieldset>
-            <label htmlFor="column">Column
-                <select name="column" id="column" defaultValue={curCol}>
-                    {colOptions}
-                </select>
-            </label>
-            <button type="submit" className="save-btn">Create Task</button>
-        </form>
+        <dialog className="form-modal" id="create-task-modal">
+            <form method="POST" onSubmit={handleSubmit}>
+                <h2>Add New Task</h2>
+                <label htmlFor="task">Title<input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" /></label>
+                <label htmlFor="desc">Description<textarea rows="5" id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." /></label>
+                <fieldset>
+                    <legend>Subtasks</legend>
+                    <label htmlFor="subtask0" className="subtask-label"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" placeholder="e.g., Make coffee" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
+                    <label htmlFor="subtask1" className="subtask-label"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" placeholder="e.g., Drink coffee and smile" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
+                    {extraSubtaskFields}
+                    <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
+                </fieldset>
+                <label htmlFor="column">Column
+                    <select name="column" id="column" defaultValue={curCol}>
+                        {colOptions}
+                    </select>
+                </label>
+                <button type="submit" className="save-btn">Create Task</button>
+            </form>
+            <button className="close-modal" type="button" onClick={handleCreateTaskModal}>
+                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+            </button>
+        </dialog>
     );
 };
 

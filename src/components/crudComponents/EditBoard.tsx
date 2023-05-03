@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
-const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
+const EditBoard = function({ setBoardsData, setCurBoardId }) {
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
 
@@ -11,7 +11,6 @@ const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
     const [ boardName, setBoardName ] = useState(curBoard.name);
     const [ numCols, setNumCols ] = useState(curBoard.columns.length);
     const [ extraColFields, setExtraColFields ] = useState([]);
-    const [ deleteMsgVis, setDeleteMsgVis ] = useState(false);
 
     const existingColFields = curBoard.columns.map((col, index) => {
         return (
@@ -29,6 +28,17 @@ const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
     function handleChange(e) {
         const input = e.target;
         setBoardName(input.value);
+    };
+
+    function handleEditBoardModal() {
+        const editBoardModal = document.querySelector("#edit-board-modal");
+        editBoardModal.close();
+    };
+
+    function handleDeleteBoardModal(action) {
+        const deleteBoardModal = document.querySelector("#delete-board-modal");
+        if (action === "show") deleteBoardModal.showModal();
+        if (action === "close") deleteBoardModal.close();
     };
 
     async function handleSubmit(e) {
@@ -71,7 +81,7 @@ const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
                 });
                 setBoardsData([...filteredBoardsData, updatedMongoBoard]);
 
-                setEditBoardVis(false);
+                handleEditBoardModal();
             } else {
                 // client-generated error message
                 throw new Error("Failed to update board. Please try again later.");
@@ -94,6 +104,8 @@ const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
                 });
                 setBoardsData(filteredBoardsData);         
                 setCurBoardId(null);
+
+                handleDeleteBoardModal("close");
             } else {
                 throw new Error("Unable to delete board.");
             }
@@ -103,29 +115,33 @@ const EditBoard = function({ setBoardsData, setCurBoardId, setEditBoardVis }) {
     };
 
     return (
-        <form method="POST" className="edit-brd-form" onSubmit={handleSubmit}>
-            <h2>Edit Board</h2>
-            <label htmlFor="boardName">Board Name<input type="text" id="boardName" value={boardName} onChange={handleChange} /></label>
-            <fieldset>
-                <legend>Columns</legend>
-                {existingColFields}
-                {extraColFields}
-                <button type="button" className="add-btn" onClick={handleAddColField}>+ Add New Column</button>
-            </fieldset>
-            <button className="save-btn" type="submit">Save Changes</button>
-            <button className="delete-btn" type="button" onClick={() => setDeleteMsgVis(true)}>Delete Board</button>
-            {deleteMsgVis ?
-                <section className="delete-brd-msg">
-                    <hr />
-                    <h2>Delete this board?</h2>
-                    <p>{`Are you sure you want to delete the '${curBoard.name}' board? This action will remove all columns and tasks and cannot be reversed.`}</p>
-                    <div className="delete-btn-cluster">
-                        <button type="button" className="delete-btn" onClick={handleDelete}>Delete</button>
-                        <button type="button" className="cancel-btn" onClick={() => setEditBoardVis(false)}>Cancel</button>
-                    </div>
-                </section> : <></>
-            }
-        </form>
+        <>
+            <dialog className="form-modal" id="edit-board-modal">
+                <form method="POST" className="edit-brd-form" onSubmit={handleSubmit}>
+                    <h2>Edit Board</h2>
+                    <label htmlFor="boardName">Board Name<input type="text" id="boardName" value={boardName} onChange={handleChange} /></label>
+                    <fieldset>
+                        <legend>Columns</legend>
+                        {existingColFields}
+                        {extraColFields}
+                        <button type="button" className="add-btn" onClick={handleAddColField}>+ Add New Column</button>
+                    </fieldset>
+                    <button className="save-btn" type="submit">Save Changes</button>
+                    <button className="delete-btn" type="button" onClick={() => {handleEditBoardModal(); handleDeleteBoardModal("show");}}>Delete Board</button>
+                    <button className="close-modal" type="button" onClick={handleEditBoardModal}>
+                        <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                    </button>
+                </form>
+            </dialog>
+            <dialog className="delete-modal" id="delete-board-modal">
+                <h2>Delete this board?</h2>
+                <p>{`Are you sure you want to delete the '${curBoard.name}' board? This action will remove all columns and tasks and cannot be reversed.`}</p>
+                <div className="delete-btn-cluster">
+                    <button type="button" className="delete-btn" onClick={handleDelete}>Delete</button>
+                    <button type="button" className="cancel-btn" onClick={() => handleDeleteBoardModal("close")}>Cancel</button>
+                </div>
+            </dialog>
+        </>
     );
 };
 

@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { BoardsContext } from "../../Context";
 
-const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
+const CreateBoard = function({ setBoardsData }) {
     // only the board name will be a controlled input
     const [ boardName, setBoardName ] = useState("");
     const [ numCols, setNumCols ] = useState(2);
@@ -47,6 +47,11 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
         // // console.log(updatedColFields);
     };
 
+    function handleCreateBoardModal() {
+        const createBoardModal = document.querySelector("#create-board-modal");
+        createBoardModal.close();
+    };
+
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -79,7 +84,7 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
                 const newMongoBoard = await res.json();
                 setBoardsData([...boardsData, newMongoBoard]);
 
-                setCreateBoardVis(false);
+                handleCreateBoardModal();
             } else {
                 // client-generated error message
                 throw new Error("Failed to create board. Please try again later.");
@@ -90,17 +95,22 @@ const CreateBoard = function({ setBoardsData, setCreateBoardVis }) {
     };
     
     return (
-        <form method="POST" className="create-board" onSubmit={handleSubmit}>
-            <h2>Add New Board</h2>
-            <label htmlFor="boardName">Board Name</label>
-            <input type="text" id="boardName" value={boardName} onChange={handleChange} />
-            <fieldset>
-                <legend>Columns</legend>
-                {colFields}
-                <button type="button" className="add-btn" onClick={handleAddColField}>+ Add New Column</button>
-            </fieldset>
-            <button type="submit" className="save-btn">Create New Board</button>
-        </form>
+        <dialog className="form-modal" id="create-board-modal">
+            <form method="POST" onSubmit={handleSubmit}>
+                <h2>Add New Board</h2>
+                <label htmlFor="boardName">Board Name</label>
+                <input type="text" id="boardName" value={boardName} onChange={handleChange} />
+                <fieldset>
+                    <legend>Columns</legend>
+                    {colFields}
+                    <button type="button" className="add-btn" onClick={handleAddColField}>+ Add New Column</button>
+                </fieldset>
+                <button type="submit" className="save-btn">Create New Board</button>
+            </form>
+            <button className="close-modal" type="button" onClick={handleCreateBoardModal}>
+                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+            </button>
+        </dialog>      
     );
 };
 

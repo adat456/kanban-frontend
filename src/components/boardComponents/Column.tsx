@@ -1,15 +1,15 @@
+import { useState } from "react";
+
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 
+import CreateTask from "../crudComponents/CreateTask";
 import Task from "./Task";
 
-const Column = function({ col, order, setCurCol, setCreateTaskVis, setBoardsData }) {
+const Column = function({ col, order, columnsArr, setBoardsData }) {
+    const [ curCol, setCurCol ] = useState();
+
     // each column is a droppable...
     const { isOver, setNodeRef } = useDroppable({ id: col._id });
-    // const { attributes, listeners, transform } = useDraggable({
-    //     // all of this data is sent to DndContext in Board.tsx to be processed by onDragStart (and onDragEnd)
-    //     id: `col${col._id}`,
-    //     data: { order }
-    // });
     const style = isOver ? 
         {
             backgroundColor: "#E9EFFA",
@@ -28,7 +28,8 @@ const Column = function({ col, order, setCurCol, setCreateTaskVis, setBoardsData
     // sets the id of the current column so that the new task will be created under the right column, and toggles CreateTask visibility
     function displayTask(colId) {
         setCurCol(colId);
-        setCreateTaskVis(true);
+        const createTaskModal = document.querySelector("#create-task-modal");
+        createTaskModal.showModal();
     };
 
     return (
@@ -37,6 +38,7 @@ const Column = function({ col, order, setCurCol, setCreateTaskVis, setBoardsData
             {(tasks.length > 0) ? <DroppableSpace id={`${col._id}0`} /> : null }
             {tasks}
             <button type="button" className="add-task-btn" onClick={() => displayTask(col._id)}>+ New Task</button>
+            <CreateTask curCol={curCol} columnsArr={columnsArr} setBoardsData={setBoardsData} />
         </section>
     );
 };

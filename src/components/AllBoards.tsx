@@ -7,7 +7,6 @@ import EditBoard from "./crudComponents/EditBoard";
 import Board from "./boardComponents/Board";
 
 const AllBoards = function({ setMode, setBoardsData, setCurBoardId }) {
-    const [ editBoardVis, setEditBoardVis ] = useState(false);
     const [ sidebarVis, setSidebarVis ] = useState(true);
 
     const boardsData = useContext(BoardsContext);
@@ -16,6 +15,11 @@ const AllBoards = function({ setMode, setBoardsData, setCurBoardId }) {
     boardsData.forEach(board => {
         if (board._id === curBoardId) curBoardName = board.name;
     });
+
+    function handleEditBoardModal() {
+        const editBoardModal = document.querySelector("#edit-board-modal");
+        editBoardModal.showModal();
+    };
 
     return (
         <div id="app">
@@ -37,13 +41,8 @@ const AllBoards = function({ setMode, setBoardsData, setCurBoardId }) {
                 <div className="all-boards">
                     <header>
                         <h1>{curBoardName}</h1>
-                        <button type="button" className="edit-brd-btn" onClick={() => setEditBoardVis(true)}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
-                        {editBoardVis ?
-                            <>
-                                <EditBoard setBoardsData={setBoardsData} setEditBoardVis={setEditBoardVis} setCurBoardId={setCurBoardId} />
-                                <div className="backdrop" onClick={() => setEditBoardVis(false)} />
-                            </> : null
-                        }
+                        <button type="button" className="edit-brd-btn" onClick={handleEditBoardModal}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
+                        <EditBoard setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />
                     </header>
                     <Board setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />
                 </div>

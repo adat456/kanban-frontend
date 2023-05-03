@@ -36,7 +36,7 @@ const Login = function({ setBoardsData }) {
     };
 
     return (
-        <form method="POST" onSubmit={handleSubmit}>
+        <form method="POST" className="login-form" onSubmit={handleSubmit}>
             <h1>Log in</h1>
             <label htmlFor="username">Username<input type="text" name="username" id="username" value={username} onChange={handleChange} /></label>
             <label htmlFor="password">Password<input type="password" name="password" id="password" value={password} onChange={handleChange} /></label>

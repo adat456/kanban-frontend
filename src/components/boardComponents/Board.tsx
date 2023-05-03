@@ -7,10 +7,6 @@ import CreateTask from "../crudComponents/CreateTask";
 import EditBoard from "../crudComponents/EditBoard";
 
 const Board = function({ setBoardsData, setCurBoardId }) {
-    const [ createTaskVis, setCreateTaskVis ] = useState(false);
-    const [ curCol, setCurCol ] = useState();
-    const [ editBoardVis, setEditBoardVis ] = useState(false);
-
     const [ draggableInfo, setDraggableInfo ] = useState({ 
         order: "", 
         taskId: "", 
@@ -24,8 +20,13 @@ const Board = function({ setBoardsData, setCurBoardId }) {
 
     // rendering columns w/ their tasks
     const columns = columnsArr.map((col, index) => 
-        <Column key={col._id} order={index} col={col} setCreateTaskVis={setCreateTaskVis} setCurCol={setCurCol} setBoardsData={setBoardsData} />
+        <Column key={col._id} order={index} col={col} columnsArr={columnsArr} setBoardsData={setBoardsData} />
     );
+
+    function handleEditBoardModal() {
+        const editBoardModal = document.querySelector("#edit-board-modal");
+        editBoardModal.showModal();
+    };
 
     // although pointer sensor is one of the default sensors, I imported it with useSensor and useSensors to be passed along to DndContext so that an activation constraint could be added, and a simple click on a draggable opens the task preview instead of initiating a dragstart event
     const pointerSensor = useSensor(PointerSensor, {
@@ -101,19 +102,8 @@ const Board = function({ setBoardsData, setCurBoardId }) {
         <main>
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {columns}
-                {createTaskVis ?
-                    <CreateTask curCol={curCol} columnsArr={columnsArr} setBoardsData={setBoardsData} setCreateTaskVis={setCreateTaskVis} /> : <></>
-                }
-                {createTaskVis ?
-                    <div className="backdrop" onClick={() => setCreateTaskVis(false)}/> : null
-                }
-                <button type="button" className="add-column-btn" onClick={() => setEditBoardVis(true)}>+ New Column</button>
-                {editBoardVis ?
-                    <EditBoard setBoardsData={setBoardsData} setEditBoardVis={setEditBoardVis} setCurBoardId={setCurBoardId} /> : <></>
-                }
-                {editBoardVis ?
-                    <div className="backdrop" onClick={() => setEditBoardVis(false)}/> : null
-                }
+                <button type="button" className="add-column-btn" onClick={handleEditBoardModal}>+ New Column</button>
+                <EditBoard setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />
             </DndContext>
         </main>
     );

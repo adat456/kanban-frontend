@@ -1,16 +1,34 @@
 @use 'base'
 
-form, .create-board, .edit-task
-    position: absolute
-    left: 0
-    right: 0
-    top: 50px
-    margin: 0 auto
+.form-modal, .delete-modal, .login-form, .signup-form
+    border: none
     width: 500px
-    z-index: 2
-    background-color: white
-    padding: 3rem
+    padding: 3rem 3rem 5.5rem 3rem
     border-radius: 0.5rem
+    margin: auto
+
+    &::backdrop
+        background-color: rgba(0, 0, 0, 0.4)
+
+    button.close-modal
+        position: absolute
+        bottom: 1.75rem
+        left: 0
+        right: 0
+        margin: 0 auto
+        width: 3rem
+        height: 3rem
+        padding: 1rem
+        border-radius: 50%
+        background-color: base.$lite-blue-inactive
+        @include base.center
+
+        &:hover, &:focus
+            background-color: base.$lite-blue-active
+
+        svg
+            height: 1rem
+            fill: base.$drk-blue-inactive
 
     h2
         @include base.l
@@ -116,6 +134,7 @@ form, .create-board, .edit-task
     .delete-btn
         background-color: base.$red-inactive
         color: white
+        margin-bottom: 1rem
 
         &:hover, &:focus
             background-color: base.$red-active
@@ -133,11 +152,7 @@ form, .create-board, .edit-task
         width: auto
         padding: 1rem
 
-.delete-brd-msg, .delete-task-msg
-    hr
-        border: 1px solid base.$outline
-        margin: 2rem 0
-
+#delete-board-modal, #delete-task-modal
     h2
         @include base.l
         color: base.$red-inactive

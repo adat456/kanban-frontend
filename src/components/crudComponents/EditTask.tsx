@@ -2,12 +2,11 @@ import { useState, useContext } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
-const EditTask = function({ name, desc, subtasks, colId, taskId, setEditTaskVis, setBoardsData }) {
+const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }) {
     const [ task, setTask ] = useState(name);
     const [ description, setDescription ] = useState(desc);
     const [ numSubtasks, setNumSubtasks ] = useState(subtasks.length);
     const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
-    const [ deleteTaskVis, setDeleteTaskVis ] = useState(false);
 
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
@@ -38,6 +37,18 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setEditTaskVis,
 
         if (field === "task") setTask(input.value);
         if (field === "description") setDescription(input.value);
+    };
+
+    function handleEditTaskModal() {
+        const editTaskModal = document.querySelector("#edit-task-modal");
+        editTaskModal.close();
+    };
+
+    function handleDeleteTaskModal(action) {
+        const deleteTaskModal = document.querySelector("#delete-task-modal");
+        console.log(deleteTaskModal)
+        if (action === "show") deleteTaskModal?.showModal();
+        if (action === "close") deleteTaskModal?.close();
     };
 
     async function handleSubmit(e) {
@@ -85,7 +96,7 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setEditTaskVis,
                 updatedBoardsData.push(updatedBoard);
                 setBoardsData(updatedBoardsData);
 
-                setEditTaskVis(false);
+                handleEditTaskModal();
             } else {
                 throw new Error("Unable to edit task.");
             };
@@ -105,7 +116,7 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setEditTaskVis,
                 updatedBoardsData.push(updatedBoard);
                 setBoardsData(updatedBoardsData);
 
-                setEditTaskVis(false);
+                handleDeleteTaskModal("close");
             } else {
                 throw new Error("Unable to delete task.");
             };
@@ -115,35 +126,39 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setEditTaskVis,
     };
 
     return (
-        <form method="POST" className="edit-task" onSubmit={handleSubmit}>
-            <h2>Edit Task</h2>
-            <label htmlFor="task">Title<input type="text" id="task" name="task" value={task} onChange={handleChange} /></label>
-            <label htmlFor="description">Description<textarea id="description" name="description" value={description} onChange={handleChange} rows="5" /></label>
-            <fieldset>
-                <legend>Subtasks</legend>
-                {existingSubtaskFields}
-                {extraSubtaskFields}
-                <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
-            </fieldset>
-            <label htmlFor="column">Column
-                <select name="column" id="column" defaultValue={colId}>
-                    {colOptions}
-                </select>
-            </label>
-            <button type="submit" className="save-btn">Save Changes</button>
-            <button type="button" className="delete-btn" onClick={() => setDeleteTaskVis(true)}>Delete Task</button>
-            {deleteTaskVis ?
-                <section className="delete-task-msg">
-                    <hr />
-                    <h2>Delete this task?</h2>
-                    <p>{`Are you sure you want to delete the '${name}' task and its subtasks? This action cannot be reversed.`}</p>
-                    <div className="delete-btn-cluster">
-                        <button type="button" onClick={handleDelete} className="delete-btn">Delete</button>
-                        <button type="button" onClick={() => setEditTaskVis(false)} className="add-btn">Cancel</button>
-                    </div>
-                </section> : <></>
-            }
-        </form>
+        <>
+            <dialog className="form-modal" id="edit-task-modal">
+                <form method="POST" className="edit-task" onSubmit={handleSubmit}>
+                    <h2>Edit Task</h2>
+                    <label htmlFor="task">Title<input type="text" id="task" name="task" value={task} onChange={handleChange} /></label>
+                    <label htmlFor="description">Description<textarea id="description" name="description" value={description} onChange={handleChange} rows="5" /></label>
+                    <fieldset>
+                        <legend>Subtasks</legend>
+                        {existingSubtaskFields}
+                        {extraSubtaskFields}
+                        <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
+                    </fieldset>
+                    <label htmlFor="column">Column
+                        <select name="column" id="column" defaultValue={colId}>
+                            {colOptions}
+                        </select>
+                    </label>
+                    <button type="submit" className="save-btn">Save Changes</button>
+                    <button type="button" className="delete-btn" onClick={() => {handleEditTaskModal(); handleDeleteTaskModal("show")}}>Delete Task</button>
+                    <button className="close-modal" type="button" onClick={handleEditTaskModal}>
+                        <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                    </button>
+                </form>
+            </dialog>
+            <dialog className="delete-modal" id="delete-task-modal">
+                <h2>Delete this task?</h2>
+                <p>{`Are you sure you want to delete the '${name}' task and its subtasks? This action cannot be reversed.`}</p>
+                <div className="delete-btn-cluster">
+                    <button type="button" onClick={handleDelete} className="delete-btn">Delete</button>
+                    <button type="button" onClick={() => handleDeleteTaskModal("close")} className="add-btn">Cancel</button>
+                </div>
+            </dialog>
+        </>
     );
 };
 
