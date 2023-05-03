@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
@@ -9,6 +9,7 @@ const EditBoard = function({ setBoardsData, setCurBoardId }) {
     const curBoard = boardsData.find(board => (board._id === curBoardId));
 
     const [ boardName, setBoardName ] = useState(curBoard.name);
+    const [ errMsg, setErrMsg ] = useState("Field required");
     const [ numCols, setNumCols ] = useState(curBoard.columns.length);
     const [ extraColFields, setExtraColFields ] = useState([]);
 
@@ -27,8 +28,27 @@ const EditBoard = function({ setBoardsData, setCurBoardId }) {
 
     function handleChange(e) {
         const input = e.target;
+
+        if (input) {
+            let valid = true;
+            boardsData.forEach(board => {
+                if (board._id !== curBoardId && board.name.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
+            });        
+            if (!valid) {
+                setErrMsg("Board name must be unique.");
+                input.setCustomValidity("Board name must be unique.");
+            } else {
+                setErrMsg(null);
+                input.setCustomValidity("");
+            };
+        };
+
         setBoardName(input.value);
     };
+
+    useEffect(() => {
+        if (boardName === "") setErrMsg("Field required.");
+    }, [boardName]);
 
     function handleEditBoardModal() {
         const editBoardModal = document.querySelector("#edit-board-modal");
@@ -44,50 +64,54 @@ const EditBoard = function({ setBoardsData, setCurBoardId }) {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        let columns = [];      
-        function pullColumns() {
-            const colArr = [...document.getElementsByClassName("edit-brd-cols")];
-            colArr.forEach((col, index) => {
-                // push all columns regardless of whether field is an emptry string; if it has an id, mongodb will delete that column, if it does not, mongodb will not add another column
-                columns.push({
-                    name: col.value,
-                    order: index,
-                    id: col.getAttribute("data-id"),
+        if (!errMsg) {
+            let columns = [];      
+            function pullColumns() {
+                const colArr = [...document.getElementsByClassName("edit-brd-cols")];
+                colArr.forEach((col, index) => {
+                    // push all columns regardless of whether field is an emptry string; if it has an id, mongodb will delete that column, if it does not, mongodb will not add another column
+                    columns.push({
+                        name: col.value,
+                        order: index,
+                        id: col.getAttribute("data-id"),
+                    });
                 });
-            });
-        };
-        pullColumns();
-
-        const reqOptions = {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ 
-                name: boardName, 
-                boardId: curBoardId,
-                columns
-            }),
-            // indicates whether user should receive AND send cookies
-            credentials: "include"
-        };
-        
-        try {
-            const res = await fetch("http://localhost:3000/update-board", reqOptions);
-            const updatedMongoBoard = await res.json();
-            console.log(updatedMongoBoard);
-            if (res.ok) {
-                // update context as well
-                const filteredBoardsData = boardsData.filter(board => {
-                    return (board._id !== curBoardId);
-                });
-                setBoardsData([...filteredBoardsData, updatedMongoBoard]);
-
-                handleEditBoardModal();
-            } else {
-                // client-generated error message
-                throw new Error("Failed to update board. Please try again later.");
             };
-        } catch(err) {
-            console.log(err.message);
+            pullColumns();
+
+            const reqOptions = {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ 
+                    name: boardName, 
+                    boardId: curBoardId,
+                    columns
+                }),
+                // indicates whether user should receive AND send cookies
+                credentials: "include"
+            };
+            
+            try {
+                const res = await fetch("http://localhost:3000/update-board", reqOptions);
+                const updatedMongoBoard = await res.json();
+                console.log(updatedMongoBoard);
+                if (res.ok) {
+                    // update context as well
+                    const filteredBoardsData = boardsData.filter(board => {
+                        return (board._id !== curBoardId);
+                    });
+                    setBoardsData([...filteredBoardsData, updatedMongoBoard]);
+
+                    handleEditBoardModal();
+                } else {
+                    // client-generated error message
+                    throw new Error("Failed to update board. Please try again later.");
+                };
+            } catch(err) {
+                console.log(err.message);
+            };
+        } else {
+            console.log("Please fix errors first.");
         };
     };
 
@@ -117,9 +141,11 @@ const EditBoard = function({ setBoardsData, setCurBoardId }) {
     return (
         <>
             <dialog className="form-modal" id="edit-board-modal">
-                <form method="POST" className="edit-brd-form" onSubmit={handleSubmit}>
+                <form method="POST" className="edit-brd-form" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Board</h2>
-                    <label htmlFor="boardName">Board Name<input type="text" id="boardName" value={boardName} onChange={handleChange} /></label>
+                    <label htmlFor="boardName">Board Name</label>
+                    <input type="text" id="boardName" value={boardName} onChange={handleChange} maxLength="20" required />
+                    {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     <fieldset>
                         <legend>Columns</legend>
                         {existingColFields}

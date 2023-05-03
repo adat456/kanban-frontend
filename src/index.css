@@ -95,6 +95,7 @@ main {
   line-height: 1.9rem;
   font-weight: 700;
   padding-bottom: 1rem;
+  word-wrap: break-word;
 }
 .task p, .add-task-btn p {
   font-size: 1.3rem;
@@ -415,7 +416,6 @@ main.no-brd-chosen p {
   line-height: 1.9rem;
   font-weight: 700;
   color: #828FA3;
-  display: block;
 }
 .form-modal label, .delete-modal label, .login-form label, .signup-form label {
   font-size: 1.5rem;
@@ -433,6 +433,7 @@ main.no-brd-chosen p {
   justify-content: center;
 }
 .form-modal label.col-label svg, .form-modal label.subtask-label svg, .delete-modal label.col-label svg, .delete-modal label.subtask-label svg, .login-form label.col-label svg, .login-form label.subtask-label svg, .signup-form label.col-label svg, .signup-form label.subtask-label svg {
+  margin-top: 1rem;
   height: 2rem;
   padding-left: 2rem;
   fill: #828FA3;
@@ -454,6 +455,14 @@ main.no-brd-chosen p {
   line-height: 1.5rem;
   font-weight: 700;
   border-radius: 0.5rem;
+  margin-top: 1rem;
+}
+.form-modal input:focus, .form-modal textarea:focus, .form-modal select:focus, .delete-modal input:focus, .delete-modal textarea:focus, .delete-modal select:focus, .login-form input:focus, .login-form textarea:focus, .login-form select:focus, .signup-form input:focus, .signup-form textarea:focus, .signup-form select:focus {
+  outline: transparent;
+  border: 2px solid #A8A4FF;
+}
+.form-modal input:invalid, .form-modal textarea:invalid, .form-modal select:invalid, .delete-modal input:invalid, .delete-modal textarea:invalid, .delete-modal select:invalid, .login-form input:invalid, .login-form textarea:invalid, .login-form select:invalid, .signup-form input:invalid, .signup-form textarea:invalid, .signup-form select:invalid {
+  border-color: #EA5555;
 }
 .form-modal .checkboxes-field .checked-subtask, .delete-modal .checkboxes-field .checked-subtask, .login-form .checkboxes-field .checked-subtask, .signup-form .checkboxes-field .checked-subtask {
   text-decoration: line-through;
@@ -483,6 +492,10 @@ main.no-brd-chosen p {
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
+}
+.form-modal .err-msg, .delete-modal .err-msg, .login-form .err-msg, .signup-form .err-msg {
+  margin-top: 0.5rem;
+  color: #EA5555;
 }
 .form-modal button, .delete-modal button, .login-form button, .signup-form button {
   display: block;

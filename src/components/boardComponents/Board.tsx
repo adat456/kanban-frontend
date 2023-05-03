@@ -3,7 +3,6 @@ import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from 
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import Column from "./Column";
-import CreateTask from "../crudComponents/CreateTask";
 import EditBoard from "../crudComponents/EditBoard";
 
 const Board = function({ setBoardsData, setCurBoardId }) {

@@ -1,9 +1,10 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
 const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }) {
     const [ task, setTask ] = useState(name);
+    const [ errMsg, setErrMsg ] = useState("Field required");
     const [ description, setDescription ] = useState(desc);
     const [ numSubtasks, setNumSubtasks ] = useState(subtasks.length);
     const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
@@ -35,9 +36,30 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }
         const input = e.target;
         const field = e.target.getAttribute("id");
 
-        if (field === "task") setTask(input.value);
+        if (field === "task") {
+            setTask(input.value);
+
+            let valid = true;
+            curBoard.columns.forEach(col => {
+                col.tasks.forEach(task => {
+                    if (task._id !== taskId && task.task.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
+                });
+            });          
+            if (!valid) {
+                setErrMsg("Task name must be unique.");
+                input.setCustomValidity("Task name must be unique.");
+            } else {
+                setErrMsg(null);
+                input.setCustomValidity("");
+            };
+        };
+
         if (field === "description") setDescription(input.value);
     };
+
+    useEffect(() => {
+        if (task === "") setErrMsg("Field required.");
+    }, [task]);
 
     function handleEditTaskModal() {
         const editTaskModal = document.querySelector("#edit-task-modal");
@@ -54,54 +76,58 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }
     async function handleSubmit(e) {
         e.preventDefault();
 
-        let subtasks = [];      
-        function pullSubtasks() {
-            const subtaskArr = [...document.getElementsByClassName("edit-subtasks")];
-            subtaskArr.forEach(subtask => {
-                subtasks.push({
-                    subtask: subtask.value,
-                    id: subtask.getAttribute("data-id"),
+        if (!errMsg) {
+            let subtasks = [];      
+            function pullSubtasks() {
+                const subtaskArr = [...document.getElementsByClassName("edit-subtasks")];
+                subtaskArr.forEach(subtask => {
+                    subtasks.push({
+                        subtask: subtask.value,
+                        id: subtask.getAttribute("data-id"),
+                    });
                 });
-            });
-        };
-        pullSubtasks();
-
-        const selElement = document.getElementById("column");
-        const updatedColId = selElement.value;
-
-        const reqOptions = {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({  
-                boardId: curBoardId,
-                colId, 
-                taskId,
-                task,
-                desc: description,
-                updatedSubtasks: subtasks,
-                updatedColId
-            }),
-            credentials: "include"
-        };
-
-        try {
-            const res = await fetch("http://localhost:3000/edit-task", reqOptions);
-            if (res.ok) {
-                const updatedBoard = await res.json();
-                console.log(updatedBoard);
-
-                let updatedBoardsData = boardsData.filter(board => {
-                    return (board._id !== curBoardId);
-                })
-                updatedBoardsData.push(updatedBoard);
-                setBoardsData(updatedBoardsData);
-
-                handleEditTaskModal();
-            } else {
-                throw new Error("Unable to edit task.");
             };
-        } catch(err) {
-            console.log(err.message);
+            pullSubtasks();
+
+            const selElement = document.getElementById("column");
+            const updatedColId = selElement.value;
+
+            const reqOptions = {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({  
+                    boardId: curBoardId,
+                    colId, 
+                    taskId,
+                    task,
+                    desc: description,
+                    updatedSubtasks: subtasks,
+                    updatedColId
+                }),
+                credentials: "include"
+            };
+
+            try {
+                const res = await fetch("http://localhost:3000/edit-task", reqOptions);
+                if (res.ok) {
+                    const updatedBoard = await res.json();
+                    console.log(updatedBoard);
+
+                    let updatedBoardsData = boardsData.filter(board => {
+                        return (board._id !== curBoardId);
+                    })
+                    updatedBoardsData.push(updatedBoard);
+                    setBoardsData(updatedBoardsData);
+
+                    handleEditTaskModal();
+                } else {
+                    throw new Error("Unable to edit task.");
+                };
+            } catch(err) {
+                console.log(err.message);
+            };
+        } else {
+            console.log("Please fix errors first.");
         };
     };
 
@@ -128,10 +154,12 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }
     return (
         <>
             <dialog className="form-modal" id="edit-task-modal">
-                <form method="POST" className="edit-task" onSubmit={handleSubmit}>
+                <form method="POST" className="edit-task" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Task</h2>
-                    <label htmlFor="task">Title<input type="text" id="task" name="task" value={task} onChange={handleChange} /></label>
-                    <label htmlFor="description">Description<textarea id="description" name="description" value={description} onChange={handleChange} rows="5" /></label>
+                    <label htmlFor="task">Title</label>
+                    <input type="text" id="task" name="task" value={task} onChange={handleChange} maxLength="30" required />
+                    {errMsg ? <p className="err-msg">{errMsg}</p> : null}
+                    <label htmlFor="description">Description<textarea id="description" name="description" value={description} onChange={handleChange} rows="5" maxLength="200" /></label>
                     <fieldset>
                         <legend>Subtasks</legend>
                         {existingSubtaskFields}
