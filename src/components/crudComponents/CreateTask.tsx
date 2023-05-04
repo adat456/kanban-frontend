@@ -1,12 +1,16 @@
 import { useState, useContext, useEffect } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 
-const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVis }) {
+const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
     const [ task, setTask ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required.");
     const [ desc, setDesc ] = useState("");
     const [ numSubtasks, setNumSubtasks ] = useState(2);
     const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
+    const [ displayMsg, setDisplayMsg ] = useState({ 
+        ok: true, 
+        message: "" 
+    });
 
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
@@ -109,8 +113,11 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
                 const res = await fetch("http://localhost:3000/create-task", reqOptions);
                 const message = await res.json();
                 // this will print any messages (success or error) received from the server
-                console.log(message);
                 if (res.ok) {
+                    setDisplayMsg({
+                        ok: true,
+                        message: "Task created.",
+                    });
                     // update context as well, with board ID
                     const res = await fetch(`http://localhost:3000/read-board/${curBoardId}`, {credentials: "include"});
                     const updatedMongoBoard = await res.json();
@@ -127,40 +134,70 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setCreateTaskVi
                     throw new Error("Failed to create board. Please try again later.");
                 };
             } catch(err) {
-                console.log(err.message);
+                setDisplayMsg({
+                    ok: false,
+                    message: err.message
+                });
             };
             // close out window/modal
         } else {
-            console.log("Please fix errors first.");
+            setDisplayMsg({
+                ok: false,
+                message: "Please fix errors before submitting."
+            });
         }
     };
 
+    useEffect(() => {
+        const displayMsgModal = document.querySelector("#ct-msg-modal");
+
+        if (displayMsg.message) {
+            if (displayMsg.ok) {
+                displayMsgModal?.show();
+            } else {
+                displayMsgModal?.show();
+                displayMsgModal?.classList.add("error");
+            };
+        };
+
+        const timer = setTimeout(() => {
+            displayMsgModal?.close();
+            displayMsgModal?.classList.remove("error");
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, [displayMsg]);
+
     return (
-        <dialog className="form-modal" id="create-task-modal">
-            <form method="POST" onSubmit={handleSubmit} noValidate>
-                <h2>Add New Task</h2>
-                <label htmlFor="task">Title</label>
-                <input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" maxLength="30" required />
-                {errMsg ? <p className="err-msg">{errMsg}</p> : null}
-                <label htmlFor="desc">Description<textarea rows="5" id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." maxLength="200" /></label>
-                <fieldset>
-                    <legend>Subtasks</legend>
-                    <label htmlFor="subtask0" className="subtask-label"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" placeholder="e.g., Make coffee" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-                    <label htmlFor="subtask1" className="subtask-label"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" placeholder="e.g., Drink coffee and smile" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-                    {extraSubtaskFields}
-                    <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
-                </fieldset>
-                <label htmlFor="column">Column
-                    <select name="column" id="column" defaultValue={curCol}>
-                        {colOptions}
-                    </select>
-                </label>
-                <button type="submit" className="save-btn">Create Task</button>
-            </form>
-            <button className="close-modal" type="button" onClick={handleCreateTaskModal}>
-                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
-            </button>
-        </dialog>
+        <>
+            <dialog className="form-modal" id="create-task-modal">
+                <form method="POST" onSubmit={handleSubmit} noValidate>
+                    <h2>Add New Task</h2>
+                    <label htmlFor="task">Title</label>
+                    <input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" maxLength="30" required />
+                    {errMsg ? <p className="err-msg">{errMsg}</p> : null}
+                    <label htmlFor="desc">Description<textarea rows="5" id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." maxLength="200" /></label>
+                    <fieldset>
+                        <legend>Subtasks</legend>
+                        <label htmlFor="subtask0" className="subtask-label"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" placeholder="e.g., Make coffee" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
+                        <label htmlFor="subtask1" className="subtask-label"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" placeholder="e.g., Drink coffee and smile" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
+                        {extraSubtaskFields}
+                        <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
+                    </fieldset>
+                    <label htmlFor="column">Column
+                        <select name="column" id="column" defaultValue={curCol}>
+                            {colOptions}
+                        </select>
+                    </label>
+                    <button type="submit" className="save-btn">Create Task</button>
+                </form>
+                <button className="close-modal" type="button" onClick={handleCreateTaskModal}>
+                    <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                </button>
+            </dialog>
+            <dialog className="display-msg-modal" id="ct-msg-modal">
+                <p>{displayMsg.message}</p>
+            </dialog>
+        </>
     );
 };
 

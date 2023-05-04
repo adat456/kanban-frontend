@@ -111,6 +111,9 @@ main {
 .task svg, .add-task-btn svg {
   height: 2rem;
 }
+.task:hover, .task:focus, .add-task-btn:hover, .add-task-btn:focus {
+  color: #635FC7;
+}
 .task:hover h3, .task:focus h3, .add-task-btn:hover h3, .add-task-btn:focus h3 {
   color: #635FC7;
 }
@@ -297,10 +300,7 @@ main.no-brd-chosen p {
   height: 2rem;
   width: 4rem;
   background-color: #635FC7;
-  border-top-left-radius: 1rem;
-  border-bottom-left-radius: 1rem;
-  border-top-right-radius: 1rem;
-  border-bottom-right-radius: 1rem;
+  border-radius: 1rem;
   position: relative;
 }
 .toggler:hover, .toggler:focus {
@@ -362,6 +362,27 @@ main.no-brd-chosen p {
 }
 #app.dark > .sidebar .hide-sidebar, #app.dark > .sidebar .create-brd-btn {
   background-color: #2B2C37;
+}
+
+.display-msg-modal {
+  border: none;
+  width: fit-content;
+  padding: 1rem 2rem;
+  bottom: 2rem;
+  margin: auto;
+  border-radius: 10rem;
+  position: fixed;
+  background-color: #E4EBFA;
+}
+.display-msg-modal p {
+  color: #635FC7;
+  font-size: 1.5rem;
+}
+.display-msg-modal.error {
+  background-color: #EA5555;
+}
+.display-msg-modal.error p {
+  color: white;
 }
 
 .form-modal, .delete-modal, .login-form, .signup-form {
@@ -503,10 +524,7 @@ main.no-brd-chosen p {
   padding: 1.5rem 0;
   font-size: 1.3rem;
   font-weight: bold;
-  border-top-left-radius: 10rem;
-  border-bottom-left-radius: 10rem;
-  border-top-right-radius: 10rem;
-  border-bottom-right-radius: 10rem;
+  border-radius: 10rem;
 }
 .form-modal .add-btn, .form-modal .cancel-btn, .delete-modal .add-btn, .delete-modal .cancel-btn, .login-form .add-btn, .login-form .cancel-btn, .signup-form .add-btn, .signup-form .cancel-btn {
   margin-top: 1rem;

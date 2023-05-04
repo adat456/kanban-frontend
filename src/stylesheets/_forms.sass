@@ -1,5 +1,25 @@
 @use 'base'
 
+.display-msg-modal
+    border: none
+    width: fit-content
+    padding: 1rem 2rem
+    bottom: 2rem
+    margin: auto
+    border-radius: 10rem
+    position: fixed
+    background-color: base.$lite-blue-inactive
+
+    p
+        color: base.$drk-blue-inactive
+        font-size: 1.5rem
+
+    &.error
+        background-color: base.$red-inactive
+
+        p
+            color: white
+
 .form-modal, .delete-modal, .login-form, .signup-form
     border: none
     width: 500px
@@ -29,7 +49,7 @@
         svg
             height: 1rem
             fill: base.$drk-blue-inactive
-            
+
     h2
         @include base.l
         color: black
@@ -121,10 +141,7 @@
         padding: 1.5rem 0
         font-size: 1.3rem
         font-weight: bold
-        border-top-left-radius: 10rem
-        border-bottom-left-radius: 10rem
-        border-top-right-radius: 10rem
-        border-bottom-right-radius: 10rem
+        border-radius: 10rem
 
     .add-btn, .cancel-btn
         margin-top: 1rem

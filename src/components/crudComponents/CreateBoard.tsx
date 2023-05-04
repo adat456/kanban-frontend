@@ -10,6 +10,10 @@ const CreateBoard = function({ setBoardsData }) {
         <label key={0} htmlFor="col0" className="col-label"><input type="text" id="col0 "name="columns" className="columns create-brd-cols" maxLength="20" /><svg viewBox="0 0 15 15" onClick={handleRemoveColField} xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>,
         <label key={1} htmlFor="col1" className="col-label"><input type="text" id="col1 "name="columns" className="columns create-brd-cols" maxLength="20" /><svg viewBox="0 0 15 15" onClick={handleRemoveColField} xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
     ]);
+    const [ displayMsg, setDisplayMsg ] = useState({ 
+        ok: true, 
+        message: "" 
+    });
 
     const boardsData = useContext(BoardsContext);
 
@@ -96,9 +100,11 @@ const CreateBoard = function({ setBoardsData }) {
             try {
                 const res = await fetch("http://localhost:3000/create-board", reqOptions);
                 const message = await res.json();
-                // this will print any messages (success or error) received from the server
-                console.log(message);
                 if (res.ok) {
+                    setDisplayMsg({
+                        ok: true,
+                        message: "Board created.",
+                    });
                     // update context as well, with board NAME
                     const boardNameUrl = boardName.split(" ").join("-");
                     const res = await fetch(`http://localhost:3000/read-board/${boardNameUrl}`, {credentials: "include"});
@@ -111,32 +117,61 @@ const CreateBoard = function({ setBoardsData }) {
                     throw new Error("Failed to create board. Please try again later.");
                 };
             } catch(err) {
-                console.log(err.message);
+                setDisplayMsg({
+                    ok: false,
+                    message: err.message
+                });
             };
         } else {
-            console.log(errMsg);
-            console.log("Please fix errors first.");
+            setDisplayMsg({
+                ok: false,
+                message: "Please fix errors before submitting."
+            })
         };
     };
+
+    useEffect(() => {
+        const displayMsgModal = document.querySelector("#cb-msg-modal");
+
+        if (displayMsg.message) {
+            if (displayMsg.ok) {
+                displayMsgModal?.show();
+            } else {
+                displayMsgModal?.show();
+                displayMsgModal?.classList.add("error");
+            };
+        };
+
+        const timer = setTimeout(() => {
+            displayMsgModal?.close();
+            displayMsgModal?.classList.remove("error");
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, [displayMsg]);
     
     return (
-        <dialog className="form-modal" id="create-board-modal">
-            <form method="POST" onSubmit={handleSubmit} noValidate>
-                <h2>Add New Board</h2>
-                <label htmlFor="boardName">Board Name *</label>
-                <input type="text" id="boardName" value={boardName} onChange={handleChange} maxLength="20" required />
-                {errMsg ? <p className="err-msg">{errMsg}</p> : null}
-                <fieldset>
-                    <legend>Columns</legend>
-                    {colFields}
-                    <button type="button" className="add-btn" onClick={handleAddColField}>+ Add New Column</button>
-                </fieldset>
-                <button type="submit" className="save-btn">Create New Board</button>
-            </form>
-            <button className="close-modal" type="button" onClick={handleCreateBoardModal}>
-                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
-            </button>
-        </dialog>      
+        <>
+            <dialog className="form-modal" id="create-board-modal">
+                <form method="POST" onSubmit={handleSubmit} noValidate>
+                    <h2>Add New Board</h2>
+                    <label htmlFor="boardName">Board Name *</label>
+                    <input type="text" id="boardName" value={boardName} onChange={handleChange} maxLength="20" required />
+                    {errMsg ? <p className="err-msg">{errMsg}</p> : null}
+                    <fieldset>
+                        <legend>Columns</legend>
+                        {colFields}
+                        <button type="button" className="add-btn" onClick={handleAddColField}>+ Add New Column</button>
+                    </fieldset>
+                    <button type="submit" className="save-btn">Create New Board</button>
+                </form>
+                <button className="close-modal" type="button" onClick={handleCreateBoardModal}>
+                    <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                </button>
+            </dialog>  
+            <dialog className="display-msg-modal" id="cb-msg-modal">
+                <p>{displayMsg.message}</p>
+            </dialog>
+        </>    
     );
 };
 
