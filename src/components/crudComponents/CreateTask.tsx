@@ -1,16 +1,13 @@
 import { useState, useContext, useEffect } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
+import { handleDisplayMsg } from "../helpers";
 
-const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
+const CreateTask = function({ curCol, columnsArr, setBoardsData, setDisplayMsg }) {
     const [ task, setTask ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required.");
     const [ desc, setDesc ] = useState("");
     const [ numSubtasks, setNumSubtasks ] = useState(2);
     const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
-    const [ displayMsg, setDisplayMsg ] = useState({ 
-        ok: true, 
-        message: "" 
-    });
 
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
@@ -111,12 +108,11 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
             
             try {
                 const res = await fetch("http://localhost:3000/create-task", reqOptions);
-                const message = await res.json();
-                // this will print any messages (success or error) received from the server
                 if (res.ok) {
-                    setDisplayMsg({
+                    handleDisplayMsg({
                         ok: true,
                         message: "Task created.",
+                        msgSetter: setDisplayMsg
                     });
                     // update context as well, with board ID
                     const res = await fetch(`http://localhost:3000/read-board/${curBoardId}`, {credentials: "include"});
@@ -134,38 +130,21 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
                     throw new Error("Failed to create board. Please try again later.");
                 };
             } catch(err) {
-                setDisplayMsg({
+                handleDisplayMsg({
                     ok: false,
-                    message: err.message
+                    message: err.message,
+                    msgSetter: setDisplayMsg
                 });
             };
             // close out window/modal
         } else {
-            setDisplayMsg({
+            handleDisplayMsg({
                 ok: false,
-                message: "Please fix errors before submitting."
+                message: "Please fix errors before submitting.",
+                msgSetter: setDisplayMsg
             });
         }
     };
-
-    useEffect(() => {
-        const displayMsgModal = document.querySelector("#ct-msg-modal");
-
-        if (displayMsg.message) {
-            if (displayMsg.ok) {
-                displayMsgModal?.show();
-            } else {
-                displayMsgModal?.show();
-                displayMsgModal?.classList.add("error");
-            };
-        };
-
-        const timer = setTimeout(() => {
-            displayMsgModal?.close();
-            displayMsgModal?.classList.remove("error");
-        }, 3000);
-        return () => clearTimeout(timer);
-    }, [displayMsg]);
 
     return (
         <>
@@ -193,9 +172,6 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData }) {
                 <button className="close-modal" type="button" onClick={handleCreateTaskModal}>
                     <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
                 </button>
-            </dialog>
-            <dialog className="display-msg-modal" id="ct-msg-modal">
-                <p>{displayMsg.message}</p>
             </dialog>
         </>
     );

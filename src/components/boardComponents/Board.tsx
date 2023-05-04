@@ -5,7 +5,7 @@ import { BoardsContext, CurBoardIdContext } from "../../Context";
 import Column from "./Column";
 import EditBoard from "../crudComponents/EditBoard";
 
-const Board = function({ setBoardsData, setCurBoardId }) {
+const Board = function({ setBoardsData, setCurBoardId, setDisplayMsg }) {
     const [ draggableInfo, setDraggableInfo ] = useState({ 
         order: "", 
         taskId: "", 
@@ -19,7 +19,7 @@ const Board = function({ setBoardsData, setCurBoardId }) {
 
     // rendering columns w/ their tasks
     const columns = columnsArr.map((col, index) => 
-        <Column key={col._id} order={index} col={col} columnsArr={columnsArr} setBoardsData={setBoardsData} />
+        <Column key={col._id} order={index} col={col} columnsArr={columnsArr} setBoardsData={setBoardsData} setDisplayMsg={setDisplayMsg} />
     );
 
     function handleEditBoardModal() {

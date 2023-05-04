@@ -365,9 +365,9 @@ main.no-brd-chosen p {
 }
 
 .display-msg-modal {
-  border: none;
+  border: 2px solid #635FC7;
   width: fit-content;
-  padding: 1rem 2rem;
+  padding: 1rem 3rem;
   bottom: 2rem;
   margin: auto;
   border-radius: 10rem;
@@ -379,6 +379,7 @@ main.no-brd-chosen p {
   font-size: 1.5rem;
 }
 .display-msg-modal.error {
+  border: none;
   background-color: #EA5555;
 }
 .display-msg-modal.error p {
@@ -569,7 +570,7 @@ main.no-brd-chosen p {
   padding: 1rem;
 }
 
-#delete-board-modal h2, #delete-task-modal h2 {
+.delete-modal h2 {
   font-size: 1.8rem;
   line-height: 2.3rem;
   font-weight: 700;
@@ -577,19 +578,20 @@ main.no-brd-chosen p {
   color: #EA5555;
   margin-bottom: 2rem;
 }
-#delete-board-modal p, #delete-task-modal p {
+.delete-modal p {
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
   color: #828FA3;
 }
-#delete-board-modal .delete-btn-cluster, #delete-task-modal .delete-btn-cluster {
+.delete-modal .delete-btn-cluster {
   margin-top: 2rem;
   display: flex;
   column-gap: 2rem;
 }
-#delete-board-modal .delete-btn, #delete-task-modal .delete-btn {
+.delete-modal .delete-btn {
   margin-top: 1rem;
+  margin-bottom: 0;
 }
 
 #app.dark form, #app.dark .edit-task {

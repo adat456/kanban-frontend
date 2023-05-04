@@ -1,9 +1,9 @@
 @use 'base'
 
 .display-msg-modal
-    border: none
+    border: 2px solid base.$drk-blue-inactive
     width: fit-content
-    padding: 1rem 2rem
+    padding: 1rem 3rem
     bottom: 2rem
     margin: auto
     border-radius: 10rem
@@ -15,6 +15,7 @@
         font-size: 1.5rem
 
     &.error
+        border: none
         background-color: base.$red-inactive
 
         p
@@ -181,7 +182,7 @@
         width: auto
         padding: 1rem
 
-#delete-board-modal, #delete-task-modal
+.delete-modal
     h2
         @include base.l
         color: base.$red-inactive
@@ -198,6 +199,7 @@
 
     .delete-btn
         margin-top: 1rem
+        margin-bottom: 0
     
 
 #app.dark form, #app.dark .edit-task

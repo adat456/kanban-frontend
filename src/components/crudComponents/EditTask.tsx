@@ -1,17 +1,14 @@
 import { useState, useContext, useEffect } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
+import { handleDisplayMsg } from "../helpers";
 
-const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }) {
+const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData, setDisplayMsg }) {
     const [ task, setTask ] = useState(name);
     const [ errMsg, setErrMsg ] = useState("Field required");
     const [ description, setDescription ] = useState(desc);
     const [ numSubtasks, setNumSubtasks ] = useState(subtasks.length);
     const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
-    const [ displayMsg, setDisplayMsg ] = useState({ 
-        ok: true, 
-        message: "" 
-    });
 
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
@@ -66,13 +63,12 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }
     }, [task]);
 
     function handleEditTaskModal() {
-        const editTaskModal = document.querySelector("#edit-task-modal");
+        const editTaskModal = document.querySelector(`#edit-task-modal-${taskId}`);
         editTaskModal.close();
     };
 
     function handleDeleteTaskModal(action) {
-        const deleteTaskModal = document.querySelector("#delete-task-modal");
-        console.log(deleteTaskModal)
+        const deleteTaskModal = document.querySelector(`#delete-task-modal-${taskId}`);
         if (action === "show") deleteTaskModal?.showModal();
         if (action === "close") deleteTaskModal?.close();
     };
@@ -114,10 +110,7 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }
             try {
                 const res = await fetch("http://localhost:3000/edit-task", reqOptions);
                 if (res.ok) {
-                    setDisplayMsg({
-                        ok: true,
-                        message: "Task updated."
-                    });
+                    handleDisplayMsg({ok: true, message: "Task updated.", msgSetter: setDisplayMsg});
 
                     const updatedBoard = await res.json();
                     console.log(updatedBoard);
@@ -133,16 +126,10 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }
                     throw new Error("Failed to update task. Please try again later.");
                 };
             } catch(err) {
-                setDisplayMsg({
-                    ok: false,
-                    message: err.message
-                });
+                handleDisplayMsg({ok: false, message: err.message, msgSetter: setDisplayMsg});
             };
         } else {
-            setDisplayMsg({
-                ok: false,
-                message: "Please fix errors before submitting."
-            });
+            handleDisplayMsg({ok: false, message: "Please fix errors before submitting.", msgSetter: setDisplayMsg});
         };
     };
 
@@ -150,10 +137,7 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }
         try {
             const res = await fetch(`http://localhost:3000/delete-task/${curBoardId}/${colId}/${taskId}`, { method: "DELETE", credentials: "include" });;
             if (res.ok) {
-                setDisplayMsg({
-                    ok: true,
-                    message: "Task deleted."
-                });
+                handleDisplayMsg({ok: true, message: "Task deleted.", msgSetter: setDisplayMsg});
 
                 const updatedBoard = await res.json();
                 let updatedBoardsData = boardsData.filter(board => {
@@ -167,35 +151,13 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }
                 throw new Error("Unable to delete task.");
             };
         } catch(err) {
-            setDisplayMsg({
-                ok: false,
-                message: err.message
-            });
+            handleDisplayMsg({ok: false, message: err.message, msgSetter: setDisplayMsg});
         };
     };
 
-    useEffect(() => {
-        const displayMsgModal = document.querySelector("#et-msg-modal");
-
-        if (displayMsg.message) {
-            if (displayMsg.ok) {
-                displayMsgModal?.show();
-            } else {
-                displayMsgModal?.show();
-                displayMsgModal?.classList.add("error");
-            };
-        };
-
-        const timer = setTimeout(() => {
-            displayMsgModal?.close();
-            displayMsgModal?.classList.remove("error");
-        }, 3000);
-        return () => clearTimeout(timer);
-    }, [displayMsg]);
-
     return (
         <>
-            <dialog className="form-modal" id="edit-task-modal">
+            <dialog className="form-modal" id={`edit-task-modal-${taskId}`}>
                 <form method="POST" className="edit-task" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Task</h2>
                     <label htmlFor="task">Title</label>
@@ -220,16 +182,13 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData }
                     </button>
                 </form>
             </dialog>
-            <dialog className="delete-modal" id="delete-task-modal">
+            <dialog className="delete-modal" id={`delete-task-modal-${taskId}`}>
                 <h2>Delete this task?</h2>
                 <p>{`Are you sure you want to delete the '${name}' task and its subtasks? This action cannot be reversed.`}</p>
                 <div className="delete-btn-cluster">
                     <button type="button" onClick={handleDelete} className="delete-btn">Delete</button>
                     <button type="button" onClick={() => handleDeleteTaskModal("close")} className="add-btn">Cancel</button>
                 </div>
-            </dialog>
-            <dialog className="display-msg-modal" id="et-msg-modal">
-                <p>{displayMsg.message}</p>
             </dialog>
         </>
     );

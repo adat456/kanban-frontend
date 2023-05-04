@@ -37,11 +37,11 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis,
     });
 
     function handleViewTaskModal() {
-        const viewTaskModal = document.querySelector("#view-task-modal");
+        const viewTaskModal = document.querySelector(`#view-task-modal-${taskId}`);
         viewTaskModal.close();
     };
     function handleEditTaskModal() {
-        const editTaskModal = document.querySelector("#edit-task-modal");
+        const editTaskModal = document.querySelector(`#edit-task-modal-${taskId}`);
         editTaskModal.showModal();
     };
 
@@ -95,7 +95,7 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis,
     };
 
     return (
-        <dialog className="form-modal" id="view-task-modal">
+        <dialog className="form-modal" id={`view-task-modal-${taskId}`}>
             <form method="POST" className="view-task">
                 <div className="view-task-header">
                     <h2>{name}</h2>

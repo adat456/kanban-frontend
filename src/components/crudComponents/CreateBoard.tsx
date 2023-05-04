@@ -1,7 +1,8 @@
 import { useState, useContext, useEffect } from "react";
 import { BoardsContext } from "../../Context";
+import { handleDisplayMsg } from "../helpers";
 
-const CreateBoard = function({ setBoardsData }) {
+const CreateBoard = function({ setBoardsData, setDisplayMsg }) {
     // only the board name will be a controlled input
     const [ boardName, setBoardName ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required");
@@ -10,10 +11,6 @@ const CreateBoard = function({ setBoardsData }) {
         <label key={0} htmlFor="col0" className="col-label"><input type="text" id="col0 "name="columns" className="columns create-brd-cols" maxLength="20" /><svg viewBox="0 0 15 15" onClick={handleRemoveColField} xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>,
         <label key={1} htmlFor="col1" className="col-label"><input type="text" id="col1 "name="columns" className="columns create-brd-cols" maxLength="20" /><svg viewBox="0 0 15 15" onClick={handleRemoveColField} xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
     ]);
-    const [ displayMsg, setDisplayMsg ] = useState({ 
-        ok: true, 
-        message: "" 
-    });
 
     const boardsData = useContext(BoardsContext);
 
@@ -99,11 +96,11 @@ const CreateBoard = function({ setBoardsData }) {
             
             try {
                 const res = await fetch("http://localhost:3000/create-board", reqOptions);
-                const message = await res.json();
                 if (res.ok) {
-                    setDisplayMsg({
+                    handleDisplayMsg({
                         ok: true,
                         message: "Board created.",
+                        msgSetter: setDisplayMsg
                     });
                     // update context as well, with board NAME
                     const boardNameUrl = boardName.split(" ").join("-");
@@ -117,37 +114,20 @@ const CreateBoard = function({ setBoardsData }) {
                     throw new Error("Failed to create board. Please try again later.");
                 };
             } catch(err) {
-                setDisplayMsg({
+                handleDisplayMsg({
                     ok: false,
-                    message: err.message
+                    message: err.message,
+                    msgSetter: setDisplayMsg
                 });
             };
         } else {
-            setDisplayMsg({
+            handleDisplayMsg({
                 ok: false,
-                message: "Please fix errors before submitting."
-            })
+                message: "Please fix errors before submitting.",
+                msgSetter: handleDisplayMsg
+            });
         };
     };
-
-    useEffect(() => {
-        const displayMsgModal = document.querySelector("#cb-msg-modal");
-
-        if (displayMsg.message) {
-            if (displayMsg.ok) {
-                displayMsgModal?.show();
-            } else {
-                displayMsgModal?.show();
-                displayMsgModal?.classList.add("error");
-            };
-        };
-
-        const timer = setTimeout(() => {
-            displayMsgModal?.close();
-            displayMsgModal?.classList.remove("error");
-        }, 3000);
-        return () => clearTimeout(timer);
-    }, [displayMsg]);
     
     return (
         <>
@@ -168,9 +148,6 @@ const CreateBoard = function({ setBoardsData }) {
                     <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
                 </button>
             </dialog>  
-            <dialog className="display-msg-modal" id="cb-msg-modal">
-                <p>{displayMsg.message}</p>
-            </dialog>
         </>    
     );
 };

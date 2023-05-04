@@ -1,8 +1,9 @@
 import { useState, useContext, useEffect } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
+import { handleDisplayMsg } from "../helpers";
 
-const EditBoard = function({ setBoardsData, setCurBoardId }) {
+const EditBoard = function({ setBoardsData, setCurBoardId, setDisplayMsg }) {
     const boardsData = useContext(BoardsContext);
     const curBoardId = useContext(CurBoardIdContext);
 
@@ -12,10 +13,6 @@ const EditBoard = function({ setBoardsData, setCurBoardId }) {
     const [ errMsg, setErrMsg ] = useState("Field required");
     const [ numCols, setNumCols ] = useState(curBoard.columns.length);
     const [ extraColFields, setExtraColFields ] = useState([]);
-    const [ displayMsg, setDisplayMsg ] = useState({ 
-        ok: true, 
-        message: "" 
-    });
 
     const existingColFields = curBoard.columns.map((col, index) => {
         return (
@@ -99,10 +96,8 @@ const EditBoard = function({ setBoardsData, setCurBoardId }) {
                 const res = await fetch("http://localhost:3000/update-board", reqOptions);
                 const updatedMongoBoard = await res.json();
                 if (res.ok) {
-                    setDisplayMsg({
-                        ok: true,
-                        message: "Board updated."
-                    });
+                    handleDisplayMsg({ok: true, message: "Board updated.", msgSetter: setDisplayMsg});
+    
                     // update context as well
                     const filteredBoardsData = boardsData.filter(board => {
                         return (board._id !== curBoardId);
@@ -115,16 +110,10 @@ const EditBoard = function({ setBoardsData, setCurBoardId }) {
                     throw new Error("Failed to update board. Please try again later.");
                 };
             } catch(err) {
-                setDisplayMsg({
-                    ok: false,
-                    message: err.message
-                });
+                handleDisplayMsg({ok: false, message: err.message, msgSetter: setDisplayMsg});
             };
         } else {
-            setDisplayMsg({
-                ok: false,
-                message: "Please fix errors before submitting."
-            });
+            handleDisplayMsg({ok: false, message: "Please fix errors before submitting.", msgSetter: setDisplayMsg});
         };
     };
 
@@ -132,10 +121,8 @@ const EditBoard = function({ setBoardsData, setCurBoardId }) {
         try {
             const res = await fetch(`http://localhost:3000/delete-board/${curBoardId}`, { method: "DELETE", credentials: "include" });
             if (res.ok) {
-                setDisplayMsg({
-                    ok: false,
-                    message: "Board deleted."
-                });
+                handleDisplayMsg({ok: true, message: "Board deleted.", msgSetter: setDisplayMsg});
+    
                 // update context as well
                 const filteredBoardsData = boardsData.filter(board => {
                     return (board._id !== curBoardId);
@@ -148,31 +135,9 @@ const EditBoard = function({ setBoardsData, setCurBoardId }) {
                 throw new Error("Unable to delete board.");
             }
         } catch(err) {
-            setDisplayMsg({
-                ok: false,
-                message: err.message
-            });
+            handleDisplayMsg({ok: false, message: err.message, msgSetter: setDisplayMsg});
         };
     };
-
-    useEffect(() => {
-        const displayMsgModal = document.querySelector("#eb-msg-modal");
-
-        if (displayMsg.message) {
-            if (displayMsg.ok) {
-                displayMsgModal?.show();
-            } else {
-                displayMsgModal?.show();
-                displayMsgModal?.classList.add("error");
-            };
-        };
-
-        const timer = setTimeout(() => {
-            displayMsgModal?.close();
-            displayMsgModal?.classList.remove("error");
-        }, 3000);
-        return () => clearTimeout(timer);
-    }, [displayMsg]);
 
     return (
         <>
@@ -202,9 +167,6 @@ const EditBoard = function({ setBoardsData, setCurBoardId }) {
                     <button type="button" className="delete-btn" onClick={handleDelete}>Delete</button>
                     <button type="button" className="cancel-btn" onClick={() => handleDeleteBoardModal("close")}>Cancel</button>
                 </div>
-            </dialog>
-            <dialog className="display-msg-modal" id="eb-msg-modal">
-                <p>{displayMsg.message}</p>
             </dialog>
         </>
     );
