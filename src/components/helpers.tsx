@@ -71,6 +71,18 @@ export function handleVisToggle(e) {
     };
 }; 
 
+// extract info about missing fields (thrown by MongoDB model validation) for error display message
+export function extractErrMsg(errMsg) {
+    const errMessages = errMsg.slice(24);
+    let errMsgArr = errMessages.split(",");
+    let displayMsg = "";
+    errMsgArr = errMsgArr.map(errMsg => {
+        const errArr = errMsg.split(":");
+        displayMsg += errArr[1];
+    });
+    return displayMsg;
+};
+
 
 
 

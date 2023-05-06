@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { handleDisplayMsg, validateReqString, validateEmail, validateCred, handleVisToggle } from "./helpers";
+import { handleDisplayMsg, validateReqString, validateEmail, validateCred, handleVisToggle, extractErrMsg } from "./helpers";
 
 const Signup = function() {
     const [ firstName, setFirstName ] = useState("");
@@ -41,7 +41,7 @@ const Signup = function() {
                 break;
             case "password":
                 validateCred(input, setPasswordErr);
-                const confirmPasswordField = document.querySelector("#confirm-password");
+                const confirmPasswordField = document.querySelector("#confirmPassword");
                 if (input.value !== confirmPassword) {
                     setConfirmPasswordErr("Passwords must match.");
                     confirmPasswordField.setCustomValidity("Passwords must match.");
@@ -51,7 +51,7 @@ const Signup = function() {
                 };
                 setPassword(input.value);
                 break;
-            case "confirm-password":
+            case "confirmPassword":
                 if (input.value !== password) {
                     setConfirmPasswordErr("Passwords must match.");
                     input.setCustomValidity("Passwords must match.");
@@ -88,7 +88,7 @@ const Signup = function() {
                 msgSetter: setDisplayMsg
             });
 
-            // setCustomValidity on the errored fields
+            // setCustomValidity on fields errored because they are not unique
             if (err.message === "Email and username have already been taken.") {
                 const emailField = document.querySelector("#email");
                 const usernameField = document.querySelector("#username");
@@ -102,6 +102,15 @@ const Signup = function() {
             if (err.message === "Username has already been taken.") {
                 const usernameField = document.querySelector("#username");
                 usernameField.setCustomValidity("Already taken.");
+            };
+
+            // set display message for missing fields
+            if (err.message.startsWith("user validation failed:")) {
+                handleDisplayMsg({
+                    ok: false,
+                    message: extractErrMsg(err.message),
+                    msgSetter: setDisplayMsg
+                });
             };
         };
     };
@@ -127,9 +136,9 @@ const Signup = function() {
                     </button>
                 </div>
                 <p className="err-msg">{passwordErr}</p>
-                <label htmlFor="confirm-password">Confirm password</label>
+                <label htmlFor="confirmPassword">Confirm password</label>
                 <div className="password-field-set">
-                    <input type="password" name="confirm-password" id="confirm-password" value={confirmPassword} onChange={handleChange} />
+                    <input type="password" name="confirmPassword" id="confirmPassword" value={confirmPassword} onChange={handleChange} />
                     <button type="button" data-id="confirm-password" onClick={handleVisToggle}>
                         <svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><path d="M15.815 4.434A9.055 9.055 0 0 0 8 0 9.055 9.055 0 0 0 .185 4.434a1.333 1.333 0 0 0 0 1.354A9.055 9.055 0 0 0 8 10.222c3.33 0 6.25-1.777 7.815-4.434a1.333 1.333 0 0 0 0-1.354ZM8 8.89A3.776 3.776 0 0 1 4.222 5.11 3.776 3.776 0 0 1 8 1.333a3.776 3.776 0 0 1 3.778 3.778A3.776 3.776 0 0 1 8 8.89Zm2.889-3.778a2.889 2.889 0 1 1-5.438-1.36 1.19 1.19 0 1 0 1.19-1.189H6.64a2.889 2.889 0 0 1 4.25 2.549Z" /></svg>
                     </button>

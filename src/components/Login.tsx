@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { handleDisplayMsg, validateCred, handleVisToggle } from "./helpers";
+import { handleDisplayMsg, validateCred, handleVisToggle, extractErrMsg } from "./helpers";
 
 const Login = function({ setBoardsData }) {
     const [ username, setUsername ] = useState("");
@@ -54,7 +54,7 @@ const Login = function({ setBoardsData }) {
 
     return (
         <>
-            <form method="POST" className="login-form" onSubmit={handleSubmit}>
+            <form method="POST" className="login-form" onSubmit={handleSubmit} noValidate autoComplete="off">
                 <h2>Log in</h2>
                 <label htmlFor="username">Username<input type="text" name="username" id="username" value={username} onChange={handleChange} required maxLength="15" /></label>
                 <p className="err-msg">{usernameErr}</p>
