@@ -2,19 +2,60 @@
 
 .all-boards   
     flex-grow: 1
-    min-height: 100vh
+    position: relative
 
 header
-    padding: 3rem
+    padding: 3rem 3rem 3rem 0
     border-bottom: 1px solid base.$outline
     display: flex
-    justify-content: space-between
+    align-items: center
+
+    @media (max-width: 500px)
+        padding: 1.5rem 1.5rem 1.5rem 0
+        position: sticky
+        top: 0
+        left: 0
+        width: 100vw
+
+    .header-logo
+        height: 3rem
+        padding: 0 3rem
+        border-right: 1px solid base.$outline
+
+        @media (max-width: 500px)
+            padding: 0 1.5rem 0 3rem
+
+    .desktop
+        display: none
+
+        @media (min-width: 500px)
+            .desktop
+                display: block
+
+            .mobile
+                display: none
 
     h1
         @include base.xl
+        padding-left: 3rem
+
+        @media (max-width: 500px)
+            padding-left: 1.5rem
+
+    .dropdown-sidebar-btn
+        background-color: transparent
+
+        @media (min-width: 500px)
+            display: none
+
+    .nav-arrow
+        padding-left: 2rem
+        height: 1.25rem
 
     .edit-brd-btn
         padding: 1rem
+        margin-left: auto
+
 
 main
     background-color: base.$board-background

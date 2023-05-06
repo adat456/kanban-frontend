@@ -31,22 +31,71 @@ button {
 
 .all-boards {
   flex-grow: 1;
-  min-height: 100vh;
+  position: relative;
 }
 
 header {
-  padding: 3rem;
+  padding: 3rem 3rem 3rem 0;
   border-bottom: 1px solid #E4EBFA;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+}
+@media (max-width: 500px) {
+  header {
+    padding: 1.5rem 1.5rem 1.5rem 0;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100vw;
+  }
+}
+header .header-logo {
+  height: 3rem;
+  padding: 0 3rem;
+  border-right: 1px solid #E4EBFA;
+}
+@media (max-width: 500px) {
+  header .header-logo {
+    padding: 0 1.5rem 0 3rem;
+  }
+}
+header .desktop {
+  display: none;
+}
+@media (min-width: 500px) {
+  header .desktop .desktop {
+    display: block;
+  }
+  header .desktop .mobile {
+    display: none;
+  }
 }
 header h1 {
   font-size: 2.4rem;
   line-height: 3rem;
   font-weight: 700;
+  padding-left: 3rem;
+}
+@media (max-width: 500px) {
+  header h1 {
+    padding-left: 1.5rem;
+  }
+}
+header .dropdown-sidebar-btn {
+  background-color: transparent;
+}
+@media (min-width: 500px) {
+  header .dropdown-sidebar-btn {
+    display: none;
+  }
+}
+header .nav-arrow {
+  padding-left: 2rem;
+  height: 1.25rem;
 }
 header .edit-brd-btn {
   padding: 1rem;
+  margin-left: auto;
 }
 
 main {
@@ -203,9 +252,19 @@ main.no-brd-chosen p {
   border-right: 1px solid #E4EBFA;
   min-height: 100vh;
 }
+@media (max-width: 900px) {
+  .sidebar {
+    width: 250px;
+  }
+}
 .sidebar .logo {
-  height: 2.5rem;
-  padding: 0 3rem 5rem 3rem;
+  height: 3.5rem;
+  padding: 1rem 3rem 5rem 3rem;
+}
+@media (max-width: 900px) {
+  .sidebar .logo {
+    height: 3rem;
+  }
 }
 .sidebar h2 {
   font-weight: bold;
@@ -386,12 +445,44 @@ main.no-brd-chosen p {
   color: white;
 }
 
+.signup-form h2, .login-form h2 {
+  text-align: center;
+}
+.signup-form hr, .login-form hr {
+  width: 30%;
+  margin: 3rem auto;
+  border: 1px solid #E4EBFA;
+}
+.signup-form .password-field-set, .login-form .password-field-set {
+  display: flex;
+  align-items: center;
+}
+.signup-form .password-field-set input, .login-form .password-field-set input {
+  flex-grow: 1;
+}
+.signup-form .password-field-set button, .login-form .password-field-set button {
+  height: 2rem;
+  width: 12rem;
+}
+.signup-form .password-field-set svg, .login-form .password-field-set svg {
+  height: 1.75rem;
+  fill: #828FA3;
+}
+.signup-form .password-field-set svg:hover, .signup-form .password-field-set svg:focus, .login-form .password-field-set svg:hover, .login-form .password-field-set svg:focus {
+  fill: #E4EBFA;
+}
+
 .form-modal, .delete-modal, .login-form, .signup-form {
   border: none;
   width: 500px;
   padding: 3rem 3rem 5.5rem 3rem;
   border-radius: 0.5rem;
   margin: auto;
+}
+@media (max-width: 950px) {
+  .form-modal, .delete-modal, .login-form, .signup-form {
+    width: 70%;
+  }
 }
 .form-modal::backdrop, .delete-modal::backdrop, .login-form::backdrop, .signup-form::backdrop {
   background-color: rgba(0, 0, 0, 0.4);
@@ -594,30 +685,30 @@ main.no-brd-chosen p {
   margin-bottom: 0;
 }
 
-#app.dark form, #app.dark .edit-task {
+#app.dark .form-modal, #app.dark .delete-modal, #app.dark form, #app.dark .edit-task {
   background-color: #2B2C37;
 }
-#app.dark form .view-task-header button, #app.dark .edit-task .view-task-header button {
+#app.dark .form-modal .view-task-header button, #app.dark .delete-modal .view-task-header button, #app.dark form .view-task-header button, #app.dark .edit-task .view-task-header button {
   background-color: #2B2C37;
 }
-#app.dark form h2, #app.dark form label, #app.dark form legend, #app.dark .edit-task h2, #app.dark .edit-task label, #app.dark .edit-task legend {
+#app.dark .form-modal h2, #app.dark .form-modal label, #app.dark .form-modal legend, #app.dark .delete-modal h2, #app.dark .delete-modal label, #app.dark .delete-modal legend, #app.dark form h2, #app.dark form label, #app.dark form legend, #app.dark .edit-task h2, #app.dark .edit-task label, #app.dark .edit-task legend {
   color: white;
 }
-#app.dark form input, #app.dark form textarea, #app.dark form select, #app.dark .edit-task input, #app.dark .edit-task textarea, #app.dark .edit-task select {
+#app.dark .form-modal input, #app.dark .form-modal textarea, #app.dark .form-modal select, #app.dark .delete-modal input, #app.dark .delete-modal textarea, #app.dark .delete-modal select, #app.dark form input, #app.dark form textarea, #app.dark form select, #app.dark .edit-task input, #app.dark .edit-task textarea, #app.dark .edit-task select {
   background-color: #2B2C37;
   border-color: #3E3F4E;
   color: white;
 }
-#app.dark form ::placeholder, #app.dark .edit-task ::placeholder {
+#app.dark .form-modal ::placeholder, #app.dark .delete-modal ::placeholder, #app.dark form ::placeholder, #app.dark .edit-task ::placeholder {
   color: #3E3F4E;
 }
-#app.dark form .checkboxes-field label, #app.dark .edit-task .checkboxes-field label {
+#app.dark .form-modal .checkboxes-field label, #app.dark .delete-modal .checkboxes-field label, #app.dark form .checkboxes-field label, #app.dark .edit-task .checkboxes-field label {
   background-color: #20212C;
 }
-#app.dark form hr, #app.dark .edit-task hr {
+#app.dark .form-modal hr, #app.dark .delete-modal hr, #app.dark form hr, #app.dark .edit-task hr {
   border-color: #3E3F4E;
 }
-#app.dark form .add-btn, #app.dark .edit-task .add-btn {
+#app.dark .form-modal .add-btn, #app.dark .delete-modal .add-btn, #app.dark form .add-btn, #app.dark .edit-task .add-btn {
   background-color: white;
 }
 

@@ -21,12 +21,42 @@
         p
             color: white
 
+.signup-form, .login-form
+    h2
+        text-align: center
+
+    hr
+        width: 30%
+        margin: 3rem auto
+        border: 1px solid base.$outline
+        
+    .password-field-set
+        display: flex
+        align-items: center
+
+        input
+            flex-grow: 1
+
+        button
+            height: 2rem
+            width: 12rem
+
+        svg
+            height: 1.75rem
+            fill: base.$grey
+
+            &:hover, &:focus
+                fill: base.$outline
+
 .form-modal, .delete-modal, .login-form, .signup-form
     border: none
     width: 500px
     padding: 3rem 3rem 5.5rem 3rem
     border-radius: 0.5rem
     margin: auto
+
+    @media (max-width: 950px)
+        width: 70%
 
     &::backdrop
         background-color: rgba(0, 0, 0, 0.4)
@@ -202,7 +232,7 @@
         margin-bottom: 0
     
 
-#app.dark form, #app.dark .edit-task
+#app.dark .form-modal, #app.dark .delete-modal, #app.dark form, #app.dark .edit-task
     background-color: base.$dark-background-2
 
     .view-task-header button
