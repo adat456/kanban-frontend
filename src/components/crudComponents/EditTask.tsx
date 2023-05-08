@@ -1,14 +1,15 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
 const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg }) {
     const [ task, setTask ] = useState(name);
-    const [ errMsg, setErrMsg ] = useState("Field required");
+    const [ errMsg, setErrMsg ] = useState("");
     const [ description, setDescription ] = useState(desc);
     const [ numSubtasks, setNumSubtasks ] = useState(subtasks.length);
     const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
+    const [ formKey, setFormKey ] = useState(0);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
@@ -38,33 +39,41 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg }
         const field = e.target.getAttribute("id");
 
         if (field === "task") {
-            setTask(input.value);
+            // if there's an input at all 
+            if (input.value !== "") { 
+                // check that the task name is unique 
+                let valid = true;
+                curBoard.columns.forEach(col => {
+                    col.tasks.forEach(task => {
+                        if (task._id !== taskId && task.task.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
+                    });
+                }); 
 
-            let valid = true;
-            curBoard.columns.forEach(col => {
-                col.tasks.forEach(task => {
-                    if (task._id !== taskId && task.task.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
-                });
-            });          
-            if (!valid) {
-                setErrMsg("Task name must be unique.");
-                input.setCustomValidity("Task name must be unique.");
-            } else {
-                setErrMsg(null);
+                if (valid) {
+                    setErrMsg(null);
+                    input.setCustomValidity("");
+                } else {
+                    setErrMsg("Task name must be unique.");
+                    input.setCustomValidity("Task name must be unique.");
+                };
+            };
+            
+            // if there's no input, throw err
+            if (input.value === "") {
+                setErrMsg("Field required.");
                 input.setCustomValidity("");
             };
+
+            setTask(input.value);
         };
 
         if (field === "description") setDescription(input.value);
     };
 
-    useEffect(() => {
-        if (task === "") setErrMsg("Field required.");
-    }, [task]);
-
     function handleEditTaskModal() {
         const editTaskModal = document.querySelector(`#edit-task-modal-${taskId}`);
         editTaskModal.close();
+        setFormKey(formKey + 1);
     };
 
     function handleDeleteTaskModal(action) {
@@ -157,11 +166,11 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg }
 
     return (
         <>
-            <dialog className="form-modal" id={`edit-task-modal-${taskId}`}>
+            <dialog key={formKey} className="form-modal" id={`edit-task-modal-${taskId}`}>
                 <form method="POST" className="edit-task" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Task</h2>
                     <label htmlFor="task">Title</label>
-                    <input type="text" id="task" name="task" value={task} onChange={handleChange} maxLength="30" required />
+                    <input type="text" id="task" name="task" defaultValue={name} onChange={handleChange} maxLength="30" required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     <label htmlFor="description">Description<textarea id="description" name="description" value={description} onChange={handleChange} rows="5" maxLength="200" /></label>
                     <fieldset>

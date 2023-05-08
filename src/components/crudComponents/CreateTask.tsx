@@ -6,6 +6,8 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
     const [ task, setTask ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required.");
     const [ desc, setDesc ] = useState("");
+    // https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/?utm_source=pocket_saves#keys-and-reconciliation
+    const [ formKey, setFormKey ] = useState(0);
     // TRIAL
     const [ subtaskValues, setSubtaskValues ] = useState({
         subtask1: {
@@ -35,7 +37,6 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
     // TRIAL
     useEffect(() => {    
         const subtasks = Object.values(subtaskValues);
-        console.log(subtasks);
         const subtaskFieldsArr = subtasks.map(subtask => {
             return (
                 <label key={subtask.id} htmlFor={`subtask${subtask.id}`}className="subtask-label">
@@ -85,21 +86,32 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
         const field = e.target.getAttribute("id");
 
         if (field === "task") {
-            setTask(input.value);
+            // if there's an input at all 
+            if (input.value !== "") { 
+                // check that the task name is unique 
+                let valid = true;
+                curBoard.columns.forEach(col => {
+                    col.tasks.forEach(task => {
+                        if (task.task.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
+                    });
+                }); 
 
-            let valid = true;
-            curBoard.columns.forEach(col => {
-                col.tasks.forEach(task => {
-                    if (task.task.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
-                });
-            });          
-            if (!valid) {
-                setErrMsg("Task name must be unique.");
-                input.setCustomValidity("Task name must be unique.");
-            } else {
-                setErrMsg(null);
+                if (valid) {
+                    setErrMsg(null);
+                    input.setCustomValidity("");
+                } else {
+                    setErrMsg("Task name must be unique.");
+                    input.setCustomValidity("Task name must be unique.");
+                };
+            };
+            
+            // if there's no input, throw err
+            if (input.value === "") {
+                setErrMsg("Field required.");
                 input.setCustomValidity("");
             };
+
+            setTask(input.value);
         };
 
         if (field === "desc") setDesc(input.value);
@@ -112,6 +124,9 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
     function handleCreateTaskModal() {
         const createTaskModal = document.querySelector("#create-task-modal");
         createTaskModal.close();
+        // part of clearing stale state
+        setFormKey(formKey + 1);
+        setErrMsg("Field required.");
     };
 
     async function handleSubmit(e) {
@@ -201,7 +216,7 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
 
     return (
         <>
-            <dialog className="form-modal" id="create-task-modal">
+            <dialog key={formKey} className="form-modal" id="create-task-modal">
                 <form method="POST" onSubmit={handleSubmit} noValidate>
                     <h2>Add New Task</h2>
                     <label htmlFor="task">Title</label>

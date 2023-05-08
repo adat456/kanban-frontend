@@ -10,9 +10,11 @@ const EditBoard = function({ setDisplayMsg }) {
     const curBoard = boardsData.find(board => (board._id === curBoardId));
 
     const [ boardName, setBoardName ] = useState(curBoard.name);
-    const [ errMsg, setErrMsg ] = useState("Field required");
+    const [ errMsg, setErrMsg ] = useState("");
     const [ numCols, setNumCols ] = useState(curBoard.columns.length);
     const [ extraColFields, setExtraColFields ] = useState([]);
+    // need to use a combination of changing keys (formKey, which is attached to dialog element, changes every time curBoardId changes or the dialog element is closed) and defaultValue equal to an empty string or a bit of context (not state) on certain inputs to wipe out stale state
+    const [ formKey, setFormKey ] = useState(0);
 
     const existingColFields = curBoard.columns.map((col, index) => {
         return (
@@ -30,30 +32,40 @@ const EditBoard = function({ setDisplayMsg }) {
     function handleChange(e) {
         const input = e.target;
 
-        if (input) {
+        // if there's an input at all 
+        if (input.value !== "") { 
+            // check that the board name is unique 
             let valid = true;
             boardsData.forEach(board => {
                 if (board._id !== curBoardId && board.name.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
-            });        
-            if (!valid) {
-                setErrMsg("Board name must be unique.");
-                input.setCustomValidity("Board name must be unique.");
-            } else {
+            }); 
+
+            if (valid) {
                 setErrMsg(null);
                 input.setCustomValidity("");
+            } else {
+                setErrMsg("Board name must be unique.");
+                input.setCustomValidity("Board name must be unique.");
             };
+        };
+        
+        // if there's no input, throw err
+        if (input.value === "") {
+            setErrMsg("Field required.");
+            input.setCustomValidity("");
         };
 
         setBoardName(input.value);
     };
 
     useEffect(() => {
-        if (boardName === "") setErrMsg("Field required.");
-    }, [boardName]);
+        setFormKey(formKey + 1);
+    }, [curBoardId]);
 
     function handleEditBoardModal() {
         const editBoardModal = document.querySelector("#edit-board-modal");
         editBoardModal.close();
+        setFormKey(formKey + 1);
     };
 
     function handleDeleteBoardModal(action) {
@@ -140,12 +152,12 @@ const EditBoard = function({ setDisplayMsg }) {
     };
 
     return (
-        <>
-            <dialog className="form-modal" id="edit-board-modal">
+        <div>
+            <dialog key={formKey} className="form-modal" id="edit-board-modal">
                 <form method="POST" className="edit-brd-form" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Board</h2>
                     <label htmlFor="boardName">Board Name</label>
-                    <input type="text" id="boardName" value={boardName} onChange={handleChange} maxLength="20" required />
+                    <input type="text" id="boardName" defaultValue={curBoard.name} onChange={handleChange} maxLength="20" required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     <fieldset>
                         <legend>Columns</legend>
@@ -168,7 +180,7 @@ const EditBoard = function({ setDisplayMsg }) {
                     <button type="button" className="cancel-btn" onClick={() => handleDeleteBoardModal("close")}>Cancel</button>
                 </div>
             </dialog>
-        </>
+        </div>
     );
 };
 

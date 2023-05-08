@@ -19,7 +19,7 @@ const Board = function({ setDisplayMsg }) {
 
     // rendering columns w/ their tasks
     const columns = columnsArr.map((col, index) => 
-        <Column key={col._id} order={index} col={col} columnsArr={columnsArr} setBoardsData={setBoardsData} setDisplayMsg={setDisplayMsg} />
+        <Column key={col._id} order={index} col={col} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
     );
 
     function handleEditBoardModal() {

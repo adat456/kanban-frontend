@@ -1,9 +1,8 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { BoardsContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
 const CreateBoard = function({ setDisplayMsg }) {
-    // only the board name will be a controlled input
     const [ boardName, setBoardName ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required");
     const [ numCols, setNumCols ] = useState(2);
@@ -11,6 +10,9 @@ const CreateBoard = function({ setDisplayMsg }) {
         <label key={0} htmlFor="col0" className="col-label"><input type="text" id="col0 "name="columns" className="columns create-brd-cols" maxLength="20" /><svg viewBox="0 0 15 15" onClick={handleRemoveColField} xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>,
         <label key={1} htmlFor="col1" className="col-label"><input type="text" id="col1 "name="columns" className="columns create-brd-cols" maxLength="20" /><svg viewBox="0 0 15 15" onClick={handleRemoveColField} xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
     ]);
+    // need to use changing keys (formKey, which is attached to dialog element, changes every time the dialog element is closed)
+    // optionally, can specify a defaultValue (not from state) on UNCONTROLLED inputs (such as board name) to replace any stale state, or state lingering from the last time the form was opened. otherwise, defaultValue will be set to "" by defaults
+    const [ formKey, setFormKey ] = useState(0);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
 
@@ -25,26 +27,31 @@ const CreateBoard = function({ setDisplayMsg }) {
     function handleChange(e) {
         const input = e.target;
 
-        if (input) {
+        // if there's an input at all 
+        if (input.value !== "") { 
+            // check that the board name is unique 
             let valid = true;
             boardsData.forEach(board => {
                 if (board.name.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
-            });        
-            if (!valid) {
-                setErrMsg("Board name must be unique.");
-                input.setCustomValidity("Board name must be unique.");
-            } else {
+            }); 
+
+            if (valid) {
                 setErrMsg(null);
                 input.setCustomValidity("");
+            } else {
+                setErrMsg("Board name must be unique.");
+                input.setCustomValidity("Board name must be unique.");
             };
+        };
+        
+        // if there's no input, throw err
+        if (input.value === "") {
+            setErrMsg("Field required.");
+            input.setCustomValidity("");
         };
 
         setBoardName(input.value);
     };
-
-    useEffect(() => {
-        if (boardName === "") setErrMsg("Field required.");
-    }, [boardName]);
 
     function handleRemoveColField(e) {;
         // const parentColField = e.target.closest(".col-label");
@@ -71,6 +78,8 @@ const CreateBoard = function({ setDisplayMsg }) {
     function handleCreateBoardModal() {
         const createBoardModal = document.querySelector("#create-board-modal");
         createBoardModal.close();
+        setFormKey(formKey + 1);
+        setErrMsg("Field required.");
     };
 
     async function handleSubmit(e) {
@@ -124,18 +133,18 @@ const CreateBoard = function({ setDisplayMsg }) {
             handleDisplayMsg({
                 ok: false,
                 message: "Please fix errors before submitting.",
-                msgSetter: handleDisplayMsg
+                msgSetter: setDisplayMsg
             });
         };
     };
     
     return (
         <>
-            <dialog className="form-modal" id="create-board-modal">
+            <dialog key={formKey} className="form-modal" id="create-board-modal">
                 <form method="POST" onSubmit={handleSubmit} noValidate>
                     <h2>Add New Board</h2>
                     <label htmlFor="boardName">Board Name *</label>
-                    <input type="text" id="boardName" value={boardName} onChange={handleChange} maxLength="20" required />
+                    <input type="text" id="boardName" onChange={handleChange} maxLength="20" required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     <fieldset>
                         <legend>Columns</legend>
