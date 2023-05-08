@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
+import { handleDisplayMsg } from "../helpers";
 
-const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis, setBoardsData, setEditTaskVis }) {
-    const boardsData = useContext(BoardsContext);
-    const curBoardId = useContext(CurBoardIdContext);
+const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg }) {
+    const { boardsData, setBoardsData } = useContext(BoardsContext);
+    const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     
     let numCompleteSubtasks = 0;
     const subtasksArr = subtasks.map(subtask => {
@@ -76,9 +77,13 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis,
         try {
             const res = await fetch("http://localhost:3000/update-task", reqOptions);
             if (res.ok) {
-                const updatedBoard = await res.json();
-                console.log(updatedBoard);
+                handleDisplayMsg({
+                    ok: true,
+                    message: "Task updated",
+                    msgSetter: setDisplayMsg
+                });
 
+                const updatedBoard = await res.json();
                 let updatedBoardsData = boardsData.filter(board => {
                     return (board._id !== curBoardId);
                 })
@@ -90,7 +95,11 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setViewTaskVis,
                 throw new Error("Unable to update this task.");
             };
         } catch(err) {
-            console.log(err.message);
+            handleDisplayMsg({
+                ok: false,
+                message: err.message,
+                msgSetter: setDisplayMsg
+            });
         };
     };
 

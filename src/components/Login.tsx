@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { handleDisplayMsg, validateCred, handleVisToggle, extractErrMsg } from "./helpers";
+import { handleDisplayMsg, validateCred, handleVisToggle } from "./helpers";
 
-const Login = function({ setBoardsData }) {
+const Login = function() {
     const [ username, setUsername ] = useState("");
     const [ usernameErr, setUsernameErr ] = useState("");
     const [ password, setPassword ] = useState("");
@@ -35,10 +35,9 @@ const Login = function({ setBoardsData }) {
 
         try {
             const res = await fetch("http://localhost:3000/users/log-in", reqOptions);
-            // must parse the JSON error regardless, because whether the log in attempt succeeded or failed, the returned JSON message contains important info (either board data or the specific error message)
+            // must parse the JSON error, because if the log in attempt failed, the returned JSON message contains the specific error message
             const message = await res.json();
             if (res.ok) {
-                setBoardsData(message);
                 navigate("/boards");
             } else {
                 throw new Error(message);

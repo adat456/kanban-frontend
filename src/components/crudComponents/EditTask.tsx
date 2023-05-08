@@ -3,15 +3,15 @@ import { useState, useContext, useEffect } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
-const EditTask = function({ name, desc, subtasks, colId, taskId, setBoardsData, setDisplayMsg }) {
+const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg }) {
     const [ task, setTask ] = useState(name);
     const [ errMsg, setErrMsg ] = useState("Field required");
     const [ description, setDescription ] = useState(desc);
     const [ numSubtasks, setNumSubtasks ] = useState(subtasks.length);
     const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
 
-    const boardsData = useContext(BoardsContext);
-    const curBoardId = useContext(CurBoardIdContext);
+    const { boardsData, setBoardsData } = useContext(BoardsContext);
+    const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData.find(board => (board._id === curBoardId));
 
     const existingSubtaskFields = subtasks.map((subtask, index) => {

@@ -5,7 +5,7 @@ import { useDroppable, useDraggable } from "@dnd-kit/core";
 import CreateTask from "../crudComponents/CreateTask";
 import Task from "./Task";
 
-const Column = function({ col, order, columnsArr, setBoardsData, setDisplayMsg }) {
+const Column = function({ col, order, columnsArr, setDisplayMsg }) {
     const [ curCol, setCurCol ] = useState();
 
     // each column is a droppable...
@@ -20,7 +20,7 @@ const Column = function({ col, order, columnsArr, setBoardsData, setDisplayMsg }
     const tasksArr = col.tasks;
     const tasks = tasksArr.map((task, index) => 
         <div key={task._id}>
-            <Task id={task._id} name={task.task} desc={task.desc} order={index} subtasks={task.subtasks} colId={col._id} setBoardsData={setBoardsData} setDisplayMsg={setDisplayMsg} />
+            <Task id={task._id} name={task.task} desc={task.desc} order={index} subtasks={task.subtasks} colId={col._id} setDisplayMsg={setDisplayMsg} />
             <DroppableSpace id={`${col._id}${index + 1}`} />
         </div>
     );
@@ -38,7 +38,7 @@ const Column = function({ col, order, columnsArr, setBoardsData, setDisplayMsg }
             {(tasks.length > 0) ? <DroppableSpace id={`${col._id}0`} /> : null }
             {tasks}
             <button type="button" className="add-task-btn" onClick={() => displayTask(col._id)}>+ New Task</button>
-            <CreateTask curCol={curCol} columnsArr={columnsArr} setBoardsData={setBoardsData} setDisplayMsg={setDisplayMsg} />
+            <CreateTask curCol={curCol} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
         </section>
     );
 };

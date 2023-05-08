@@ -3,9 +3,9 @@ import { useState, useContext, useEffect } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
-const EditBoard = function({ setBoardsData, setCurBoardId, setDisplayMsg }) {
-    const boardsData = useContext(BoardsContext);
-    const curBoardId = useContext(CurBoardIdContext);
+const EditBoard = function({ setDisplayMsg }) {
+    const { boardsData, setBoardsData } = useContext(BoardsContext);
+    const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
 
     const curBoard = boardsData.find(board => (board._id === curBoardId));
 

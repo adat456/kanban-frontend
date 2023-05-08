@@ -1,16 +1,29 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
-const CreateTask = function({ curCol, columnsArr, setBoardsData, setDisplayMsg }) {
+const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
     const [ task, setTask ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required.");
     const [ desc, setDesc ] = useState("");
-    const [ numSubtasks, setNumSubtasks ] = useState(2);
-    const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
+    // TRIAL
+    const [ subtaskValues, setSubtaskValues ] = useState({
+        subtask1: {
+            id: 1,
+            value: "",
+        },
+        subtask2: {
+            id: 2,
+            value: "",
+        },
+    });
+    const counterRef = useRef(3);
+    const [ subtaskFields, setSubtaskFields ] = useState([]);
+    // const [ numSubtasks, setNumSubtasks ] = useState(2);
+    // const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
 
-    const boardsData = useContext(BoardsContext);
-    const curBoardId = useContext(CurBoardIdContext);
+    const { boardsData, setBoardsData } = useContext(BoardsContext);
+    const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData.find(board => board._id === curBoardId);
 
     const colOptions = columnsArr.map(col => {
@@ -19,13 +32,53 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setDisplayMsg }
         );
     });
 
-    function handleAddSubtaskField() {
-        // this first setState call will not click in until the next click, which is why the initial value is 2 instead of 1 (0-indexed)
-        setNumSubtasks(numSubtasks + 1);
-        setExtraSubtaskFields(extraSubtaskFields => [...extraSubtaskFields,
-            <label key={numSubtasks} htmlFor={`subtask${numSubtasks}`}className="subtask-label"><input type="text" id={`subtask${numSubtasks}`} name="subtasks" className="create-subtasks" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-        ]);
+    // TRIAL
+    useEffect(() => {    
+        const subtasks = Object.values(subtaskValues);
+        console.log(subtasks);
+        const subtaskFieldsArr = subtasks.map(subtask => {
+            return (
+                <label key={subtask.id} htmlFor={`subtask${subtask.id}`}className="subtask-label">
+                    <input type="text" data-id={subtask.id} id={`subtask${subtask.id}`} value={subtask.value} onChange={handleSubtaskFieldChange} name="subtasks" className="create-subtasks" maxLength="50" />
+                    <button type="button" data-id={subtask.id} onClick={handleSubtaskFieldRemoval}>
+                        <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                    </button>
+                </label>
+            );
+        });
+
+        setSubtaskFields(subtaskFieldsArr);
+    }, [subtaskValues]);
+
+    function handleSubtaskFieldChange(e) {
+        const subtaskId = e.target.getAttribute("data-id");
+        
+        const subtaskValuesCopy = subtaskValues;
+        subtaskValuesCopy[`subtask${subtaskId}`].value = e.target.value;
+        console.log(subtaskValuesCopy);
+        setSubtaskValues(subtaskValuesCopy);
     };
+
+    function handleSubtaskFieldRemoval(e) {
+        // const subtaskField = e.target;
+        // const subtaskId = subtaskField.getAttribute("data-id");
+
+        // const filteredSubtaskValues = subtaskValues.filter(subtask => {
+        //     return (subtask.id !== subtaskId);
+        // });
+        // setSubtaskValues(filteredSubtaskValues);
+    };
+
+    function handleAddSubtaskField() {
+        
+    };
+    // function handleAddSubtaskField() {
+    //     // this first setState call will not click in until the next click, which is why the initial value is 2 instead of 1 (0-indexed)
+    //     setNumSubtasks(numSubtasks + 1);
+    //     setExtraSubtaskFields(extraSubtaskFields => [...extraSubtaskFields,
+    //         <label key={numSubtasks} htmlFor={`subtask${numSubtasks}`}className="subtask-label"><input type="text" id={`subtask${numSubtasks}`} name="subtasks" className="create-subtasks" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
+    //     ]);
+    // };
 
     function handleChange(e) {
         const input = e.target;
@@ -157,9 +210,11 @@ const CreateTask = function({ curCol, columnsArr, setBoardsData, setDisplayMsg }
                     <label htmlFor="desc">Description<textarea rows="5" id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." maxLength="200" /></label>
                     <fieldset>
                         <legend>Subtasks</legend>
-                        <label htmlFor="subtask0" className="subtask-label"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" placeholder="e.g., Make coffee" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
+                        {/* TRIAL */}
+                        {subtaskFields}
+                        {/* <label htmlFor="subtask0" className="subtask-label"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" placeholder="e.g., Make coffee" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
                         <label htmlFor="subtask1" className="subtask-label"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" placeholder="e.g., Drink coffee and smile" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-                        {extraSubtaskFields}
+                        {extraSubtaskFields} */}
                         <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
                     </fieldset>
                     <label htmlFor="column">Column

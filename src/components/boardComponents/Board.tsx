@@ -5,15 +5,15 @@ import { BoardsContext, CurBoardIdContext } from "../../Context";
 import Column from "./Column";
 import EditBoard from "../crudComponents/EditBoard";
 
-const Board = function({ setBoardsData, setCurBoardId, setDisplayMsg }) {
+const Board = function({ setDisplayMsg }) {
     const [ draggableInfo, setDraggableInfo ] = useState({ 
         order: "", 
         taskId: "", 
         colId: ""
     });
 
-    const boardsData = useContext(BoardsContext);
-    const curBoardId = useContext(CurBoardIdContext);
+    const { boardsData, setBoardsData } = useContext(BoardsContext);
+    const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData.find(board => board._id === curBoardId);
     const columnsArr = curBoard.columns;
 
@@ -102,7 +102,7 @@ const Board = function({ setBoardsData, setCurBoardId, setDisplayMsg }) {
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {columns}
                 <button type="button" className="add-column-btn" onClick={handleEditBoardModal}>+ New Column</button>
-                <EditBoard setBoardsData={setBoardsData} setCurBoardId={setCurBoardId} />
+                <EditBoard />
             </DndContext>
         </main>
     );
