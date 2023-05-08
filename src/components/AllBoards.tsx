@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 import { BoardsContext, CurBoardIdContext, ModeContext } from "../Context";
 import { handleDisplayMsg } from "./helpers";
@@ -10,13 +11,16 @@ import Board from "./boardComponents/Board";
 const AllBoards = function({ setMode }) {
     const [ sidebarVis, setSidebarVis ] = useState(true);
     const [ displayMsg, setDisplayMsg ] = useState("");
-    
+
     const [ boardsData, setBoardsData ] = useState(null);
     const [ curBoardId, setCurBoardId ] = useState("");
     const [ curBoardName, setCurBoardName ] = useState("");
+    // loading status is in state, set to false once data is retrieved
     const [ loading, setLoading ] = useState(true);
 
     const mode = useContext(ModeContext);
+
+    const location = useLocation();
 
     useEffect(() => {
         async function pullBoardsData() {
@@ -43,7 +47,14 @@ const AllBoards = function({ setMode }) {
             };
         };          
 
-        if (!boardsData) {
+        // retrieves useLocation state (passed in by Signup and Login components); sets boardsData to an empty array (not null) because Sidebar will need to map over it once loading is set to false
+        if (location.state.newUser) {
+            setBoardsData([]);
+            setLoading(false);
+        };
+
+        // if not a new user and boardsData is null, call the async fetch data fx
+        if (!location.state.newUser && !boardsData) {
             pullBoardsData();
         };  
     }, []);

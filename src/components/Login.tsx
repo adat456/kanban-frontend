@@ -38,7 +38,7 @@ const Login = function() {
             // must parse the JSON error, because if the log in attempt failed, the returned JSON message contains the specific error message
             const message = await res.json();
             if (res.ok) {
-                navigate("/boards");
+                navigate("/boards", {state: {newUser: false}});
             } else {
                 throw new Error(message);
             };

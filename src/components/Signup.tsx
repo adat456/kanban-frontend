@@ -77,7 +77,7 @@ const Signup = function() {
             const res = await fetch("http://localhost:3000/users/sign-up", reqOptions);
             const message = await res.json();
             if (res.ok) {
-                navigate("/boards");
+                navigate("/boards", {state: {newUser: true}});
             } else {
                 throw new Error(message);
             };
