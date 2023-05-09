@@ -22,6 +22,7 @@
     padding-top: 3rem
     border-right: 1px solid base.$outline
     min-height: 100vh
+    position: relative
 
     @media (max-width: 900px)
         width: 250px
@@ -88,9 +89,9 @@
         fill: base.$drk-blue-inactive
 
 .sidebar-btm-cluster
-    position: relative
+    position: absolute
     z-index: 0
-    top: 45vh
+    inset: auto 0 3rem 0
     padding: 0 3rem
 
 .mode-toggle
