@@ -68,12 +68,12 @@ const AllBoards = function({ setMode }) {
     }, [curBoardId]);
 
     const curBoard = boardsData?.find(board => board._id === curBoardId);
-    const [ colValues, setColValues ] = useState(
-        curBoard?.columns.map(col => { return {id: col._id, value: col.name}})
-    );
+    // ensures that the colValues in both instances of EditBoard will always be UTD (this pair of values is directly passed down to both instances)
+    const [ colValues, setColValues ] = useState();
     function handleEditBoardModal() {
         const editBoardModal = document.querySelector("#edit-board-modal");
         editBoardModal.showModal();
+        // calling the setter whenever editBoard is opened 
         setColValues(curBoard.columns.map(col => { return {id: col._id, value: col.name}}));
     };
 
@@ -143,7 +143,7 @@ const AllBoards = function({ setMode }) {
                                 <button type="button" className="edit-brd-btn" onClick={handleEditBoardModal}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
                                 <EditBoard setDisplayMsg={setDisplayMsg} colValues={colValues} setColValues={setColValues} />
                             </header>
-                            <Board setDisplayMsg={setDisplayMsg} />
+                            <Board setDisplayMsg={setDisplayMsg} colValues={colValues} setColValues={setColValues} />
                         </div>
                     }
                     <dialog className="display-msg-modal">

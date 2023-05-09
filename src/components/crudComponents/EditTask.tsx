@@ -109,8 +109,6 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
                     handleDisplayMsg({ok: true, message: "Task updated.", msgSetter: setDisplayMsg});
 
                     const updatedBoard = await res.json();
-                    console.log(updatedBoard);
-
                     let updatedBoardsData = boardsData.filter(board => {
                         return (board._id !== curBoardId);
                     })

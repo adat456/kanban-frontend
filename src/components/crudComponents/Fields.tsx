@@ -33,8 +33,9 @@ const Fields = function({ type, values, setValues, counterRef, valuesTBD, setVal
     function handleRemoval(itemId) {
         // removes item from the values array so that user can no longer see it...
         setValues(values.filter(item => item.id !== itemId));
-        // and adds the item to the array of values to be deleted (with the ID, but an empty string for the name so that the backend can recognize that it needs to be deleted)
-        setValuesTBD([...valuesTBD, {id: itemId, name: ""}]);
+        // and if it is an edit task/board form that received a deletion array...
+        // ...adds the item to the array of values to be deleted (with the ID, but an empty string for the name so that the backend can recognize that it needs to be deleted)
+        if (setValuesTBD) setValuesTBD([...valuesTBD, {id: itemId, name: ""}]);
     };
 
     function handleAddition() {

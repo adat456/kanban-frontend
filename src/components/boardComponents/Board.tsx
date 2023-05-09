@@ -5,7 +5,7 @@ import { BoardsContext, CurBoardIdContext } from "../../Context";
 import Column from "./Column";
 import EditBoard from "../crudComponents/EditBoard";
 
-const Board = function({ setDisplayMsg }) {
+const Board = function({ setDisplayMsg, colValues, setColValues }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData.find(board => board._id === curBoardId);
@@ -22,16 +22,10 @@ const Board = function({ setDisplayMsg }) {
         <Column key={col._id} order={index} col={col} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
     );
 
-    // originally in EditBoard, moved up so that every time the modal is opened or closed, the colValues are updated and the correct existing columns are shown... replaces stale state
-    const [ colValues, setColValues ] = useState(
-        curBoard.columns.map(col => { return {id: col._id, value: col.name}})
-    );
-    const [ boardName, setBoardName ] = useState(curBoard.name);
     function handleEditBoardModal() {
         const editBoardModal = document.querySelector("#edit-board-modal");
         editBoardModal.showModal();
         setColValues(curBoard.columns.map(col => { return {id: col._id, value: col.name}}));
-        setBoardName(curBoard.name);
     };
 
     // although pointer sensor is one of the default sensors, I imported it with useSensor and useSensors to be passed along to DndContext so that an activation constraint could be added, and a simple click on a draggable opens the task preview instead of initiating a dragstart event
