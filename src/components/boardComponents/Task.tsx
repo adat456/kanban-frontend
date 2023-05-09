@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -44,6 +44,17 @@ const Task = function({ id, name, desc, order, subtasks, colId, setDisplayMsg })
         const viewTaskModal = document.querySelector(`#view-task-modal-${id}`);
         viewTaskModal.showModal();
     };
+    // added
+    const [ subtaskValues, setSubtaskValues ] = useState(
+        subtasks.map(subtask => { return {id: subtask._id, value: subtask.subtask}})
+    );
+    // moved from ViewTask, currently passed into ViewTask as a prop
+    function handleEditTaskModal(id) {
+        const editTaskModal = document.querySelector(`#edit-task-modal-${id}`);
+        editTaskModal.showModal();
+        // added
+        setSubtaskValues(subtasks.map(subtask => { return {id: subtask._id, value: subtask.subtask}}));
+    };
 
     return (
         <>
@@ -58,8 +69,8 @@ const Task = function({ id, name, desc, order, subtasks, colId, setDisplayMsg })
                     <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="#828FA3" stroke="#828FA3"><g id="SVGRepo_bgCarrier" strokeWidth="0"/><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"/><g id="SVGRepo_iconCarrier"><path d="M7 2a2 2 0 10.001 4.001A2 2 0 007 2zm0 6a2 2 0 10.001 4.001A2 2 0 007 8zm0 6a2 2 0 10.001 4.001A2 2 0 007 14zm6-8a2 2 0 10-.001-4.001A2 2 0 0013 6zm0 2a2 2 0 10.001 4.001A2 2 0 0013 8zm0 6a2 2 0 10.001 4.001A2 2 0 0013 14z" fill="#828FA3"/></g></svg>
                 </div>
             </div>
-            <ViewTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setDisplayMsg={setDisplayMsg} /> 
-            <EditTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setDisplayMsg={setDisplayMsg} />
+            <ViewTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setDisplayMsg={setDisplayMsg} handleEditTaskModal={handleEditTaskModal} /> 
+            <EditTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setDisplayMsg={setDisplayMsg} subtaskValues={subtaskValues} setSubtaskValues={setSubtaskValues} />
         </>
     );
 };

@@ -1,6 +1,13 @@
-// valueArr e.g., colValues, subtaskValues
-// type e.g., "col" or "subtask"
-const Fields = function({ type, values, valuesSetter, counterRef }) {
+// FOR ADJUSTING TEXT BASED ON FORM TYPE: type e.g., "col" or "subtask"
+// FOR ADDING/UPDATING VALUES FOR USER TO SEE:
+// values e.g., colValues, subtaskValues
+// setValues e.g., setColValues, setSubtaskValues
+// FOR ADDING NEW FIELDS WITH UNIQUE KEYS/IDS: counterRef
+// FOR ADDING VALUES TO A DELETION ARRAY:
+// valuesTBD, e.g., colsTBD (to be deleted)
+// setValuesTBD e.g., setColsTBD
+
+const Fields = function({ type, values, setValues, counterRef, valuesTBD, setValuesTBD }) {
     let fields = values.map(item => {
         return (
             <label key={item.id} htmlFor={`${type}${item.id}`} className={`${type}-label`}>
@@ -14,7 +21,7 @@ const Fields = function({ type, values, valuesSetter, counterRef }) {
 
     function handleChange(e) {
         const id = e.target.getAttribute("data-id");
-        valuesSetter(values.map(item => {
+        setValues(values.map(item => {
             if (id == item.id) {
                 return { id, value: e.target.value };
             } else {
@@ -24,11 +31,14 @@ const Fields = function({ type, values, valuesSetter, counterRef }) {
     };
 
     function handleRemoval(itemId) {
-        valuesSetter(values.filter(item => item.id !== itemId));
+        // removes item from the values array so that user can no longer see it...
+        setValues(values.filter(item => item.id !== itemId));
+        // and adds the item to the array of values to be deleted (with the ID, but an empty string for the name so that the backend can recognize that it needs to be deleted)
+        setValuesTBD([...valuesTBD, {id: itemId, name: ""}]);
     };
 
     function handleAddition() {
-        valuesSetter([
+        setValues([
             ...values,
             { id: counterRef.current, value: "" }
         ]);

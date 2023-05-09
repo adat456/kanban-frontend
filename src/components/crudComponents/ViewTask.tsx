@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
-const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg }) {
+const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, handleEditTaskModal }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     
@@ -40,10 +40,6 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg }
     function handleViewTaskModal() {
         const viewTaskModal = document.querySelector(`#view-task-modal-${taskId}`);
         viewTaskModal.close();
-    };
-    function handleEditTaskModal() {
-        const editTaskModal = document.querySelector(`#edit-task-modal-${taskId}`);
-        editTaskModal.showModal();
     };
 
     async function handleSubmitUpdates(e) {
@@ -109,7 +105,7 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg }
             <form method="POST" className="view-task">
                 <div className="view-task-header">
                     <h2>{name}</h2>
-                    <button type="button" onClick={() => {handleViewTaskModal(); handleEditTaskModal();}}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
+                    <button type="button" onClick={() => {handleViewTaskModal(); handleEditTaskModal(taskId);}}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
                 </div>   
                 <p>{desc}</p>
                 <fieldset className="checkboxes-field">

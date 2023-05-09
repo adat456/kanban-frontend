@@ -7,15 +7,15 @@ import Fields from "./Fields";
 const EditBoard = function({ setDisplayMsg, colValues, setColValues }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
-
     const curBoard = boardsData.find(board => (board._id === curBoardId));
 
-    const [ boardName, setBoardName ] = useState(curBoard.name);
-    const [ errMsg, setErrMsg ] = useState("");
-    // for new columns
-    const counterRef = useRef(curBoard.columns.length);
     // need to use a combination of changing keys (formKey, which is attached to dialog element, changes every time curBoardId changes or the dialog element is closed) and defaultValue equal to an empty string or a bit of context (not state) on certain inputs to wipe out stale state
     const [ formKey, setFormKey ] = useState(0);
+    const [ boardName, setBoardName ] = useState(curBoard.name);
+    const [ errMsg, setErrMsg ] = useState("");
+    const [ colsTBD, setColsTBD ] = useState([]);
+    // for new columns
+    const counterRef = useRef(curBoard.columns.length);
 
     function handleChange(e) {
         const input = e.target;
@@ -68,6 +68,7 @@ const EditBoard = function({ setDisplayMsg, colValues, setColValues }) {
         if (!errMsg) { 
             let columns = [];
             colValues.forEach(col => {
+                // filters out any column fields that were left empty and formats info in the object
                 if (col.value) columns.push({ name: col.value, id: col.id });
             });     
 
@@ -77,7 +78,8 @@ const EditBoard = function({ setDisplayMsg, colValues, setColValues }) {
                 body: JSON.stringify({ 
                     name: boardName, 
                     boardId: curBoardId,
-                    columns
+                    // sends both columns that need to be added/updated and columns that need to be deleted
+                    columns: [...columns, ...colsTBD]
                 }),
                 // indicates whether user should receive AND send cookies
                 credentials: "include"
@@ -138,7 +140,7 @@ const EditBoard = function({ setDisplayMsg, colValues, setColValues }) {
                     <label htmlFor="boardName">Board Name</label>
                     <input type="text" id="boardName" defaultValue={curBoard.name} onChange={handleChange} maxLength="20" required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
-                    {colValues ? <Fields type="col" values={colValues} valuesSetter={setColValues} counterRef={counterRef} /> : null }
+                    {colValues ? <Fields type="col" values={colValues} setValues={setColValues} counterRef={counterRef} valuesTBD={colsTBD} setValuesTBD={setColsTBD} /> : null }
                     <button className="save-btn" type="submit">Save Changes</button>
                     <button className="delete-btn" type="button" onClick={() => {handleEditBoardModal(); handleDeleteBoardModal("show");}}>Delete Board</button>
                     <button className="close-modal" type="button" onClick={handleEditBoardModal}>

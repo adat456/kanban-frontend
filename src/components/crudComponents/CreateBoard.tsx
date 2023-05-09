@@ -109,7 +109,7 @@ const CreateBoard = function({ setDisplayMsg, colValues, setColValues }) {
                     <label htmlFor="boardName">Board Name *</label>
                     <input type="text" id="boardName" onChange={handleChange} maxLength="20" required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
-                    <Fields type="col" values={colValues} valuesSetter={setColValues} counterRef={counterRef} />
+                    <Fields type="col" values={colValues} setValues={setColValues} counterRef={counterRef} />
                     <button type="submit" className="save-btn">Create New Board</button>
                 </form>
                 <button className="close-modal" type="button" onClick={handleCreateBoardModal}>

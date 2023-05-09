@@ -156,7 +156,7 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg, subtaskValues, 
                     <input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" maxLength="30" required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     <label htmlFor="desc">Description<textarea rows="5" id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." maxLength="200" /></label>
-                    <Fields type="subtask" values={subtaskValues} valuesSetter={setSubtaskValues} counterRef={counterRef} />
+                    <Fields type="subtask" values={subtaskValues} setValues={setSubtaskValues} counterRef={counterRef} />
                     <label htmlFor="column">Column
                         <select name="column" id="column" defaultValue={curCol}>
                             {colOptions}
