@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { BoardsContext, CurBoardIdContext, ModeContext } from "../../Context";
 import { useNavigate } from "react-router-dom";
 
@@ -15,9 +15,18 @@ const Sidebar = function({ loading, setMode, setSidebarVis, setDisplayMsg }) {
         setCurBoardId(boardId);
     };
 
+    // originally in CreateBoard, moved up so that every time the modal is opened or closed, the colValues are reset... replaces stale state
+    const [ colValues, setColValues ] = useState([
+        { id: 1, value: "" },
+        { id: 2, value: "" },
+    ]);
     function handleCreateBoardModal() {
         const createBoardModal = document.querySelector("#create-board-modal");
         createBoardModal.showModal();
+        setColValues([
+            { id: 1, value: "" },
+            { id: 2, value: "" },
+        ]);
     };
 
     let boardLinks;
@@ -82,7 +91,7 @@ const Sidebar = function({ loading, setMode, setSidebarVis, setDisplayMsg }) {
                     </div>
                 </div>
             }
-            <CreateBoard setDisplayMsg={setDisplayMsg} />
+            <CreateBoard setDisplayMsg={setDisplayMsg} colValues={colValues} setColValues={setColValues} />
             <div className="sidebar-btm-cluster">
                 <div className="mode-toggle">
                     <svg viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg"><path d="M9.167 15.833a.833.833 0 0 1 .833.834v.833a.833.833 0 0 1-1.667 0v-.833a.833.833 0 0 1 .834-.834ZM3.75 13.75a.833.833 0 0 1 .59 1.422l-1.25 1.25a.833.833 0 0 1-1.18-1.178l1.25-1.25a.833.833 0 0 1 .59-.244Zm10.833 0c.221 0 .433.088.59.244l1.25 1.25a.833.833 0 0 1-1.179 1.178l-1.25-1.25a.833.833 0 0 1 .59-1.422ZM9.167 5a4.167 4.167 0 1 1 0 8.334 4.167 4.167 0 0 1 0-8.334Zm-7.5 3.333a.833.833 0 0 1 0 1.667H.833a.833.833 0 1 1 0-1.667h.834Zm15.833 0a.833.833 0 0 1 0 1.667h-.833a.833.833 0 0 1 0-1.667h.833Zm-1.667-6.666a.833.833 0 0 1 .59 1.422l-1.25 1.25a.833.833 0 1 1-1.179-1.178l1.25-1.25a.833.833 0 0 1 .59-.244Zm-13.333 0c.221 0 .433.088.59.244l1.25 1.25a.833.833 0 0 1-1.18 1.178L1.91 3.09a.833.833 0 0 1 .59-1.422ZM9.167 0A.833.833 0 0 1 10 .833v.834a.833.833 0 1 1-1.667 0V.833A.833.833 0 0 1 9.167 0Z" fill="#828FA3"/></svg>

@@ -61,6 +61,7 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg }
         // getting the column if it changed
         const selElement = document.getElementById("column");
         const updatedColId = selElement.value;
+        console.log(updatedColId);
         
         const reqOptions = {
             method: "POST",

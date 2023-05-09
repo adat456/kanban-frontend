@@ -25,11 +25,19 @@ const Column = function({ col, order, columnsArr, setDisplayMsg }) {
         </div>
     );
 
+    const [ subtaskValues, setSubtaskValues ] = useState([
+        { id: 1, value: "" },
+        { id: 2, value: "" },
+    ]);
     // sets the id of the current column so that the new task will be created under the right column, and toggles CreateTask visibility
     function displayTask(colId) {
         setCurCol(colId);
         const createTaskModal = document.querySelector("#create-task-modal");
         createTaskModal.showModal();
+        setSubtaskValues([
+            { id: 1, value: "" },
+            { id: 2, value: "" },
+        ]);
     };
 
     return (
@@ -38,7 +46,7 @@ const Column = function({ col, order, columnsArr, setDisplayMsg }) {
             {(tasks.length > 0) ? <DroppableSpace id={`${col._id}0`} /> : null }
             {tasks}
             <button type="button" className="add-task-btn" onClick={() => displayTask(col._id)}>+ New Task</button>
-            <CreateTask curCol={curCol} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
+            <CreateTask curCol={curCol} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} subtaskValues={subtaskValues} setSubtaskValues={setSubtaskValues} />
         </section>
     );
 };

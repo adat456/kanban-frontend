@@ -1,28 +1,16 @@
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useContext, useRef } from "react";
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
+import Fields from "./Fields";
 
-const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
+const CreateTask = function({ curCol, columnsArr, setDisplayMsg, subtaskValues, setSubtaskValues }) {
     const [ task, setTask ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required.");
     const [ desc, setDesc ] = useState("");
+    
+    const counterRef = useRef(3);
     // https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/?utm_source=pocket_saves#keys-and-reconciliation
     const [ formKey, setFormKey ] = useState(0);
-    // TRIAL
-    const [ subtaskValues, setSubtaskValues ] = useState({
-        subtask1: {
-            id: 1,
-            value: "",
-        },
-        subtask2: {
-            id: 2,
-            value: "",
-        },
-    });
-    const counterRef = useRef(3);
-    const [ subtaskFields, setSubtaskFields ] = useState([]);
-    // const [ numSubtasks, setNumSubtasks ] = useState(2);
-    // const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
@@ -33,53 +21,6 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
             <option key={col._id} value={col._id}>{col.name}</option>
         );
     });
-
-    // TRIAL
-    useEffect(() => {    
-        const subtasks = Object.values(subtaskValues);
-        const subtaskFieldsArr = subtasks.map(subtask => {
-            return (
-                <label key={subtask.id} htmlFor={`subtask${subtask.id}`}className="subtask-label">
-                    <input type="text" data-id={subtask.id} id={`subtask${subtask.id}`} value={subtask.value} onChange={handleSubtaskFieldChange} name="subtasks" className="create-subtasks" maxLength="50" />
-                    <button type="button" data-id={subtask.id} onClick={handleSubtaskFieldRemoval}>
-                        <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
-                    </button>
-                </label>
-            );
-        });
-
-        setSubtaskFields(subtaskFieldsArr);
-    }, [subtaskValues]);
-
-    function handleSubtaskFieldChange(e) {
-        const subtaskId = e.target.getAttribute("data-id");
-        
-        const subtaskValuesCopy = subtaskValues;
-        subtaskValuesCopy[`subtask${subtaskId}`].value = e.target.value;
-        console.log(subtaskValuesCopy);
-        setSubtaskValues(subtaskValuesCopy);
-    };
-
-    function handleSubtaskFieldRemoval(e) {
-        // const subtaskField = e.target;
-        // const subtaskId = subtaskField.getAttribute("data-id");
-
-        // const filteredSubtaskValues = subtaskValues.filter(subtask => {
-        //     return (subtask.id !== subtaskId);
-        // });
-        // setSubtaskValues(filteredSubtaskValues);
-    };
-
-    function handleAddSubtaskField() {
-        
-    };
-    // function handleAddSubtaskField() {
-    //     // this first setState call will not click in until the next click, which is why the initial value is 2 instead of 1 (0-indexed)
-    //     setNumSubtasks(numSubtasks + 1);
-    //     setExtraSubtaskFields(extraSubtaskFields => [...extraSubtaskFields,
-    //         <label key={numSubtasks} htmlFor={`subtask${numSubtasks}`}className="subtask-label"><input type="text" id={`subtask${numSubtasks}`} name="subtasks" className="create-subtasks" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-    //     ]);
-    // };
 
     function handleChange(e) {
         const input = e.target;
@@ -117,10 +58,6 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
         if (field === "desc") setDesc(input.value);
     };
 
-    useEffect(() => {
-        if (task === "") setErrMsg("Field required.");
-    }, [task]);
-
     function handleCreateTaskModal() {
         const createTaskModal = document.querySelector("#create-task-modal");
         createTaskModal.close();
@@ -135,18 +72,14 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
         if (!errMsg) {
             // get subtasks and format in arr
             let subtasks = [];      
-            function pullSubtaskNames() {
-                const subtaskArr = [...document.getElementsByClassName("create-subtasks")];
-                subtaskArr.forEach(subtask => {
-                    if (subtask.value) {
-                        subtasks.push({
-                            subtask: subtask.value,
-                            status: false,
-                        });
-                    };
-                });
-            };
-            pullSubtaskNames();
+            subtaskValues.forEach(subtask => {
+                if (subtask.value) {
+                    subtasks.push({
+                        subtask: subtask.value,
+                        status: false,
+                    });
+                };
+            });
 
             // get id of column that task will be assigned to
             const selElement = document.getElementById("column");
@@ -223,15 +156,7 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg }) {
                     <input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" maxLength="30" required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     <label htmlFor="desc">Description<textarea rows="5" id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." maxLength="200" /></label>
-                    <fieldset>
-                        <legend>Subtasks</legend>
-                        {/* TRIAL */}
-                        {subtaskFields}
-                        {/* <label htmlFor="subtask0" className="subtask-label"><input type="text" id="subtask0" name="subtasks" className="create-subtasks" placeholder="e.g., Make coffee" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-                        <label htmlFor="subtask1" className="subtask-label"><input type="text" id="subtask1" name="subtasks" className="create-subtasks" placeholder="e.g., Drink coffee and smile" maxLength="50" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-                        {extraSubtaskFields} */}
-                        <button type="button" className="add-btn" onClick={handleAddSubtaskField}>+ Add New Subtask</button>
-                    </fieldset>
+                    <Fields type="subtask" values={subtaskValues} valuesSetter={setSubtaskValues} counterRef={counterRef} />
                     <label htmlFor="column">Column
                         <select name="column" id="column" defaultValue={curCol}>
                             {colOptions}

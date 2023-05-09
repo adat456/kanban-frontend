@@ -1,9 +1,10 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
+import Fields from "./Fields";
 
-const EditBoard = function({ setDisplayMsg }) {
+const EditBoard = function({ setDisplayMsg, colValues, setColValues }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
 
@@ -11,23 +12,10 @@ const EditBoard = function({ setDisplayMsg }) {
 
     const [ boardName, setBoardName ] = useState(curBoard.name);
     const [ errMsg, setErrMsg ] = useState("");
-    const [ numCols, setNumCols ] = useState(curBoard.columns.length);
-    const [ extraColFields, setExtraColFields ] = useState([]);
+    // for new columns
+    const counterRef = useRef(curBoard.columns.length);
     // need to use a combination of changing keys (formKey, which is attached to dialog element, changes every time curBoardId changes or the dialog element is closed) and defaultValue equal to an empty string or a bit of context (not state) on certain inputs to wipe out stale state
     const [ formKey, setFormKey ] = useState(0);
-
-    const existingColFields = curBoard.columns.map((col, index) => {
-        return (
-            <label key={index} htmlFor={`col${index}`} className="col-label"><input type="text" name="columns" className="columns edit-brd-cols" id={`col${index}`} data-id={col._id} defaultValue={col.name} /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-        );
-    });
-
-    function handleAddColField() {
-        setNumCols(numCols + 1);
-        setExtraColFields(extraColFields => [...extraColFields,
-            <label key={numCols} htmlFor={`col${numCols}`} className="col-label"><input type="text" id={`col${numCols}`} name="columns" className="columns edit-brd-cols" /><svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg></label>
-        ]);
-    };
 
     function handleChange(e) {
         const input = e.target;
@@ -77,20 +65,11 @@ const EditBoard = function({ setDisplayMsg }) {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        if (!errMsg) {
-            let columns = [];      
-            function pullColumns() {
-                const colArr = [...document.getElementsByClassName("edit-brd-cols")];
-                colArr.forEach((col, index) => {
-                    // push all columns regardless of whether field is an emptry string; if it has an id, mongodb will delete that column, if it does not, mongodb will not add another column
-                    columns.push({
-                        name: col.value,
-                        order: index,
-                        id: col.getAttribute("data-id"),
-                    });
-                });
-            };
-            pullColumns();
+        if (!errMsg) { 
+            let columns = [];
+            colValues.forEach(col => {
+                if (col.value) columns.push({ name: col.value, id: col.id });
+            });     
 
             const reqOptions = {
                 method: "POST",
@@ -153,24 +132,19 @@ const EditBoard = function({ setDisplayMsg }) {
 
     return (
         <div>
-            <dialog key={formKey} className="form-modal" id="edit-board-modal">
+            <dialog key={formKey} className="form-modal" id="edit-board-modal"> 
                 <form method="POST" className="edit-brd-form" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Board</h2>
                     <label htmlFor="boardName">Board Name</label>
                     <input type="text" id="boardName" defaultValue={curBoard.name} onChange={handleChange} maxLength="20" required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
-                    <fieldset>
-                        <legend>Columns</legend>
-                        {existingColFields}
-                        {extraColFields}
-                        <button type="button" className="add-btn" onClick={handleAddColField}>+ Add New Column</button>
-                    </fieldset>
+                    {colValues ? <Fields type="col" values={colValues} valuesSetter={setColValues} counterRef={counterRef} /> : null }
                     <button className="save-btn" type="submit">Save Changes</button>
                     <button className="delete-btn" type="button" onClick={() => {handleEditBoardModal(); handleDeleteBoardModal("show");}}>Delete Board</button>
                     <button className="close-modal" type="button" onClick={handleEditBoardModal}>
                         <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
                     </button>
-                </form>
+                </form>       
             </dialog>
             <dialog className="delete-modal" id="delete-board-modal">
                 <h2>Delete this board?</h2>
