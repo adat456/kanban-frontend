@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
@@ -6,6 +6,8 @@ import { handleDisplayMsg } from "../helpers";
 const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, handleEditTaskModal }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
+
+    const [ updatedColId, setUpdatedColId ] = useState(colId);
     
     let numCompleteSubtasks = 0;
     const subtasksArr = subtasks.map(subtask => {
@@ -53,10 +55,6 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
                 status: subtask.checked
             });
         });
-
-        // getting the column if it changed
-        const selElement = document.getElementById("column");
-        const updatedColId = selElement.value;
         
         const reqOptions = {
             method: "POST",
@@ -112,7 +110,7 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
                     {subtasksArr}
                 </fieldset>
                 <label htmlFor="column">Column
-                    <select name="column" id="column" defaultValue={colId}>
+                    <select name="column" id="column" defaultValue={colId} onChange={(e) => setUpdatedColId(e.target.value)} >
                         {colOptions}
                     </select>
                 </label>

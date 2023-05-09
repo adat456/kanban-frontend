@@ -8,15 +8,11 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
     const [ task, setTask ] = useState(name);
     const [ errMsg, setErrMsg ] = useState("");
     const [ description, setDescription ] = useState(desc);
-
-    // added
     const [ subtasksTBD, setSubtasksTBD ] = useState([]);
-    const counterRef = useRef(subtaskValues.length);
-
-    // const [ numSubtasks, setNumSubtasks ] = useState(subtasks.length);
-    // const [ extraSubtaskFields, setExtraSubtaskFields ] = useState([]);
-
+    const [ updatedColId, setUpdatedColId ] = useState(colId);
     const [ formKey, setFormKey ] = useState(0);
+
+    const counterRef = useRef(subtaskValues.length);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
@@ -84,9 +80,6 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
             subtaskValues.forEach(subtask => {
                 if (subtask.value) subtasks.push({ name: subtask.value, id: subtask.id, status: false })
             });
-
-            const selElement = document.getElementById("column");
-            const updatedColId = selElement.value;
 
             const reqOptions = {
                 method: "POST",
@@ -160,7 +153,7 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
                     <label htmlFor="description">Description<textarea id="description" name="description" value={description} onChange={handleChange} rows="5" maxLength="200" /></label>
                     <Fields type="subtask" values={subtaskValues} setValues={setSubtaskValues} counterRef={counterRef} valuesTBD={subtasksTBD} setValuesTBD={setSubtasksTBD} />
                     <label htmlFor="column">Column
-                        <select name="column" id="column" defaultValue={colId}>
+                        <select name="column" id="column" defaultValue={colId} onChange={(e) => setUpdatedColId(e.target.value)} >
                             {colOptions}
                         </select>
                     </label>
