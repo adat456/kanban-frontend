@@ -1,12 +1,18 @@
 import { useState } from "react";
-
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 
+import { columnData } from "../../Context";
 import CreateTask from "../crudComponents/CreateTask";
 import Task from "./Task";
 
-const Column = function({ col, order, columnsArr, setDisplayMsg }) {
-    const [ curCol, setCurCol ] = useState();
+interface Prop {
+    col: columnData,
+    columnsArr: columnData[],
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>
+};
+
+const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
+    const [ curCol, setCurCol ] = useState("");
 
     // each column is a droppable...
     const { isOver, setNodeRef } = useDroppable({ id: col._id });
@@ -14,7 +20,7 @@ const Column = function({ col, order, columnsArr, setDisplayMsg }) {
         {
             backgroundColor: "#E9EFFA",
             padding: "2rem 1rem 0 1rem"
-        } : null;
+        } : undefined;
 
     // but there are also droppable spaces, which consist of the joined column ID and order
     const tasksArr = col.tasks;
@@ -26,17 +32,17 @@ const Column = function({ col, order, columnsArr, setDisplayMsg }) {
     );
 
     const [ subtaskValues, setSubtaskValues ] = useState([
-        { id: 1, value: "" },
-        { id: 2, value: "" },
+        { id: "1", value: "" },
+        { id: "2", value: "" },
     ]);
     // sets the id of the current column so that the new task will be created under the right column, and toggles CreateTask visibility
-    function displayTask(colId) {
+    function displayTask(colId: string) {
         setCurCol(colId);
-        const createTaskModal = document.querySelector("#create-task-modal");
-        createTaskModal.showModal();
+        const createTaskModal: HTMLDialogElement | null = document.querySelector("#create-task-modal");
+        createTaskModal?.showModal();
         setSubtaskValues([
-            { id: 1, value: "" },
-            { id: 2, value: "" },
+            { id: "1", value: "" },
+            { id: "2", value: "" },
         ]);
     };
 
@@ -51,7 +57,7 @@ const Column = function({ col, order, columnsArr, setDisplayMsg }) {
     );
 };
 
-const DroppableSpace = function({ id }) {
+const DroppableSpace: React.FC<{id: string}> = function({ id }) {
     const { isOver, setNodeRef } = useDroppable({ id });
 
     // style (making the droppable space/line visible) is only applied when the task/droppable is over the element
@@ -64,7 +70,7 @@ const DroppableSpace = function({ id }) {
             display: "flex",
             justifyContent: "flex-start",
             alignItems: "center"
-        } : null;
+        } : undefined;
 
     const numStyle = isOver ?
         {

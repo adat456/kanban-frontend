@@ -1,12 +1,21 @@
-import { useState, useContext, useRef } from "react";
-import { BoardsContext, CurBoardIdContext } from "../../Context";
+import React, { useState, useContext, useRef } from "react";
+import { BoardsContext, CurBoardIdContext, columnData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
 
-const CreateTask = function({ curCol, columnsArr, setDisplayMsg, subtaskValues, setSubtaskValues }) {
+interface Prop {
+    curCol: string,
+    columnsArr: columnData[],
+    subtaskValues: {id: string, value: string}[],
+    setSubtaskValues: React.Dispatch<React.SetStateAction<{id: string, value: string}[]>>,
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>
+};
+
+const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg, subtaskValues, setSubtaskValues }) {
     const [ task, setTask ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required.");
     const [ desc, setDesc ] = useState("");
+    const [ updatedColId, setUpdatedColId ] = useState("");
     
     const counterRef = useRef(3);
     // https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/?utm_source=pocket_saves#keys-and-reconciliation
@@ -22,7 +31,7 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg, subtaskValues, 
         );
     });
 
-    function handleChange(e) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const input = e.target;
         const field = e.target.getAttribute("id");
 
@@ -38,7 +47,7 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg, subtaskValues, 
                 }); 
 
                 if (valid) {
-                    setErrMsg(null);
+                    setErrMsg("");
                     input.setCustomValidity("");
                 } else {
                     setErrMsg("Task name must be unique.");
@@ -59,19 +68,19 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg, subtaskValues, 
     };
 
     function handleCreateTaskModal() {
-        const createTaskModal = document.querySelector("#create-task-modal");
-        createTaskModal.close();
+        const createTaskModal: HTMLDialogElement | null = document.querySelector("#create-task-modal");
+        createTaskModal?.close();
         // part of clearing stale state
         setFormKey(formKey + 1);
         setErrMsg("Field required.");
     };
 
-    async function handleSubmit(e) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         if (!errMsg) {
             // get subtasks and format in arr
-            let subtasks = [];      
+            let subtasks: {subtask: string, status: boolean}[] = [];      
             subtaskValues.forEach(subtask => {
                 if (subtask.value) {
                     subtasks.push({
@@ -81,26 +90,13 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg, subtaskValues, 
                 };
             });
 
-            // get id of column that task will be assigned to
-            const selElement = document.getElementById("column");
-            const columnId = selElement.value;
-
-            // get order of task based on number of existing tasks in that column
-            let numTasksinCol;
-            curBoard.columns.forEach(col => {
-                if (col._id === columnId) {
-                    numTasksinCol = col.tasks.length;
-                };
-            });
-
-            const reqOptions = {
+            const reqOptions: RequestInit = {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({ 
                     boardId: curBoardId, 
-                    columnId, 
+                    columnId: updatedColId, 
                     task, 
-                    order: numTasksinCol,
                     desc, 
                     subtasks
                 }),
@@ -153,15 +149,15 @@ const CreateTask = function({ curCol, columnsArr, setDisplayMsg, subtaskValues, 
                 <form method="POST" onSubmit={handleSubmit} noValidate>
                     <h2>Add New Task</h2>
                     <label htmlFor="task">Title</label>
-                    <input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" maxLength="30" required />
+                    <input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" maxLength={30} required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
-                    <label htmlFor="desc">Description<textarea rows="5" id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." maxLength="200" /></label>
+                    <label htmlFor="desc">Description</label>
+                    <textarea rows={5} id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." maxLength={200} />
                     <Fields type="subtask" values={subtaskValues} setValues={setSubtaskValues} counterRef={counterRef} />
-                    <label htmlFor="column">Column
-                        <select name="column" id="column" defaultValue={curCol}>
-                            {colOptions}
-                        </select>
-                    </label>
+                    <label htmlFor="column">Column</label>
+                    <select name="column" id="column" defaultValue={curCol} onChange={(e) => setUpdatedColId(e.target.value)}>
+                        {colOptions}
+                    </select>
                     <button type="submit" className="save-btn">Create Task</button>
                 </form>
                 <button className="close-modal" type="button" onClick={handleCreateTaskModal}>

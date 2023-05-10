@@ -1,9 +1,16 @@
-import { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef } from "react";
 import { BoardsContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
 
-const CreateBoard = function({ setDisplayMsg, colValues, setColValues }) {
+interface Prop {
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
+    colValues: {id: string, value: string}[],
+    setColValues: React.Dispatch<React.SetStateAction<{id: string, value: string}[]>>
+};
+
+const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, colValues, setColValues}) {
+
     const [ boardName, setBoardName ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required");
     const counterRef = useRef(3);
@@ -13,7 +20,7 @@ const CreateBoard = function({ setDisplayMsg, colValues, setColValues }) {
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     
-    function handleChange(e) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const input = e.target;
 
         // if there's an input at all 
@@ -25,7 +32,7 @@ const CreateBoard = function({ setDisplayMsg, colValues, setColValues }) {
             }); 
 
             if (valid) {
-                setErrMsg(null);
+                setErrMsg("");
                 input.setCustomValidity("");
             } else {
                 setErrMsg("Board name must be unique.");
@@ -43,22 +50,22 @@ const CreateBoard = function({ setDisplayMsg, colValues, setColValues }) {
     };
 
     function handleCreateBoardModal() {
-        const createBoardModal = document.querySelector("#create-board-modal");
-        createBoardModal.close();
+        const createBoardModal: HTMLDialogElement | null = document.querySelector("#create-board-modal");
+        createBoardModal?.close();
         setFormKey(formKey + 1);
         setErrMsg("Field required.");
     };
 
-    async function handleSubmit(e) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         if (!errMsg) {
-            let columns = [];
+            let columns: {name: string}[] = [];
             colValues.forEach(col => {
                 if (col.value) columns.push({ name: col.value });
             });
 
-            const reqOptions = {
+            const reqOptions: RequestInit = {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({ name: boardName, columns }),
@@ -107,7 +114,7 @@ const CreateBoard = function({ setDisplayMsg, colValues, setColValues }) {
                 <form method="POST" onSubmit={handleSubmit} noValidate>
                     <h2>Add New Board</h2>
                     <label htmlFor="boardName">Board Name *</label>
-                    <input type="text" id="boardName" onChange={handleChange} maxLength="20" required />
+                    <input type="text" id="boardName" onChange={handleChange} maxLength={20} required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     <Fields type="col" values={colValues} setValues={setColValues} counterRef={counterRef} />
                     <button type="submit" className="save-btn">Create New Board</button>

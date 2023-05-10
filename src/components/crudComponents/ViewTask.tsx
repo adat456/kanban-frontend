@@ -1,31 +1,53 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 
-import { BoardsContext, CurBoardIdContext } from "../../Context";
+import { BoardsContext, CurBoardIdContext, subtaskData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
-const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, handleEditTaskModal }) {
+interface Prop {
+    name: string,
+    desc: string,
+    subtasks: subtaskData[],
+    colId: string,
+    taskId: string,
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
+    handleEditTaskModal: (taskId: string) => void
+};
+
+const ViewTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, handleEditTaskModal }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
 
     const [ updatedColId, setUpdatedColId ] = useState(colId);
-    
+    // const [ numCompleteSubtasks , setNumCompleteSubtasks ] = useState(numComplete);
+
     let numCompleteSubtasks = 0;
     const subtasksArr = subtasks.map(subtask => {
         if (subtask.status) {
             numCompleteSubtasks++;
             return (
                 <div className="subtask checked-subtask" key={subtask._id}>
-                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} defaultChecked />{subtask.subtask}</label>
+                    <label htmlFor={subtask._id}>{subtask.subtask}</label>
+                    <input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={updateNumCompleteSubtasks} defaultChecked />
                 </div>
             );
         } else {
             return (
                 <div className="subtask" key={subtask._id}>
-                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} />{subtask.subtask}</label>
+                    <label htmlFor={subtask._id}>{subtask.subtask}</label>
+                    <input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={updateNumCompleteSubtasks} />
                 </div>
             );
         };
     });
+
+    function updateNumCompleteSubtasks() {
+        // let numCompleteSubtasks = 0;
+        // const arr = [...document.querySelectorAll(`.a${taskId}-subtask-checkbox`)];
+        // arr.forEach(item => {
+        //     if (item.checked) numCompleteSubtasks++;
+        // });
+        // setNumCompleteSubtasks(numCompleteSubtasks);
+    }
 
     let columnsArr;
     boardsData.forEach(board => {
@@ -40,15 +62,15 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
     });
 
     function handleViewTaskModal() {
-        const viewTaskModal = document.querySelector(`#view-task-modal-${taskId}`);
-        viewTaskModal.close();
+        const viewTaskModal: HTMLDialogElement | null = document.querySelector(`#view-task-modal-${taskId}`);
+        viewTaskModal?.close();
     };
 
-    async function handleSubmitUpdates(e) {
+    async function handleSubmitUpdates(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         // getting subtask IDs and their statuses
-        let subtasks = [];
+        let subtasks: {id: string, status: boolean}[] = [];
         document.getElementsByName("subtasks").forEach(subtask => {
             subtasks.push({
                 id: subtask.id,
@@ -56,7 +78,7 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
             });
         });
         
-        const reqOptions = {
+        const reqOptions: RequestInit = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({  
@@ -105,15 +127,14 @@ const ViewTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
                     <button type="button" onClick={() => {handleViewTaskModal(); handleEditTaskModal(taskId);}}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
                 </div>   
                 <p>{desc}</p>
-                <fieldset className="checkboxes-field">
+                <fieldset className="checkboxes-field"> 
                     <legend>{`Subtasks (${numCompleteSubtasks} of ${subtasks.length})`}</legend>
                     {subtasksArr}
                 </fieldset>
-                <label htmlFor="column">Column
-                    <select name="column" id="column" defaultValue={colId} onChange={(e) => setUpdatedColId(e.target.value)} >
-                        {colOptions}
-                    </select>
-                </label>
+                <label htmlFor="column">Column</label>
+                <select name="column" id="column" defaultValue={colId} onChange={(e) => setUpdatedColId(e.target.value)} >
+                    {colOptions}
+                </select>
                 <button type="submit" className="save-btn" onClick={handleSubmitUpdates}>Save Changes</button>
             </form>
             <button className="close-modal" type="button" onClick={handleViewTaskModal}>

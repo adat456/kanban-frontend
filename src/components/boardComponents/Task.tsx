@@ -4,9 +4,20 @@ import { CSS } from "@dnd-kit/utilities";
 
 import ViewTask from "../crudComponents/ViewTask";
 import EditTask from "../crudComponents/EditTask";
+import { subtaskData } from "../../Context";
 
-const Task = function({ id, name, desc, order, subtasks, colId, setDisplayMsg }) {
-    const dragHandleRef = useRef(null);
+interface Prop {
+    id: string,
+    name: string,
+    desc: string,
+    order: number,
+    subtasks: subtaskData[],
+    colId: string,
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>
+};
+
+const Task: React.FC<Prop> = function({ id, name, desc, order, subtasks, colId, setDisplayMsg }) {
+    const dragHandleRef = useRef<HTMLDivElement | null>(null);
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         // all of this data is sent to DndContext in Board.tsx to be processed by onDragStart (and onDragEnd)
@@ -29,29 +40,29 @@ const Task = function({ id, name, desc, order, subtasks, colId, setDisplayMsg })
         touchAction: "none"
     };
 
-    function handleDragHandleVis(boolean) {
+    function handleDragHandleVis(boolean: boolean) {
         if (boolean) {
-            dragHandleRef.current.classList.remove("hidden");
-            dragHandleRef.current.classList.add("dragHandle");
+            dragHandleRef?.current?.classList.remove("hidden");
+            dragHandleRef?.current?.classList.add("dragHandle");
         };
         if (!boolean) {
-            dragHandleRef.current.classList.add("hidden");
-            dragHandleRef.current.classList.remove("dragHandle");
+            dragHandleRef?.current?.classList.add("hidden");
+            dragHandleRef?.current?.classList.remove("dragHandle");
         };
     };
 
     function handleViewTaskModal() {
-        const viewTaskModal = document.querySelector(`#view-task-modal-${id}`);
-        viewTaskModal.showModal();
+        const viewTaskModal: HTMLDialogElement | null = document.querySelector(`#view-task-modal-${id}`);
+        viewTaskModal?.showModal();
     };
     // added
     const [ subtaskValues, setSubtaskValues ] = useState(
         subtasks.map(subtask => { return {id: subtask._id, value: subtask.subtask}})
     );
     // moved from ViewTask, currently passed into ViewTask as a prop
-    function handleEditTaskModal(id) {
-        const editTaskModal = document.querySelector(`#edit-task-modal-${id}`);
-        editTaskModal.showModal();
+    function handleEditTaskModal(id: string) {
+        const editTaskModal: HTMLDialogElement | null = document.querySelector(`#edit-task-modal-${id}`);
+        editTaskModal?.showModal();
         // added
         setSubtaskValues(subtasks.map(subtask => { return {id: subtask._id, value: subtask.subtask}}));
     };
@@ -70,7 +81,7 @@ const Task = function({ id, name, desc, order, subtasks, colId, setDisplayMsg })
                 </div>
             </div>
             <ViewTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setDisplayMsg={setDisplayMsg} handleEditTaskModal={handleEditTaskModal} /> 
-            <EditTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setDisplayMsg={setDisplayMsg} subtaskValues={subtaskValues} setSubtaskValues={setSubtaskValues} />
+            <EditTask name={name} desc={desc} colId={colId} taskId={id} setDisplayMsg={setDisplayMsg} subtaskValues={subtaskValues} setSubtaskValues={setSubtaskValues} />
         </>
     );
 };

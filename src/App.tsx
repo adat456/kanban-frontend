@@ -6,7 +6,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import AllBoards from "./components/AllBoards";
 
-function App() {
+const App: React.FC = function() {
   const [ mode, setMode ] = useState("light");
 
   useEffect(() => {

@@ -1,30 +1,42 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState, NamedExoticComponent } from "react";
 import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from "@dnd-kit/core";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import Column from "./Column";
 import EditBoard from "../crudComponents/EditBoard";
 
-const Board = function({ setDisplayMsg, colValues, setColValues }) {
+interface Prop {
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
+    colValues: {id: string, value: string}[] | null | undefined,
+    setColValues: React.Dispatch<React.SetStateAction<{id: string, value: string}[] | null | undefined>>
+};
+
+interface draggableInfoProp {
+    order: string,
+    taskId: string,
+    colId: string
+};
+
+const Board: React.FC<Prop> = function({ setDisplayMsg, colValues, setColValues }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData.find(board => board._id === curBoardId);
     const columnsArr = curBoard.columns;
 
-    const [ draggableInfo, setDraggableInfo ] = useState({ 
+    const [ draggableInfo, setDraggableInfo ] = useState<draggableInfoProp | null>({ 
         order: "", 
         taskId: "", 
         colId: ""
     });
 
     // rendering columns w/ their tasks
-    const columns = columnsArr.map((col, index) => 
-        <Column key={col._id} order={index} col={col} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
+    const columns = columnsArr.map(col => 
+        <Column key={col._id} col={col} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
     );
 
     function handleEditBoardModal() {
-        const editBoardModal = document.querySelector("#edit-board-modal");
-        editBoardModal.showModal();
+        const editBoardModal: HTMLDialogElement | null = document.querySelector("#edit-board-modal");
+        editBoardModal?.showModal();
         setColValues(curBoard.columns.map(col => { return {id: col._id, value: col.name}}));
     };
 
@@ -37,7 +49,7 @@ const Board = function({ setDisplayMsg, colValues, setColValues }) {
     });
     const sensors = useSensors(pointerSensor);
 
-    function handleDragStart(e) {
+    function handleDragStart(e: any) {
         setDraggableInfo({
             // can access the id of the draggable
             taskId: e.active.id,
@@ -47,13 +59,12 @@ const Board = function({ setDisplayMsg, colValues, setColValues }) {
         });
     };
 
-    async function handleDragEnd(e) {
+    async function handleDragEnd(e: any) {
         // information about the droppable
         const { over } = e;
-        console.log(e);
-
+    
         // if it's being dropped into a column (no order specified) that is different from the current column
-        if (over.id.length === 24 && over.id !== draggableInfo.colId) {
+        if (over.id.length === 24 && over.id !== draggableInfo?.colId) {
             updateTaskColumn(over);
         };
 
@@ -64,16 +75,16 @@ const Board = function({ setDisplayMsg, colValues, setColValues }) {
         };
     };
 
-    async function updateTaskColumn(droppable, updatedTaskOrder) {
+    async function updateTaskColumn(droppable: any, updatedTaskOrder?: number) {
         try {
-            const reqOptions = {
+            const reqOptions: RequestInit = {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({  
                     boardId: curBoardId,
-                    colId: draggableInfo.colId,
-                    taskId: draggableInfo.taskId,
-                    taskOrder: draggableInfo.order,
+                    colId: draggableInfo?.colId,
+                    taskId: draggableInfo?.taskId,
+                    taskOrder: draggableInfo?.order,
                     updatedColId: (droppable.id.length === 24) ? droppable.id : droppable.id.slice(0, -1),
                     updatedTaskOrder
                 }),
@@ -99,13 +110,13 @@ const Board = function({ setDisplayMsg, colValues, setColValues }) {
     };
 
     return (
-        <main>
+        <>
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {columns}
                 <button type="button" className="add-column-btn" onClick={handleEditBoardModal}>+ New Column</button>
                 <EditBoard setDisplayMsg={setDisplayMsg} colValues={colValues} setColValues={setColValues} />
             </DndContext>
-        </main>
+        </>
     );
 };
 

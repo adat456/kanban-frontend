@@ -4,7 +4,17 @@ import { BoardsContext, CurBoardIdContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
 
-const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, subtaskValues, setSubtaskValues }) {
+interface Prop {
+    name: string,
+    desc: string,
+    colId: string,
+    taskId: string,
+    subtaskValues: {id: string, value: string}[],
+    setSubtaskValues: React.Dispatch<React.SetStateAction<{id: string, value: string}[]>>,
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>
+};
+
+const EditTask: React.FC<Prop> = function({ name, desc, colId, taskId, setDisplayMsg, subtaskValues, setSubtaskValues }) {
     const [ task, setTask ] = useState(name);
     const [ errMsg, setErrMsg ] = useState("");
     const [ description, setDescription ] = useState(desc);
@@ -24,7 +34,7 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
         );
     });
 
-    function handleChange(e) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const input = e.target;
         const field = e.target.getAttribute("id");
 
@@ -40,7 +50,7 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
                 }); 
 
                 if (valid) {
-                    setErrMsg(null);
+                    setErrMsg("");
                     input.setCustomValidity("");
                 } else {
                     setErrMsg("Task name must be unique.");
@@ -60,14 +70,14 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
         if (field === "description") setDescription(input.value);
     };
 
-    function handleEditTaskModal() {
-        const editTaskModal = document.querySelector(`#edit-task-modal-${taskId}`);
-        editTaskModal.close();
+    function handleEditTaskModal(taskId: string) {
+        const editTaskModal: HTMLDialogElement | null = document.querySelector(`#edit-task-modal-${taskId}`);
+        editTaskModal?.close();
         setFormKey(formKey + 1);
     };
 
-    function handleDeleteTaskModal(action) {
-        const deleteTaskModal = document.querySelector(`#delete-task-modal-${taskId}`);
+    function handleDeleteTaskModal(action: string) {
+        const deleteTaskModal: HTMLDialogElement | null = document.querySelector(`#delete-task-modal-${taskId}`);
         if (action === "show") deleteTaskModal?.showModal();
         if (action === "close") deleteTaskModal?.close();
     };
@@ -76,12 +86,12 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
         e.preventDefault();
 
         if (!errMsg) {
-            let subtasks = [];     
+            let subtasks: {name: string, id: string, status: boolean}[] = [];     
             subtaskValues.forEach(subtask => {
                 if (subtask.value) subtasks.push({ name: subtask.value, id: subtask.id, status: false })
             });
 
-            const reqOptions = {
+            const reqOptions: RequestInit = {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({  
@@ -108,7 +118,7 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
                     updatedBoardsData.push(updatedBoard);
                     setBoardsData(updatedBoardsData);
 
-                    handleEditTaskModal();
+                    handleEditTaskModal(taskId);
                 } else {
                     throw new Error("Failed to update task. Please try again later.");
                 };
@@ -148,18 +158,18 @@ const EditTask = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, 
                 <form method="POST" className="edit-task" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Task</h2>
                     <label htmlFor="task">Title</label>
-                    <input type="text" id="task" name="task" defaultValue={name} onChange={handleChange} maxLength="30" required />
+                    <input type="text" id="task" name="task" defaultValue={name} onChange={handleChange} maxLength={30} required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
-                    <label htmlFor="description">Description<textarea id="description" name="description" value={description} onChange={handleChange} rows="5" maxLength="200" /></label>
+                    <label htmlFor="description">Description</label>
+                    <textarea id="description" name="description" value={description} onChange={handleChange} rows={5} maxLength={200} />
                     <Fields type="subtask" values={subtaskValues} setValues={setSubtaskValues} counterRef={counterRef} valuesTBD={subtasksTBD} setValuesTBD={setSubtasksTBD} />
-                    <label htmlFor="column">Column
-                        <select name="column" id="column" defaultValue={colId} onChange={(e) => setUpdatedColId(e.target.value)} >
-                            {colOptions}
-                        </select>
-                    </label>
+                    <label htmlFor="column">Column</label>
+                    <select name="column" id="column" defaultValue={colId} onChange={(e) => setUpdatedColId(e.target.value)} >
+                        {colOptions}
+                    </select>
                     <button type="submit" className="save-btn">Save Changes</button>
-                    <button type="button" className="delete-btn" onClick={() => {handleEditTaskModal(); handleDeleteTaskModal("show")}}>Delete Task</button>
-                    <button className="close-modal" type="button" onClick={handleEditTaskModal}>
+                    <button type="button" className="delete-btn" onClick={() => {handleEditTaskModal(taskId); handleDeleteTaskModal("show")}}>Delete Task</button>
+                    <button className="close-modal" type="button" onClick={() => handleEditTaskModal(taskId)}>
                         <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
                     </button>
                 </form>

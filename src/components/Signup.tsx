@@ -1,8 +1,8 @@
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { handleDisplayMsg, validateReqString, validateEmail, validateCred, handleVisToggle, extractErrMsg } from "./helpers";
 
-const Signup = function() {
+const Signup: React.FC = function() {
     const [ firstName, setFirstName ] = useState("");
     const [ firstNameErr, setFirstNameErr ] = useState("");
     const [ lastName, setLastName ] = useState("");
@@ -17,11 +17,15 @@ const Signup = function() {
     const [ confirmPasswordErr, setConfirmPasswordErr ] = useState("");
     const [ displayMsg, setDisplayMsg ] = useState("");
 
+    const emailRef = useRef<HTMLInputElement>(null);
+    const usernameRef = useRef<HTMLInputElement>(null);
+    const confirmPasswordRef = useRef<HTMLInputElement>(null);
+
     const navigate = useNavigate();
 
-    function handleChange(e) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const input = e.target;
-        const field = e.target.getAttribute("id");
+        const field = input.getAttribute("id");
         switch (field) {
             case "firstName":
                 validateReqString(input, setFirstNameErr);
@@ -41,13 +45,12 @@ const Signup = function() {
                 break;
             case "password":
                 validateCred(input, setPasswordErr);
-                const confirmPasswordField = document.querySelector("#confirmPassword");
                 if (input.value !== confirmPassword) {
                     setConfirmPasswordErr("Passwords must match.");
-                    confirmPasswordField.setCustomValidity("Passwords must match.");
+                    confirmPasswordRef.current?.setCustomValidity("Passwords must match.");
                 } else {
                     setConfirmPasswordErr("");
-                    confirmPasswordField.setCustomValidity("");
+                    confirmPasswordRef.current?.setCustomValidity("");
                 };
                 setPassword(input.value);
                 break;
@@ -64,7 +67,7 @@ const Signup = function() {
         };
     };
 
-    async function handleSubmit(e) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         const reqOptions = {
@@ -90,18 +93,15 @@ const Signup = function() {
 
             // setCustomValidity on fields errored because they are not unique
             if (err.message === "Email and username have already been taken.") {
-                const emailField = document.querySelector("#email");
-                const usernameField = document.querySelector("#username");
-                emailField.setCustomValidity("Already taken.");
-                usernameField.setCustomValidity("Already taken.");
+                emailRef.current?.setCustomValidity("Already taken.");
+                usernameRef.current?.setCustomValidity("Already taken.");
             };
             if (err.message === "Email has already been taken.") {
-                const emailField = document.querySelector("#email");
-                emailField.setCustomValidity("Already taken.");
+                emailRef.current?.setCustomValidity("Already taken.");
             };
             if (err.message === "Username has already been taken.") {
                 const usernameField = document.querySelector("#username");
-                usernameField.setCustomValidity("Already taken.");
+                usernameRef.current?.setCustomValidity("Already taken.");
             };
 
             // set display message for missing fields
@@ -124,13 +124,13 @@ const Signup = function() {
                 <label htmlFor="lastName">Last name<input type="text" name="lastName" id="lastName" value={lastName} onChange={handleChange} required /></label>
                 <p className="err-msg">{lastNameErr}</p>
                 <hr />
-                <label htmlFor="email">Email address<input type="email" name="email" id="email" value={email} onChange={handleChange} required /></label>
+                <label htmlFor="email">Email address<input ref={emailRef} type="email" name="email" id="email" value={email} onChange={handleChange} required /></label>
                 <p className="err-msg">{emailErr}</p>
-                <label htmlFor="username">Username<input type="text" name="username" id="username" value={username} onChange={handleChange} minLength="7" maxLength="15" required /></label>
+                <label htmlFor="username">Username<input ref={usernameRef} type="text" name="username" id="username" value={username} onChange={handleChange} minLength={7} maxLength={15} required /></label>
                 <p className="err-msg">{usernameErr}</p>
                 <label htmlFor="password">Password</label>
                 <div className="password-field-set">
-                    <input type="password" name="password" id="password" value={password} onChange={handleChange} minLength="7" maxLength="15" required />
+                    <input type="password" name="password" id="password" value={password} onChange={handleChange} minLength={7} maxLength={15} required />
                     <button type="button" data-id="password" onClick={handleVisToggle}>
                         <svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><path d="M15.815 4.434A9.055 9.055 0 0 0 8 0 9.055 9.055 0 0 0 .185 4.434a1.333 1.333 0 0 0 0 1.354A9.055 9.055 0 0 0 8 10.222c3.33 0 6.25-1.777 7.815-4.434a1.333 1.333 0 0 0 0-1.354ZM8 8.89A3.776 3.776 0 0 1 4.222 5.11 3.776 3.776 0 0 1 8 1.333a3.776 3.776 0 0 1 3.778 3.778A3.776 3.776 0 0 1 8 8.89Zm2.889-3.778a2.889 2.889 0 1 1-5.438-1.36 1.19 1.19 0 1 0 1.19-1.189H6.64a2.889 2.889 0 0 1 4.25 2.549Z" /></svg>
                     </button>
@@ -138,7 +138,7 @@ const Signup = function() {
                 <p className="err-msg">{passwordErr}</p>
                 <label htmlFor="confirmPassword">Confirm password</label>
                 <div className="password-field-set">
-                    <input type="password" name="confirmPassword" id="confirmPassword" value={confirmPassword} onChange={handleChange} />
+                    <input ref={confirmPasswordRef} type="password" name="confirmPassword" id="confirmPassword" value={confirmPassword} onChange={handleChange} required />
                     <button type="button" data-id="confirm-password" onClick={handleVisToggle}>
                         <svg viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><path d="M15.815 4.434A9.055 9.055 0 0 0 8 0 9.055 9.055 0 0 0 .185 4.434a1.333 1.333 0 0 0 0 1.354A9.055 9.055 0 0 0 8 10.222c3.33 0 6.25-1.777 7.815-4.434a1.333 1.333 0 0 0 0-1.354ZM8 8.89A3.776 3.776 0 0 1 4.222 5.11 3.776 3.776 0 0 1 8 1.333a3.776 3.776 0 0 1 3.778 3.778A3.776 3.776 0 0 1 8 8.89Zm2.889-3.778a2.889 2.889 0 1 1-5.438-1.36 1.19 1.19 0 1 0 1.19-1.189H6.64a2.889 2.889 0 0 1 4.25 2.549Z" /></svg>
                     </button>

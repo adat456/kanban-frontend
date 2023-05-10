@@ -1,10 +1,16 @@
-import { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 
 import { BoardsContext, CurBoardIdContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
 
-const EditBoard = function({ setDisplayMsg, colValues, setColValues }) {
+interface Prop {
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
+    colValues: {id: string, value: string}[],
+    setColValues: React.Dispatch<React.SetStateAction<{id: string, value: string}[]>>
+};
+
+const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColValues }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData.find(board => (board._id === curBoardId));
@@ -17,7 +23,7 @@ const EditBoard = function({ setDisplayMsg, colValues, setColValues }) {
     // for new columns
     const counterRef = useRef(curBoard.columns.length);
 
-    function handleChange(e) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const input = e.target;
 
         // if there's an input at all 
@@ -29,7 +35,7 @@ const EditBoard = function({ setDisplayMsg, colValues, setColValues }) {
             }); 
 
             if (valid) {
-                setErrMsg(null);
+                setErrMsg("");
                 input.setCustomValidity("");
             } else {
                 setErrMsg("Board name must be unique.");
@@ -51,28 +57,28 @@ const EditBoard = function({ setDisplayMsg, colValues, setColValues }) {
     }, [curBoardId]);
 
     function handleEditBoardModal() {
-        const editBoardModal = document.querySelector("#edit-board-modal");
-        editBoardModal.close();
+        const editBoardModal: HTMLDialogElement | null = document.querySelector("#edit-board-modal");
+        editBoardModal?.close();
         setFormKey(formKey + 1);
     };
 
-    function handleDeleteBoardModal(action) {
-        const deleteBoardModal = document.querySelector("#delete-board-modal");
-        if (action === "show") deleteBoardModal.showModal();
-        if (action === "close") deleteBoardModal.close();
+    function handleDeleteBoardModal(action: string) {
+        const deleteBoardModal: HTMLDialogElement | null = document.querySelector("#delete-board-modal");
+        if (action === "show") deleteBoardModal?.showModal();
+        if (action === "close") deleteBoardModal?.close();
     };
 
-    async function handleSubmit(e) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         if (!errMsg) { 
-            let columns = [];
+            let columns: {name: string, id: string}[] = [];
             colValues.forEach(col => {
                 // filters out any column fields that were left empty and formats info in the object
                 if (col.value) columns.push({ name: col.value, id: col.id });
             });     
 
-            const reqOptions = {
+            const reqOptions: RequestInit = {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({ 
@@ -138,7 +144,7 @@ const EditBoard = function({ setDisplayMsg, colValues, setColValues }) {
                 <form method="POST" className="edit-brd-form" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Board</h2>
                     <label htmlFor="boardName">Board Name</label>
-                    <input type="text" id="boardName" defaultValue={curBoard.name} onChange={handleChange} maxLength="20" required />
+                    <input type="text" id="boardName" defaultValue={curBoard.name} onChange={handleChange} maxLength={20} required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     {colValues ? <Fields type="col" values={colValues} setValues={setColValues} counterRef={counterRef} valuesTBD={colsTBD} setValuesTBD={setColsTBD} /> : null }
                     <button className="save-btn" type="submit">Save Changes</button>
