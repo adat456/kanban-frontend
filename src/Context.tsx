@@ -23,16 +23,16 @@ export interface boardData {
     columns: columnData[]
 };
 
-export interface boardsDataPair {
+export interface boardsDataInterface {
     boardsData: boardData[] | null,
     setBoardsData: React.Dispatch<React.SetStateAction<boardData[] | null>>
 };
 
-export interface curBoardIdPair {
-    curBoardId: string | null,
-    setCurBoardId: React.Dispatch<React.SetStateAction<string | null>>
+export interface curBoardIdInterface {
+    curBoardId: string,
+    setCurBoardId: React.Dispatch<React.SetStateAction<string>>
 };
 
-export const BoardsContext = createContext<boardsDataPair | null>(null);
-export const CurBoardIdContext = createContext<curBoardIdPair | null>(null);
+export const BoardsContext = createContext<boardsDataInterface>({ boardsData: null, setBoardsData: () => {} });
+export const CurBoardIdContext = createContext<curBoardIdInterface | null>({ curBoardId: "", setCurBoardId: () => {} });
 export const ModeContext = createContext("light");

@@ -1,7 +1,7 @@
-import React, { useContext, useState, NamedExoticComponent } from "react";
+import React, { useContext, useState } from "react";
 import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from "@dnd-kit/core";
 
-import { BoardsContext, CurBoardIdContext } from "../../Context";
+import { BoardsContext, CurBoardIdContext, boardData } from "../../Context";
 import Column from "./Column";
 import EditBoard from "../crudComponents/EditBoard";
 
@@ -18,10 +18,12 @@ interface draggableInfoProp {
 };
 
 const Board: React.FC<Prop> = function({ setDisplayMsg, colValues, setColValues }) {
-    const { boardsData, setBoardsData } = useContext(BoardsContext);
-    const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
-    const curBoard = boardsData.find(board => board._id === curBoardId);
-    const columnsArr = curBoard.columns;
+    const boardsDataPair = useContext(BoardsContext);
+    const { boardsData, setBoardsData } = boardsDataPair;
+    const curBoardIdPair = useContext(CurBoardIdContext);
+    const { curBoardId, setCurBoardId } = curBoardIdPair;
+    const curBoard = boardsData?.find(board => board._id === curBoardId);
+    const columnsArr = curBoard?.columns;
 
     const [ draggableInfo, setDraggableInfo ] = useState<draggableInfoProp | null>({ 
         order: "", 
@@ -30,14 +32,14 @@ const Board: React.FC<Prop> = function({ setDisplayMsg, colValues, setColValues 
     });
 
     // rendering columns w/ their tasks
-    const columns = columnsArr.map(col => 
+    const columns = columnsArr?.map(col => 
         <Column key={col._id} col={col} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
     );
 
     function handleEditBoardModal() {
         const editBoardModal: HTMLDialogElement | null = document.querySelector("#edit-board-modal");
         editBoardModal?.showModal();
-        setColValues(curBoard.columns.map(col => { return {id: col._id, value: col.name}}));
+        setColValues(curBoard?.columns.map(col => { return {id: col._id, value: col.name}}));
     };
 
     // although pointer sensor is one of the default sensors, I imported it with useSensor and useSensors to be passed along to DndContext so that an activation constraint could be added, and a simple click on a draggable opens the task preview instead of initiating a dragstart event
@@ -94,11 +96,11 @@ const Board: React.FC<Prop> = function({ setDisplayMsg, colValues, setColValues 
             const res = await fetch("http://localhost:3000/update-task", reqOptions);
             if (res.ok) {
                 const updatedBoard = await res.json();
-                let updatedBoardsData = boardsData.filter(board => {
+                let updatedBoardsData = boardsData?.filter(board => {
                     return (board._id !== curBoardId);
                 })
-                updatedBoardsData.push(updatedBoard);
-                setBoardsData(updatedBoardsData);
+                updatedBoardsData?.push(updatedBoard);
+                if (updatedBoardsData) setBoardsData(updatedBoardsData);
 
                 setDraggableInfo(null);
             } else {

@@ -7,16 +7,17 @@
 }
 
 body {
-  width: 100%;
+  max-width: 100vw;
 }
 
 #app {
+  max-width: 100vw;
   display: flex;
 }
 
 button {
   border: none;
-  background-color: white;
+  background-color: transparent;
 }
 
 .backdrop {
@@ -38,13 +39,14 @@ button {
   position: relative;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 header {
   padding: 3rem 3rem 3rem 0;
   border-bottom: 1px solid #E4EBFA;
+  position: relative;
   display: flex;
-  align-items: center;
 }
 @media (max-width: 500px) {
   header {
@@ -63,17 +65,6 @@ header .header-logo {
 @media (max-width: 500px) {
   header .header-logo {
     padding: 0 1.5rem 0 3rem;
-  }
-}
-header .desktop {
-  display: none;
-}
-@media (min-width: 500px) {
-  header .desktop .desktop {
-    display: block;
-  }
-  header .desktop .mobile {
-    display: none;
   }
 }
 header h1 {
@@ -100,8 +91,13 @@ header .nav-arrow {
   height: 1.25rem;
 }
 header .edit-brd-btn {
-  padding: 1rem;
-  margin-left: auto;
+  display: block;
+  position: absolute;
+  top: 3.5rem;
+  right: 3rem;
+}
+header .edit-brd-btn svg {
+  fill: #828FA3;
 }
 
 main {
@@ -110,9 +106,12 @@ main {
   padding: 0 2rem 2rem 2rem;
   display: flex;
   flex-grow: 1;
-  max-height: 100vh;
-  max-width: 100vw;
+  max-width: calc(100vw - 300px);
+  max-height: 90vh;
   overflow: auto;
+}
+main .sidebar-hidden {
+  max-width: 100vw;
 }
 main::-webkit-scrollbar {
   width: 1rem;
@@ -202,12 +201,12 @@ main::-webkit-scrollbar-thumb {
   color: #635FC7;
 }
 
-main.no-brd-chosen {
+main#no-brd-chosen {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-main.no-brd-chosen p {
+main#no-brd-chosen p {
   font-size: 1.8rem;
   line-height: 2.3rem;
   font-weight: 700;
@@ -253,6 +252,7 @@ main.no-brd-chosen p {
   position: fixed;
   bottom: 3rem;
   left: 0;
+  z-index: 1;
   padding: 2rem 2rem 2rem 3rem;
   background-color: #635FC7;
   border-top-right-radius: 10rem;
@@ -271,7 +271,7 @@ main.no-brd-chosen p {
   flex-shrink: 0;
   padding-top: 3rem;
   border-right: 1px solid #E4EBFA;
-  min-height: 100vh;
+  min-height: 85vh;
   position: relative;
 }
 @media (max-width: 900px) {
@@ -467,54 +467,100 @@ main.no-brd-chosen p {
   color: white;
 }
 
-.signup-form h2, .login-form h2 {
+.signup-page, .login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #F4F7FD;
+}
+.signup-page .logo, .login-page .logo {
+  height: 4.5rem;
+  position: absolute;
+  top: -2.5rem;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.signup-page .signup-form, .signup-page .login-form, .login-page .signup-form, .login-page .login-form {
+  position: relative;
+  background-color: white;
+  padding: 6rem 4rem 4rem 4rem;
+  border-radius: 0.5rem;
+}
+.signup-page .signup-form h2, .signup-page .login-form h2, .login-page .signup-form h2, .login-page .login-form h2 {
   text-align: center;
 }
-.signup-form hr, .login-form hr {
-  width: 30%;
-  margin: 3rem auto;
-  border: 1px solid #E4EBFA;
+.signup-page .signup-form input, .signup-page .login-form input, .login-page .signup-form input, .login-page .login-form input {
+  background-color: transparent;
 }
-.signup-form .password-field-set, .login-form .password-field-set {
+.signup-page .signup-form .password-field-set, .signup-page .login-form .password-field-set, .login-page .signup-form .password-field-set, .login-page .login-form .password-field-set {
   display: flex;
   align-items: center;
 }
-.signup-form .password-field-set input, .login-form .password-field-set input {
+.signup-page .signup-form .password-field-set input, .signup-page .login-form .password-field-set input, .login-page .signup-form .password-field-set input, .login-page .login-form .password-field-set input {
   flex-grow: 1;
+  margin: 0;
 }
-.signup-form .password-field-set button, .login-form .password-field-set button {
+.signup-page .signup-form .password-field-set button, .signup-page .login-form .password-field-set button, .login-page .signup-form .password-field-set button, .login-page .login-form .password-field-set button {
   height: 2rem;
-  width: 12rem;
+  width: 6rem;
+  padding: 0;
 }
-.signup-form .password-field-set svg, .login-form .password-field-set svg {
+.signup-page .signup-form .password-field-set svg, .signup-page .login-form .password-field-set svg, .login-page .signup-form .password-field-set svg, .login-page .login-form .password-field-set svg {
   height: 1.75rem;
   fill: #828FA3;
 }
-.signup-form .password-field-set svg:hover, .signup-form .password-field-set svg:focus, .login-form .password-field-set svg:hover, .login-form .password-field-set svg:focus {
+.signup-page .signup-form .password-field-set svg:hover, .signup-page .signup-form .password-field-set svg:focus, .signup-page .login-form .password-field-set svg:hover, .signup-page .login-form .password-field-set svg:focus, .login-page .signup-form .password-field-set svg:hover, .login-page .signup-form .password-field-set svg:focus, .login-page .login-form .password-field-set svg:hover, .login-page .login-form .password-field-set svg:focus {
   fill: #E4EBFA;
+}
+.signup-page .signup-form .redirect, .signup-page .login-form .redirect, .login-page .signup-form .redirect, .login-page .login-form .redirect {
+  padding-top: 2rem;
+  font-size: 1.5rem;
+  line-height: 1.9rem;
+  font-weight: 700;
+  display: block;
+  text-align: center;
+  color: #828FA3;
+}
+.signup-page .signup-form a, .signup-page .login-form a, .login-page .signup-form a, .login-page .login-form a {
+  font-size: 1.5rem;
+  line-height: 1.9rem;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.signup-page .signup-form a:hover, .signup-page .signup-form a:focus, .signup-page .login-form a:hover, .signup-page .login-form a:focus, .login-page .signup-form a:hover, .login-page .signup-form a:focus, .login-page .login-form a:hover, .login-page .login-form a:focus {
+  color: #635FC7;
 }
 
 .form-modal, .delete-modal, .login-form, .signup-form {
   border: none;
   width: 500px;
-  padding: 3rem 3rem 5.5rem 3rem;
+  padding: 3rem 3rem 0rem 3rem;
   border-radius: 0.5rem;
   margin: auto;
+  max-height: 80%;
+}
+.form-modal::-webkit-scrollbar, .delete-modal::-webkit-scrollbar, .login-form::-webkit-scrollbar, .signup-form::-webkit-scrollbar {
+  width: 1rem;
+}
+.form-modal::-webkit-scrollbar-track, .delete-modal::-webkit-scrollbar-track, .login-form::-webkit-scrollbar-track, .signup-form::-webkit-scrollbar-track {
+  background-color: #E9EFFA;
+}
+.form-modal::-webkit-scrollbar-thumb, .delete-modal::-webkit-scrollbar-thumb, .login-form::-webkit-scrollbar-thumb, .signup-form::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  background-color: #828FA3;
 }
 @media (max-width: 950px) {
   .form-modal, .delete-modal, .login-form, .signup-form {
-    width: 70%;
+    width: 60%;
   }
 }
 .form-modal::backdrop, .delete-modal::backdrop, .login-form::backdrop, .signup-form::backdrop {
   background-color: rgba(0, 0, 0, 0.4);
 }
 .form-modal button.close-modal, .delete-modal button.close-modal, .login-form button.close-modal, .signup-form button.close-modal {
-  position: absolute;
-  bottom: 1.75rem;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
+  margin: 2rem auto;
   width: 3rem;
   height: 3rem;
   padding: 1rem;
@@ -540,24 +586,12 @@ main.no-brd-chosen p {
   padding: 0;
   margin-bottom: 2rem;
 }
-.form-modal p, .delete-modal p, .login-form p, .signup-form p {
-  font-size: 1.3rem;
-  line-height: 2.3rem;
-  font-weight: 500;
-  color: #828FA3;
-}
-.form-modal legend, .delete-modal legend, .login-form legend, .signup-form legend {
+.form-modal label, .form-modal legend, .delete-modal label, .delete-modal legend, .login-form label, .login-form legend, .signup-form label, .signup-form legend {
   font-size: 1.5rem;
   line-height: 1.9rem;
   font-weight: 700;
   color: #828FA3;
-}
-.form-modal label, .delete-modal label, .login-form label, .signup-form label {
-  font-size: 1.5rem;
-  line-height: 1.9rem;
-  font-weight: 700;
-  color: #828FA3;
-  width: 100%;
+  width: auto;
   display: block;
   margin: 1.5rem 0;
 }
@@ -565,15 +599,21 @@ main.no-brd-chosen p {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  margin: 0;
+}
+.form-modal label.col-label input, .form-modal label.subtask-label input, .delete-modal label.col-label input, .delete-modal label.subtask-label input, .login-form label.col-label input, .login-form label.subtask-label input, .signup-form label.col-label input, .signup-form label.subtask-label input {
+  flex-grow: 1;
+}
+.form-modal label.col-label button, .form-modal label.subtask-label button, .delete-modal label.col-label button, .delete-modal label.subtask-label button, .login-form label.col-label button, .login-form label.subtask-label button, .signup-form label.col-label button, .signup-form label.subtask-label button {
+  width: 7rem;
 }
 .form-modal label.col-label svg, .form-modal label.subtask-label svg, .delete-modal label.col-label svg, .delete-modal label.subtask-label svg, .login-form label.col-label svg, .login-form label.subtask-label svg, .signup-form label.col-label svg, .signup-form label.subtask-label svg {
   margin-top: 1rem;
   height: 2rem;
-  padding-left: 2rem;
+  padding: 0 1rem;
   fill: #828FA3;
 }
-.form-modal label.col-label svg:hover, .form-modal label.col-label svg:focus, .form-modal label.subtask-label svg:hover, .form-modal label.subtask-label svg:focus, .delete-modal label.col-label svg:hover, .delete-modal label.col-label svg:focus, .delete-modal label.subtask-label svg:hover, .delete-modal label.subtask-label svg:focus, .login-form label.col-label svg:hover, .login-form label.col-label svg:focus, .login-form label.subtask-label svg:hover, .login-form label.subtask-label svg:focus, .signup-form label.col-label svg:hover, .signup-form label.col-label svg:focus, .signup-form label.subtask-label svg:hover, .signup-form label.subtask-label svg:focus {
+.form-modal label.col-label button:hover svg, .form-modal label.col-label button:focus svg, .form-modal label.subtask-label button:hover svg, .form-modal label.subtask-label button:focus svg, .delete-modal label.col-label button:hover svg, .delete-modal label.col-label button:focus svg, .delete-modal label.subtask-label button:hover svg, .delete-modal label.subtask-label button:focus svg, .login-form label.col-label button:hover svg, .login-form label.col-label button:focus svg, .login-form label.subtask-label button:hover svg, .login-form label.subtask-label button:focus svg, .signup-form label.col-label button:hover svg, .signup-form label.col-label button:focus svg, .signup-form label.subtask-label button:hover svg, .signup-form label.subtask-label button:focus svg {
   fill: #EA5555;
 }
 .form-modal fieldset, .delete-modal fieldset, .login-form fieldset, .signup-form fieldset {
@@ -581,9 +621,13 @@ main.no-brd-chosen p {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+.form-modal fieldset legend, .delete-modal fieldset legend, .login-form fieldset legend, .signup-form fieldset legend {
+  margin-bottom: 0;
+}
 .form-modal input, .form-modal textarea, .form-modal select, .delete-modal input, .delete-modal textarea, .delete-modal select, .login-form input, .login-form textarea, .login-form select, .signup-form input, .signup-form textarea, .signup-form select {
   display: block;
-  width: 90%;
+  box-sizing: border-box;
+  width: 100%;
   border: 1px solid #E4EBFA;
   padding: 1rem;
   font-size: 1.2rem;
@@ -599,13 +643,23 @@ main.no-brd-chosen p {
 .form-modal input:invalid, .form-modal textarea:invalid, .form-modal select:invalid, .delete-modal input:invalid, .delete-modal textarea:invalid, .delete-modal select:invalid, .login-form input:invalid, .login-form textarea:invalid, .login-form select:invalid, .signup-form input:invalid, .signup-form textarea:invalid, .signup-form select:invalid {
   border-color: #EA5555;
 }
+.form-modal ::placeholder, .delete-modal ::placeholder, .login-form ::placeholder, .signup-form ::placeholder {
+  font-size: 1.3rem;
+  line-height: 2.3rem;
+  font-weight: 500;
+  color: #E4EBFA;
+}
+.form-modal .err-msg, .delete-modal .err-msg, .login-form .err-msg, .signup-form .err-msg {
+  margin-top: 0.5rem;
+  color: #EA5555;
+  font-size: 1.25rem;
+}
 .form-modal .checkboxes-field .checked-subtask, .delete-modal .checkboxes-field .checked-subtask, .login-form .checkboxes-field .checked-subtask, .signup-form .checkboxes-field .checked-subtask {
   text-decoration: line-through;
 }
 .form-modal .checkboxes-field label, .delete-modal .checkboxes-field label, .login-form .checkboxes-field label, .signup-form .checkboxes-field label {
   padding: 1.5rem;
   margin: 1rem 0;
-  width: 94%;
   background-color: #F4F7FD;
   border-radius: 0.5rem;
 }
@@ -615,22 +669,12 @@ main.no-brd-chosen p {
   margin: 0;
   margin-right: 1.5rem;
 }
-.form-modal ::placeholder, .delete-modal ::placeholder, .login-form ::placeholder, .signup-form ::placeholder {
-  font-size: 1.3rem;
-  line-height: 2.3rem;
-  font-weight: 500;
-  color: #E4EBFA;
-}
 .form-modal select, .delete-modal select, .login-form select, .signup-form select {
   width: 100%;
   background-color: white;
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
-}
-.form-modal .err-msg, .delete-modal .err-msg, .login-form .err-msg, .signup-form .err-msg {
-  margin-top: 0.5rem;
-  color: #EA5555;
 }
 .form-modal button, .delete-modal button, .login-form button, .signup-form button {
   display: block;
@@ -683,6 +727,9 @@ main.no-brd-chosen p {
   padding: 1rem;
 }
 
+.delete-modal {
+  padding-bottom: 3rem;
+}
 .delete-modal h2 {
   font-size: 1.8rem;
   line-height: 2.3rem;

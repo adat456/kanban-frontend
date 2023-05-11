@@ -27,7 +27,7 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, colValues, setCol
         if (input.value !== "") { 
             // check that the board name is unique 
             let valid = true;
-            boardsData.forEach(board => {
+            boardsData?.forEach(board => {
                 if (board.name.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
             }); 
 
@@ -85,7 +85,7 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, colValues, setCol
                     const boardNameUrl = boardName.split(" ").join("-");
                     const res = await fetch(`http://localhost:3000/read-board/${boardNameUrl}`, {credentials: "include"});
                     const newMongoBoard = await res.json();
-                    setBoardsData([...boardsData, newMongoBoard]);
+                    if (boardsData) setBoardsData([...boardsData, newMongoBoard]);
 
                     handleCreateBoardModal();
                 } else {

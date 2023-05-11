@@ -11,8 +11,8 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
     const [ sidebarVis, setSidebarVis ] = useState(true);
     const [ displayMsg, setDisplayMsg ] = useState("");
 
-    const [ boardsData, setBoardsData ] = useState<null | boardData[]>(null);
-    const [ curBoardId, setCurBoardId ] = useState(null);
+    const [ boardsData, setBoardsData ] = useState<boardData[] | null>(null);
+    const [ curBoardId, setCurBoardId ] = useState("");
     const [ curBoardName, setCurBoardName ] = useState("");
     const [ loading, setLoading ] = useState(true);
 

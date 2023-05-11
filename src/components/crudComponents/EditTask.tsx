@@ -26,9 +26,9 @@ const EditTask: React.FC<Prop> = function({ name, desc, colId, taskId, setDispla
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
-    const curBoard = boardsData.find(board => (board._id === curBoardId));
+    const curBoard = boardsData?.find(board => (board._id === curBoardId));
 
-    const colOptions = curBoard.columns.map(col => {
+    const colOptions = curBoard?.columns.map(col => {
         return (
             <option key={col._id} value={col._id}>{col.name}</option>
         );
@@ -43,7 +43,7 @@ const EditTask: React.FC<Prop> = function({ name, desc, colId, taskId, setDispla
             if (input.value !== "") { 
                 // check that the task name is unique 
                 let valid = true;
-                curBoard.columns.forEach(col => {
+                curBoard?.columns.forEach(col => {
                     col.tasks.forEach(task => {
                         if (task._id !== taskId && task.task.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
                     });
@@ -112,11 +112,13 @@ const EditTask: React.FC<Prop> = function({ name, desc, colId, taskId, setDispla
                     handleDisplayMsg({ok: true, message: "Task updated.", msgSetter: setDisplayMsg});
 
                     const updatedBoard = await res.json();
-                    let updatedBoardsData = boardsData.filter(board => {
+                    let updatedBoardsData = boardsData?.filter(board => {
                         return (board._id !== curBoardId);
                     })
-                    updatedBoardsData.push(updatedBoard);
-                    setBoardsData(updatedBoardsData);
+                    if (updatedBoardsData) {
+                        updatedBoardsData.push(updatedBoard);
+                        setBoardsData(updatedBoardsData);
+                    };
 
                     handleEditTaskModal(taskId);
                 } else {
@@ -137,12 +139,14 @@ const EditTask: React.FC<Prop> = function({ name, desc, colId, taskId, setDispla
                 handleDisplayMsg({ok: true, message: "Task deleted.", msgSetter: setDisplayMsg});
 
                 const updatedBoard = await res.json();
-                let updatedBoardsData = boardsData.filter(board => {
+                let updatedBoardsData = boardsData?.filter(board => {
                     return (board._id !== curBoardId);
-                })
-                updatedBoardsData.push(updatedBoard);
-                setBoardsData(updatedBoardsData);
-
+                });
+                if (updatedBoardsData) {
+                    updatedBoardsData.push(updatedBoard);
+                    setBoardsData(updatedBoardsData);
+                };
+                
                 handleDeleteTaskModal("close");
             } else {
                 throw new Error("Unable to delete task.");

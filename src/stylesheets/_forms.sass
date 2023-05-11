@@ -21,52 +21,92 @@
         p
             color: white
 
-.signup-form, .login-form
-    h2
-        text-align: center
+.signup-page, .login-page
+    @include base.center
+    height: 100vh
+    background-color: base.$lite-blue-active
 
-    hr
-        width: 30%
-        margin: 3rem auto
-        border: 1px solid base.$outline
-        
-    .password-field-set
-        display: flex
-        align-items: center
+    .logo
+        height: 4.5rem
+        position: absolute
+        top: -2.5rem
+        left: 0
+        right: 0
+        margin: auto
+
+    .signup-form, .login-form
+        position: relative
+        background-color: white
+        padding: 6rem 4rem 4rem 4rem
+        border-radius: 0.5rem
+
+        h2
+            text-align: center
 
         input
-            flex-grow: 1
+            background-color: transparent
+            
+        .password-field-set
+            display: flex
+            align-items: center
 
-        button
-            height: 2rem
-            width: 12rem
+            input
+                flex-grow: 1
+                margin: 0
 
-        svg
-            height: 1.75rem
-            fill: base.$grey
+            button
+                height: 2rem
+                width: 6rem
+                padding: 0
+
+            svg
+                height: 1.75rem
+                fill: base.$grey
+
+                &:hover, &:focus
+                    fill: base.$outline
+
+        .redirect
+            padding-top: 2rem
+            @include base.m
+            display: block
+            text-align: center
+            color: base.$grey
+
+        a
+            @include base.m
+            text-decoration: underline
 
             &:hover, &:focus
-                fill: base.$outline
+                color: base.$drk-blue-inactive
+
 
 .form-modal, .delete-modal, .login-form, .signup-form
     border: none
     width: 500px
-    padding: 3rem 3rem 5.5rem 3rem
+    padding: 3rem 3rem 0rem 3rem
     border-radius: 0.5rem
     margin: auto
+    max-height: 80%
+
+    &::-webkit-scrollbar   
+        width: 1rem
+
+    &::-webkit-scrollbar-track
+        background-color: base.$add-background
+
+    &::-webkit-scrollbar-thumb
+        border-radius: 1rem
+        background-color: base.$grey
 
     @media (max-width: 950px)
-        width: 70%
+        width: 60%
 
     &::backdrop
         background-color: rgba(0, 0, 0, 0.4)
 
     button.close-modal
-        position: absolute
-        bottom: 1.75rem
-        left: 0
-        right: 0
-        margin: 0 auto
+        margin: 2rem auto
         width: 3rem
         height: 3rem
         padding: 1rem
@@ -87,32 +127,35 @@
         padding: 0
         margin-bottom: 2rem
 
-    p
-        @include base.med-body
-        color: base.$grey
-
-    legend
+    label, legend
         @include base.m
         color: base.$grey
-
-    label
-        @include base.m
-        color: base.$grey
-        width: 100%
+        width: auto
         display: block
         margin: 1.5rem 0
 
+    // referring specifically to the labels and nested inputs in the Fields component
+    // the inputs are only nested in the Fields component -- nowhere else
     label.col-label, label.subtask-label
         width: 100%
-        @include base.center
+        display: flex
+        align-items: center
+        margin: 0
+
+        input
+            flex-grow: 1
+
+        button
+            width: 7rem
 
         svg
             margin-top: 1rem
             height: 2rem
-            padding-left: 2rem
+            padding: 0 1rem
             fill: base.$grey
 
-            &:hover, &:focus
+        button:hover, button:focus
+            svg
                 fill: base.$red-inactive
 
     fieldset
@@ -120,9 +163,13 @@
         margin-top: 2rem
         margin-bottom: 2rem
 
+        legend
+            margin-bottom: 0
+
     input, textarea, select
         display: block
-        width: 90%
+        box-sizing: border-box
+        width: 100%
         border: 1px solid base.$outline
         padding: 1rem
         @include base.bold-body
@@ -136,6 +183,16 @@
         &:invalid
             border-color: base.$red-inactive
 
+    ::placeholder
+        @include base.med-body
+        color: base.$outline
+    
+    .err-msg
+        margin-top: 0.5rem
+        color: base.$red-inactive
+        font-size: 1.25rem
+
+    // specifically for checkboxes in ViewTask
     .checkboxes-field
         .checked-subtask
             text-decoration: line-through
@@ -143,7 +200,6 @@
         label
             padding: 1.5rem
             margin: 1rem 0
-            width: 94%
             background-color: base.$lite-blue-active
             border-radius: 0.5rem
 
@@ -153,18 +209,11 @@
             margin: 0
             margin-right: 1.5rem
 
-    ::placeholder
-        @include base.med-body
-        color: base.$outline
-
+    // specifically for the column dropdown in ViewTask and EditTask
     select
         width: 100%
         background-color: white
         @include base.med-body
-
-    .err-msg
-        margin-top: 0.5rem
-        color: base.$red-inactive
         
     button
         display: block
@@ -213,6 +262,8 @@
         padding: 1rem
 
 .delete-modal
+    padding-bottom: 3rem
+    
     h2
         @include base.l
         color: base.$red-inactive

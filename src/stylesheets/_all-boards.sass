@@ -5,12 +5,13 @@
     position: relative
     display: flex
     flex-direction: column
+    min-height: 100vh
 
 header
     padding: 3rem 3rem 3rem 0
     border-bottom: 1px solid base.$outline
+    position: relative
     display: flex
-    align-items: center
 
     @media (max-width: 500px)
         padding: 1.5rem 1.5rem 1.5rem 0
@@ -26,16 +27,6 @@ header
 
         @media (max-width: 500px)
             padding: 0 1.5rem 0 3rem
-
-    .desktop
-        display: none
-
-        @media (min-width: 500px)
-            .desktop
-                display: block
-
-            .mobile
-                display: none
 
     h1
         @include base.xl
@@ -55,9 +46,13 @@ header
         height: 1.25rem
 
     .edit-brd-btn
-        padding: 1rem
-        margin-left: auto
-
+        display: block
+        position: absolute
+        top: 3.5rem
+        right: 3rem
+        
+        svg
+            fill: base.$grey
 
 main
     background-color: base.$board-background
@@ -65,9 +60,12 @@ main
     padding: 0 2rem 2rem 2rem
     display: flex
     flex-grow: 1
-    max-height: 100vh
-    max-width: 100vw
+    max-width: calc(100vw - 300px)
+    max-height: 90vh
     overflow: auto
+
+    .sidebar-hidden
+        max-width: 100vw
 
     &::-webkit-scrollbar   
         width: 1rem
@@ -141,7 +139,7 @@ main
         color: base.$drk-blue-inactive
 
 // styles for main when no board has been chosen
-main.no-brd-chosen
+main#no-brd-chosen
     @include base.center
 
     p

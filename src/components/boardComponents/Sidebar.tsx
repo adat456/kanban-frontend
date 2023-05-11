@@ -12,13 +12,10 @@ interface Prop {
 };
 
 const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setDisplayMsg }) {
-    let boardsData: boardData[] | null, 
-        curBoardId: string | null, 
-        setCurBoardId: React.Dispatch<React.SetStateAction<string | null>>;
     const boardsDataPair = useContext(BoardsContext);
-    if (boardsDataPair) ({ boardsData } = boardsDataPair);
+    const { boardsData } = boardsDataPair;
     const curBoardIdPair = useContext(CurBoardIdContext);
-    if (curBoardIdPair) ({ curBoardId, setCurBoardId } = curBoardIdPair);
+    const { curBoardId, setCurBoardId } = curBoardIdPair;
     const mode = useContext(ModeContext);
 
     const circleRef = useRef<null | HTMLDivElement>(null);

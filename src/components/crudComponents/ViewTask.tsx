@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { BoardsContext, CurBoardIdContext, subtaskData } from "../../Context";
+import { BoardsContext, CurBoardIdContext, columnData, subtaskData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
 interface Prop {
@@ -49,13 +49,13 @@ const ViewTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
         // setNumCompleteSubtasks(numCompleteSubtasks);
     }
 
-    let columnsArr;
-    boardsData.forEach(board => {
+    let columnsArr: columnData[] = [];
+    boardsData?.forEach(board => {
         if (board._id === curBoardId) {
             columnsArr = board.columns;
         };
     });
-    const colOptions = columnsArr.map(col => {
+    const colOptions = columnsArr?.map(col => {
         return (
             <option key={col._id} value={col._id}>{col.name}</option>
         );
@@ -100,11 +100,13 @@ const ViewTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
                 });
 
                 const updatedBoard = await res.json();
-                let updatedBoardsData = boardsData.filter(board => {
+                let updatedBoardsData = boardsData?.filter(board => {
                     return (board._id !== curBoardId);
-                })
-                updatedBoardsData.push(updatedBoard);
-                setBoardsData(updatedBoardsData);
+                });
+                if (updatedBoardsData) {
+                    updatedBoardsData.push(updatedBoard);
+                    setBoardsData(updatedBoardsData);
+                };
 
                 handleViewTaskModal();
             } else {

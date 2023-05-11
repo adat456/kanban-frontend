@@ -23,7 +23,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
-    const curBoard = boardsData.find(board => board._id === curBoardId);
+    const curBoard = boardsData?.find(board => board._id === curBoardId);
 
     const colOptions = columnsArr.map(col => {
         return (
@@ -40,7 +40,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
             if (input.value !== "") { 
                 // check that the task name is unique 
                 let valid = true;
-                curBoard.columns.forEach(col => {
+                curBoard?.columns.forEach(col => {
                     col.tasks.forEach(task => {
                         if (task.task.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
                     });
@@ -116,10 +116,10 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                     const updatedMongoBoard = await res.json();
                     console.log(updatedMongoBoard);
                     // remove current board and replace it with the updated board in context
-                    const filteredBoardsData = boardsData.filter(board => {
+                    const filteredBoardsData = boardsData?.filter(board => {
                         return (board._id !== curBoardId);
                     })
-                    setBoardsData([...filteredBoardsData, updatedMongoBoard]);
+                    if (filteredBoardsData) setBoardsData([...filteredBoardsData, updatedMongoBoard]);
 
                     handleCreateTaskModal();
                 } else {

@@ -13,15 +13,15 @@ interface Prop {
 const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColValues }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
-    const curBoard = boardsData.find(board => (board._id === curBoardId));
+    const curBoard = boardsData?.find(board => (board._id === curBoardId));
 
     // need to use a combination of changing keys (formKey, which is attached to dialog element, changes every time curBoardId changes or the dialog element is closed) and defaultValue equal to an empty string or a bit of context (not state) on certain inputs to wipe out stale state
     const [ formKey, setFormKey ] = useState(0);
-    const [ boardName, setBoardName ] = useState(curBoard.name);
+    const [ boardName, setBoardName ] = useState(curBoard?.name);
     const [ errMsg, setErrMsg ] = useState("");
     const [ colsTBD, setColsTBD ] = useState([]);
     // for new columns
-    const counterRef = useRef(curBoard.columns.length);
+    const counterRef = useRef(curBoard?.columns.length);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const input = e.target;
@@ -30,7 +30,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColVal
         if (input.value !== "") { 
             // check that the board name is unique 
             let valid = true;
-            boardsData.forEach(board => {
+            boardsData?.forEach(board => {
                 if (board._id !== curBoardId && board.name.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
             }); 
 
@@ -98,10 +98,10 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColVal
                     handleDisplayMsg({ok: true, message: "Board updated.", msgSetter: setDisplayMsg});
     
                     // update context as well
-                    const filteredBoardsData = boardsData.filter(board => {
+                    const filteredBoardsData = boardsData?.filter(board => {
                         return (board._id !== curBoardId);
                     });
-                    setBoardsData([...filteredBoardsData, updatedMongoBoard]);
+                    if (filteredBoardsData) setBoardsData([...filteredBoardsData, updatedMongoBoard]);
 
                     handleEditBoardModal();
                 } else {
@@ -123,11 +123,11 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColVal
                 handleDisplayMsg({ok: true, message: "Board deleted.", msgSetter: setDisplayMsg});
     
                 // update context as well
-                const filteredBoardsData = boardsData.filter(board => {
+                const filteredBoardsData = boardsData?.filter(board => {
                     return (board._id !== curBoardId);
                 });
-                setBoardsData(filteredBoardsData);         
-                setCurBoardId(null);
+                if (filteredBoardsData) setBoardsData(filteredBoardsData);         
+                setCurBoardId("");
 
                 handleDeleteBoardModal("close");
             } else {
@@ -144,7 +144,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColVal
                 <form method="POST" className="edit-brd-form" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Board</h2>
                     <label htmlFor="boardName">Board Name</label>
-                    <input type="text" id="boardName" defaultValue={curBoard.name} onChange={handleChange} maxLength={20} required />
+                    <input type="text" id="boardName" defaultValue={curBoard?.name} onChange={handleChange} maxLength={20} required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     {colValues ? <Fields type="col" values={colValues} setValues={setColValues} counterRef={counterRef} valuesTBD={colsTBD} setValuesTBD={setColsTBD} /> : null }
                     <button className="save-btn" type="submit">Save Changes</button>
@@ -156,7 +156,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColVal
             </dialog>
             <dialog className="delete-modal" id="delete-board-modal">
                 <h2>Delete this board?</h2>
-                <p>{`Are you sure you want to delete the '${curBoard.name}' board? This action will remove all columns and tasks and cannot be reversed.`}</p>
+                <p>{`Are you sure you want to delete the '${curBoard?.name}' board? This action will remove all columns and tasks and cannot be reversed.`}</p>
                 <div className="delete-btn-cluster">
                     <button type="button" className="delete-btn" onClick={handleDelete}>Delete</button>
                     <button type="button" className="cancel-btn" onClick={() => handleDeleteBoardModal("close")}>Cancel</button>
