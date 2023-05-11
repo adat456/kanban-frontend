@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 import { BoardsContext, CurBoardIdContext, boardData } from "../Context";
@@ -17,6 +17,10 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
     const [ loading, setLoading ] = useState(true);
 
     const location = useLocation();
+
+    const mainRef = useRef<HTMLElement | null>(null);
+    const headerLogoRef = useRef<SVGSVGElement | null>(null);
+    const sidebarBackdropRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         async function pullBoardsData() {
@@ -63,6 +67,18 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
         };
     }, [curBoardId]);
 
+    useEffect(() => {
+        if (sidebarVis) {
+            mainRef?.current?.classList.remove("sidebar-hidden");
+            headerLogoRef?.current?.classList.add("hidden-header-logo");
+            sidebarBackdropRef?.current?.classList.add("visible");
+        } else {
+            mainRef?.current?.classList.add("sidebar-hidden");
+            headerLogoRef?.current?.classList.remove("hidden-header-logo");
+            sidebarBackdropRef?.current?.classList.remove("visible");
+        };
+    }, [sidebarVis]);
+
     const curBoard = boardsData?.find(board => board._id === curBoardId);
     // ensures that the colValues in both instances of EditBoard will always be UTD (this pair of values is directly passed down to both instances)
     const [ colValues, setColValues ] = useState<{id: string, value: string}[] | null | undefined>(null);
@@ -75,7 +91,6 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
 
     return (  
         <div id="app">
-            {/* can pass setters in as values, in addition to the actual value (use an object, and destructure as an object in the consumer) */}
             <BoardsContext.Provider value={{ boardsData, setBoardsData }}>
                 <CurBoardIdContext.Provider value={{ curBoardId, setCurBoardId }}>
                     {sidebarVis ?
@@ -87,45 +102,43 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
                     {!curBoardId ?
                         <div className="all-boards">
                             <header>
+                                <svg ref={headerLogoRef} className="header-logo" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg"><g fill="#635FC7" fillRule="evenodd"><rect width="6" height="25" rx="2"/><rect opacity=".75" x="9" width="6" height="25" rx="2"/><rect opacity=".5" x="18" width="6" height="25" rx="2"/></g></svg>
+                                <h1 />
                                 {sidebarVis ?
-                                    null :
-                                    <svg className="header-logo mobile" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg"><g fill="#635FC7" fillRule="evenodd"><rect width="6" height="25" rx="2"/><rect opacity=".75" x="9" width="6" height="25" rx="2"/><rect opacity=".5" x="18" width="6" height="25" rx="2"/></g></svg>
-                                }
-                                <h1>Choose a board to get started.</h1>
-                                {/* {sidebarVis ?
                                     <button className="dropdown-sidebar-btn open" type="button" onClick={() => setSidebarVis(false)}>
                                         <svg className="nav-arrow" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="M9 6 5 2 1 6"/></svg>
                                     </button> :
                                     <button className="dropdown-sidebar-btn closed" type="button" onClick={() => setSidebarVis(true)}>
                                         <svg className="nav-arrow" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4"/></svg>    
                                     </button>
-                                } */}
+                                }
                             </header>
-                            <main id="no-brd-chosen" className={sidebarVis ? undefined : "sidebar-hidden"}>
+                            <main ref={mainRef} id="no-brd-chosen">
                                 <p>Please choose or create a board to get started.</p>
                             </main>
+                            <div ref={sidebarBackdropRef}className="sidebar-backdrop" onClick={() => setSidebarVis(false)}></div>
                         </div>  : 
                         <div className="all-boards">
                             <header>
+                                <svg ref={headerLogoRef} className="header-logo" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg"><g fill="#635FC7" fillRule="evenodd"><rect width="6" height="25" rx="2"/><rect opacity=".75" x="9" width="6" height="25" rx="2"/><rect opacity=".5" x="18" width="6" height="25" rx="2"/></g></svg>
+                                <button type="button" className="edit-brd-btn" onClick={handleEditBoardModal}>
+                                    <h1>{curBoardName}</h1>
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.0651 7.39423L7.09967 20.4114C6.72438 20.7882 6.21446 21 5.68265 21H4.00383C3.44943 21 3 20.5466 3 19.9922V18.2987C3 17.7696 3.20962 17.2621 3.58297 16.8873L16.5517 3.86681C19.5632 1.34721 22.5747 4.87462 20.0651 7.39423Z"  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                </button>                                
                                 {sidebarVis ?
-                                    null :
-                                    <svg className="header-logo mobile" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg"><g fill="#635FC7" fillRule="evenodd"><rect width="6" height="25" rx="2"/><rect opacity=".75" x="9" width="6" height="25" rx="2"/><rect opacity=".5" x="18" width="6" height="25" rx="2"/></g></svg>
-                                }
-                                <h1>{curBoardName}</h1>
-                                {/* {sidebarVis ?
                                     <button className="dropdown-sidebar-btn open" type="button" onClick={() => setSidebarVis(false)}>
                                         <svg className="nav-arrow" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="M9 6 5 2 1 6"/></svg>
                                     </button> :
                                     <button className="dropdown-sidebar-btn closed" type="button" onClick={() => setSidebarVis(true)}>
                                         <svg className="nav-arrow" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4"/></svg>    
                                     </button>
-                                } */}
-                                <button type="button" className="edit-brd-btn" onClick={handleEditBoardModal}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
+                                }
                                 <EditBoard setDisplayMsg={setDisplayMsg} colValues={colValues} setColValues={setColValues} />
                             </header>
-                            <main className={sidebarVis ? undefined : "sidebar-hidden"}>
+                            <main ref={mainRef}>
                                 <Board setDisplayMsg={setDisplayMsg} colValues={colValues} setColValues={setColValues} />
                             </main>
+                            <div ref={sidebarBackdropRef} className="sidebar-backdrop" onClick={() => setSidebarVis(false)}></div>
                         </div>
                     }
                     <dialog className="display-msg-modal">

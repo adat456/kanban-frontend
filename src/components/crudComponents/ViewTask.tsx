@@ -26,15 +26,13 @@ const ViewTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
             numCompleteSubtasks++;
             return (
                 <div className="subtask checked-subtask" key={subtask._id}>
-                    <label htmlFor={subtask._id}>{subtask.subtask}</label>
-                    <input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={updateNumCompleteSubtasks} defaultChecked />
+                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={updateNumCompleteSubtasks} defaultChecked />{subtask.subtask}</label>  
                 </div>
             );
         } else {
             return (
                 <div className="subtask" key={subtask._id}>
-                    <label htmlFor={subtask._id}>{subtask.subtask}</label>
-                    <input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={updateNumCompleteSubtasks} />
+                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={updateNumCompleteSubtasks} />{subtask.subtask}</label>
                 </div>
             );
         };

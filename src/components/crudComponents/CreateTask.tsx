@@ -15,7 +15,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
     const [ task, setTask ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required.");
     const [ desc, setDesc ] = useState("");
-    const [ updatedColId, setUpdatedColId ] = useState("");
+    const [ updatedColId, setUpdatedColId ] = useState(curCol);
     
     const counterRef = useRef(3);
     // https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/?utm_source=pocket_saves#keys-and-reconciliation
@@ -102,6 +102,8 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                 }),
                 credentials: "include"
             };
+
+            console.log(reqOptions.body);
             
             try {
                 const res = await fetch("http://localhost:3000/create-task", reqOptions);
@@ -124,7 +126,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                     handleCreateTaskModal();
                 } else {
                     // client-generated error message
-                    throw new Error("Failed to create board. Please try again later.");
+                    throw new Error("Failed to create task. Please try again later.");
                 };
             } catch(err) {
                 handleDisplayMsg({
