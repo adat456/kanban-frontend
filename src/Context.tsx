@@ -20,6 +20,7 @@ export interface columnData {
 export interface boardData {
     _id: string,
     name: string,
+    favorite: boolean,
     columns: columnData[]
 };
 

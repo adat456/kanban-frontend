@@ -378,6 +378,7 @@ main#no-brd-chosen p {
   margin: 1rem 3.5rem 1rem 0;
   border-top-right-radius: 10rem;
   border-bottom-right-radius: 10rem;
+  position: relative;
 }
 @media (max-width: 500px) {
   .board-container {
@@ -419,11 +420,23 @@ main#no-brd-chosen p {
   color: #828FA3;
   width: 100%;
 }
+.board-links-item .star-btn, .create-brd-container .star-btn {
+  display: none;
+}
+.board-links-item .star-btn .star, .create-brd-container .star-btn .star {
+  height: 1.25rem;
+}
+.board-links-item .star-btn.favorite, .create-brd-container .star-btn.favorite {
+  display: block;
+}
 .board-links-item button, .create-brd-container button {
   font-size: 1.5rem;
   line-height: 1.9rem;
   font-weight: 700;
   color: #635FC7;
+}
+.board-links-item:hover .star-btn, .board-links-item:focus .star-btn, .create-brd-container:hover .star-btn, .create-brd-container:focus .star-btn {
+  display: block;
 }
 
 .create-brd-container {

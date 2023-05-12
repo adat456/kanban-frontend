@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { BoardsContext, CurBoardIdContext, ModeContext, boardData } from "../../Context";
 import { useNavigate } from "react-router-dom";
-
+import { handleDisplayMsg } from "../helpers";
 import CreateBoard from "../crudComponents/CreateBoard";
 
 interface Prop {
@@ -13,7 +13,7 @@ interface Prop {
 
 const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setDisplayMsg }) {
     const boardsDataPair = useContext(BoardsContext);
-    const { boardsData } = boardsDataPair;
+    const { boardsData, setBoardsData } = boardsDataPair;
     const curBoardIdPair = useContext(CurBoardIdContext);
     const { curBoardId, setCurBoardId } = curBoardIdPair;
     const mode = useContext(ModeContext);
@@ -45,10 +45,38 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                     <div className="board-links-item">
                         <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z" /></svg>
                         <a data-id={board._id} onClick={handleSetCurBoard}>{board.name}</a>
+                        <button type="button" id={`star-btn-${board._id}`} className={board.favorite ? "star-btn favorite" : "star-btn" } onClick={() => handleToggleFavorite(board._id)}><svg className="star" version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64" enableBackground="new 0 0 64 64" xmlSpace="preserve"><g><path d="M49.302,63.999c-0.664,0-1.332-0.164-1.938-0.5l-15.365-8.498l-15.366,8.498c-1.344,0.742-2.993,0.652-4.243-0.23c-1.25-0.883-1.891-2.403-1.645-3.915l2.981-18.261L1.138,28.185c-1.047-1.074-1.406-2.641-0.93-4.063c0.477-1.422,1.707-2.457,3.188-2.684l17.237-2.633L28.376,2.31c0.661-1.407,2.071-2.301,3.622-2.301s2.961,0.895,3.622,2.301l7.743,16.495l17.237,2.633c1.48,0.227,2.711,1.262,3.188,2.684c0.477,1.423,0.117,2.989-0.93,4.063L50.271,41.093l2.98,18.261c0.246,1.512-0.395,3.032-1.645,3.915C50.919,63.753,50.11,63.999,49.302,63.999z M31.998,46.43c0.668,0,1.332,0.168,1.938,0.5l10.092,5.579l-1.98-12.119c-0.203-1.254,0.199-2.527,1.086-3.438l8.563-8.779l-11.654-1.781c-1.316-0.199-2.449-1.043-3.016-2.255l-5.028-10.712L26.97,24.137c-0.566,1.212-1.699,2.056-3.016,2.255L12.3,28.173l8.563,8.779c0.887,0.91,1.289,2.184,1.086,3.438l-1.98,12.119l10.092-5.579C30.666,46.598,31.33,46.43,31.998,46.43z"/><path d="M31.998,46.43c0.668,0,1.332,0.168,1.938,0.5l10.092,5.579l-1.98-12.119c-0.203-1.254,0.199-2.527,1.086-3.438l8.563-8.779l-11.654-1.781c-1.316-0.199-2.449-1.043-3.016-2.255l-5.028-10.712L26.97,24.137c-0.566,1.212-1.699,2.056-3.016,2.255L12.3,28.173l8.563,8.779c0.887,0.91,1.289,2.184,1.086,3.438l-1.98,12.119l10.092-5.579C30.666,46.598,31.33,46.43,31.998,46.43z"/></g></svg></button> 
                     </div>
                 </div>
             );
         });
+    };
+
+    async function handleToggleFavorite(boardId: string) {
+        try {
+            const reqOptions: RequestInit = {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ boardId }),
+                credentials: "include"
+            };
+
+            const res = await fetch("http://localhost:3000/update-board-favorite", reqOptions);
+            const updatedBoard = await res.json();
+            if (res.ok) {
+                const filteredBoardsData = boardsData?.filter(board => board._id !== boardId);
+                if (filteredBoardsData) setBoardsData([...filteredBoardsData, updatedBoard]);
+
+                const button: HTMLButtonElement | null = document.getElementById(`star-btn-${boardId}`);
+                if (button) button.classList.toggle("favorite");
+            };
+        } catch (err) {
+            handleDisplayMsg({
+                ok: false,
+                message: err.message,
+                msgSetter: setDisplayMsg,
+            });
+        };
     };
 
     function handleModeToggle() {
