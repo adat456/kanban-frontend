@@ -10,7 +10,7 @@ import Board from "./boardComponents/Board";
 const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>> }> = function({ setMode }) {
     const [ sidebarVis, setSidebarVis ] = useState(window.innerWidth > 500 ? true : false);
     const [ displayMsg, setDisplayMsg ] = useState("");
-
+    const [ editBoardVis, setEditBoardVis ] = useState(false);
     const [ boardsData, setBoardsData ] = useState<boardData[] | null>(null);
     const [ curBoardId, setCurBoardId ] = useState("");
     const [ curBoardName, setCurBoardName ] = useState("");
@@ -79,15 +79,13 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
         };
     }, [sidebarVis]);
 
-    const curBoard = boardsData?.find(board => board._id === curBoardId);
-    // ensures that the colValues in both instances of EditBoard will always be UTD (this pair of values is directly passed down to both instances)
-    const [ colValues, setColValues ] = useState<{id: string, value: string}[] | null | undefined>(null);
-    function handleEditBoardModal() {
-        const editBoardModal: HTMLDialogElement | null = document.querySelector("#edit-board-modal");
-        editBoardModal?.showModal();
-        // calling the setter whenever editBoard is opened 
-        setColValues(curBoard?.columns.map(col => { return {id: col._id, value: col.name}}));
-    };
+    useEffect(() => {
+        console.log("wya");
+        if (editBoardVis) {
+            const editBoardModal: HTMLDialogElement | null = document.querySelector("#edit-board-modal");
+            editBoardModal?.showModal();
+        };
+    }, [editBoardVis]);
 
     return (  
         <div id="app">
@@ -121,7 +119,7 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
                         <div className="all-boards">
                             <header>
                                 <svg ref={headerLogoRef} className="header-logo" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg"><g fill="#635FC7" fillRule="evenodd"><rect width="6" height="25" rx="2"/><rect opacity=".75" x="9" width="6" height="25" rx="2"/><rect opacity=".5" x="18" width="6" height="25" rx="2"/></g></svg>
-                                <button type="button" className="edit-brd-btn" onClick={handleEditBoardModal}>
+                                <button type="button" className="edit-brd-btn" onClick={() => setEditBoardVis(true)}>
                                     <h1>{curBoardName}</h1>
                                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.0651 7.39423L7.09967 20.4114C6.72438 20.7882 6.21446 21 5.68265 21H4.00383C3.44943 21 3 20.5466 3 19.9922V18.2987C3 17.7696 3.20962 17.2621 3.58297 16.8873L16.5517 3.86681C19.5632 1.34721 22.5747 4.87462 20.0651 7.39423Z"  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                                 </button>                                
@@ -133,10 +131,10 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
                                         <svg className="nav-arrow" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4"/></svg>    
                                     </button>
                                 }
-                                <EditBoard setDisplayMsg={setDisplayMsg} colValues={colValues} setColValues={setColValues} />
+                                {editBoardVis ? <EditBoard setDisplayMsg={setDisplayMsg} setEditBoardVis={setEditBoardVis} /> : null }
                             </header>
                             <main ref={mainRef}>
-                                <Board setDisplayMsg={setDisplayMsg} colValues={colValues} setColValues={setColValues} />
+                                <Board setDisplayMsg={setDisplayMsg} />
                             </main>
                             <div ref={sidebarBackdropRef} className="sidebar-backdrop" onClick={() => setSidebarVis(false)}></div>
                         </div>

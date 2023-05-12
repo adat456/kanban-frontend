@@ -6,19 +6,17 @@ import Fields from "./Fields";
 
 interface Prop {
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
-    colValues: {id: string, value: string}[],
-    setColValues: React.Dispatch<React.SetStateAction<{id: string, value: string}[]>>
+    setEditBoardVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColValues }) {
+const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData?.find(board => (board._id === curBoardId));
 
-    // need to use a combination of changing keys (formKey, which is attached to dialog element, changes every time curBoardId changes or the dialog element is closed) and defaultValue equal to an empty string or a bit of context (not state) on certain inputs to wipe out stale state
-    const [ formKey, setFormKey ] = useState(0);
     const [ boardName, setBoardName ] = useState(curBoard?.name);
     const [ errMsg, setErrMsg ] = useState("");
+    const [ colValues, setColValues ] = useState(curBoard?.columns.map(col => { return {id: col._id, value: col.name}}));
     const [ colsTBD, setColsTBD ] = useState([]);
     // for new columns
     const counterRef = useRef(curBoard?.columns.length);
@@ -52,14 +50,11 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColVal
         setBoardName(input.value);
     };
 
-    useEffect(() => {
-        setFormKey(formKey + 1);
-    }, [curBoardId]);
-
     function handleEditBoardModal() {
         const editBoardModal: HTMLDialogElement | null = document.querySelector("#edit-board-modal");
         editBoardModal?.close();
-        setFormKey(formKey + 1);
+
+        setEditBoardVis(false);
     };
 
     function handleDeleteBoardModal(action: string) {
@@ -73,7 +68,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColVal
 
         if (!errMsg) { 
             let columns: {name: string, id: string}[] = [];
-            colValues.forEach(col => {
+            colValues?.forEach(col => {
                 // filters out any column fields that were left empty and formats info in the object
                 if (col.value) columns.push({ name: col.value, id: col.id });
             });     
@@ -140,7 +135,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, colValues, setColVal
 
     return (
         <div>
-            <dialog key={formKey} className="form-modal" id="edit-board-modal"> 
+            <dialog className="form-modal" id="edit-board-modal"> 
                 <form method="POST" className="edit-brd-form" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Board</h2>
                     <label htmlFor="boardName">Board Name</label>

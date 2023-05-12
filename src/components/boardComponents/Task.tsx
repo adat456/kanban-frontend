@@ -51,15 +51,13 @@ const Task: React.FC<Prop> = function({ id, name, desc, order, subtasks, colId, 
         };
     };
 
+    const [ subtaskValues, setSubtaskValues ] = useState(
+        subtasks.map(subtask => { return {id: subtask._id, value: subtask.subtask}})
+    );
     function handleViewTaskModal() {
         const viewTaskModal: HTMLDialogElement | null = document.querySelector(`#view-task-modal-${id}`);
         viewTaskModal?.showModal();
     };
-    // added
-    const [ subtaskValues, setSubtaskValues ] = useState(
-        subtasks.map(subtask => { return {id: subtask._id, value: subtask.subtask}})
-    );
-    // moved from ViewTask, currently passed into ViewTask as a prop
     function handleEditTaskModal(id: string) {
         const editTaskModal: HTMLDialogElement | null = document.querySelector(`#edit-task-modal-${id}`);
         editTaskModal?.showModal();

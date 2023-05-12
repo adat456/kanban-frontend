@@ -5,18 +5,18 @@ import Fields from "./Fields";
 
 interface Prop {
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
-    colValues: {id: string, value: string}[],
-    setColValues: React.Dispatch<React.SetStateAction<{id: string, value: string}[]>>
+    setCreateBoardVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, colValues, setColValues}) {
-
+const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis }) {
     const [ boardName, setBoardName ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required");
+    const [ colValues, setColValues ] = useState([
+        { id: "1", value: "" },
+        { id: "2", value: "" },
+    ]);
+
     const counterRef = useRef(3);
-    // need to use changing keys (formKey, which is attached to dialog element, changes every time the dialog element is closed)
-    // optionally, can specify a defaultValue (not from state) on UNCONTROLLED inputs (such as board name) to replace any stale state, or state lingering from the last time the form was opened. otherwise, defaultValue will be set to "" by defaults
-    const [ formKey, setFormKey ] = useState(0);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     
@@ -52,8 +52,8 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, colValues, setCol
     function handleCreateBoardModal() {
         const createBoardModal: HTMLDialogElement | null = document.querySelector("#create-board-modal");
         createBoardModal?.close();
-        setFormKey(formKey + 1);
-        setErrMsg("Field required.");
+        
+        setCreateBoardVis(false);
     };
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -110,7 +110,7 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, colValues, setCol
     
     return (
         <>
-            <dialog key={formKey} className="form-modal" id="create-board-modal">
+            <dialog className="form-modal" id="create-board-modal">
                 <form method="POST" onSubmit={handleSubmit} noValidate>
                     <h2>Add New Board</h2>
                     <label htmlFor="boardName">Board Name *</label>

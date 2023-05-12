@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 
 import { columnData } from "../../Context";
@@ -12,7 +12,14 @@ interface Prop {
 };
 
 const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
-    const [ curCol, setCurCol ] = useState("");
+    const [ createTaskVis, setCreateTaskVis ] = useState(false);
+
+    useEffect(() => {
+        if (createTaskVis) {
+            const createTaskModal: HTMLDialogElement | null = document.querySelector("#create-task-modal");
+            createTaskModal?.showModal();
+        };
+    }, [createTaskVis]);
 
     // each column is a droppable...
     const { isOver, setNodeRef } = useDroppable({ id: col._id });
@@ -31,29 +38,13 @@ const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
         </div>
     );
 
-    const [ subtaskValues, setSubtaskValues ] = useState([
-        { id: "1", value: "" },
-        { id: "2", value: "" },
-    ]);
-    // sets the id of the current column so that the new task will be created under the right column, and toggles CreateTask visibility
-    function displayTask(colId: string) {
-        setCurCol(colId);
-        console.log(colId);
-        const createTaskModal: HTMLDialogElement | null = document.querySelector("#create-task-modal");
-        createTaskModal?.showModal();
-        setSubtaskValues([
-            { id: "1", value: "" },
-            { id: "2", value: "" },
-        ]);
-    };
-
     return (
         <section style={style} ref={setNodeRef} className="column">
             <h2>{`${col.name} (${col.tasks.length})`}</h2>
             {(tasks.length > 0) ? <DroppableSpace id={`${col._id}0`} /> : null }
             {tasks}
-            <button type="button" className="add-task-btn" onClick={() => displayTask(col._id)}>+ New Task</button>
-            <CreateTask curCol={curCol} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} subtaskValues={subtaskValues} setSubtaskValues={setSubtaskValues} />
+            <button type="button" className="add-task-btn" onClick={() => setCreateTaskVis(true)}>+ New Task</button>
+            {createTaskVis? <CreateTask setCreateTaskVis={setCreateTaskVis} curCol={col._id} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} /> : null }
         </section>
     );
 };

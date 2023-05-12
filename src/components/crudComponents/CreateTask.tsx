@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { BoardsContext, CurBoardIdContext, columnData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
@@ -6,20 +6,21 @@ import Fields from "./Fields";
 interface Prop {
     curCol: string,
     columnsArr: columnData[],
-    subtaskValues: {id: string, value: string}[],
-    setSubtaskValues: React.Dispatch<React.SetStateAction<{id: string, value: string}[]>>,
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
+    setCreateTaskVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg, subtaskValues, setSubtaskValues }) {
+const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg, setCreateTaskVis }) {
     const [ task, setTask ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required.");
     const [ desc, setDesc ] = useState("");
+    const [ subtaskValues, setSubtaskValues ] = useState([
+        { id: "1", value: "" },
+        { id: "2", value: "" },
+    ]);
     const [ updatedColId, setUpdatedColId ] = useState(curCol);
     
     const counterRef = useRef(3);
-    // https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/?utm_source=pocket_saves#keys-and-reconciliation
-    const [ formKey, setFormKey ] = useState(0);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
@@ -70,9 +71,8 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
     function handleCreateTaskModal() {
         const createTaskModal: HTMLDialogElement | null = document.querySelector("#create-task-modal");
         createTaskModal?.close();
-        // part of clearing stale state
-        setFormKey(formKey + 1);
-        setErrMsg("Field required.");
+        
+        setCreateTaskVis(false);
     };
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -142,12 +142,12 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                 message: "Please fix errors before submitting.",
                 msgSetter: setDisplayMsg
             });
-        }
+        };
     };
 
     return (
         <>
-            <dialog key={formKey} className="form-modal" id="create-task-modal">
+            <dialog className="form-modal" id="create-task-modal">
                 <form method="POST" onSubmit={handleSubmit} noValidate>
                     <h2>Add New Task</h2>
                     <label htmlFor="task">Title</label>
