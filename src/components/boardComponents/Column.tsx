@@ -38,6 +38,7 @@ const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
     // sets the id of the current column so that the new task will be created under the right column, and toggles CreateTask visibility
     function displayTask(colId: string) {
         setCurCol(colId);
+        console.log(colId);
         const createTaskModal: HTMLDialogElement | null = document.querySelector("#create-task-modal");
         createTaskModal?.showModal();
         setSubtaskValues([

@@ -757,7 +757,7 @@ main#no-brd-chosen p {
   color: #EA5555;
   font-size: 1.25rem;
 }
-.form-modal .checkboxes-field .checked-subtask, .delete-modal .checkboxes-field .checked-subtask, .login-form .checkboxes-field .checked-subtask, .signup-form .checkboxes-field .checked-subtask {
+.form-modal .checkboxes-field .checked-subtask label, .delete-modal .checkboxes-field .checked-subtask label, .login-form .checkboxes-field .checked-subtask label, .signup-form .checkboxes-field .checked-subtask label {
   text-decoration: line-through;
 }
 .form-modal .checkboxes-field label, .delete-modal .checkboxes-field label, .login-form .checkboxes-field label, .signup-form .checkboxes-field label {

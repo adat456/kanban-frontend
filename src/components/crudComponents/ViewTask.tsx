@@ -6,6 +6,7 @@ import { handleDisplayMsg } from "../helpers";
 interface Prop {
     name: string,
     desc: string,
+    numCompleteSubtasks: number,
     subtasks: subtaskData[],
     colId: string,
     taskId: string,
@@ -13,39 +14,50 @@ interface Prop {
     handleEditTaskModal: (taskId: string) => void
 };
 
-const ViewTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, handleEditTaskModal }) {
+const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, subtasks, colId, taskId, setDisplayMsg, handleEditTaskModal }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
 
     const [ updatedColId, setUpdatedColId ] = useState(colId);
-    // const [ numCompleteSubtasks , setNumCompleteSubtasks ] = useState(numComplete);
+    const [ numComplete, setNumComplete ] = useState(numCompleteSubtasks);
 
-    let numCompleteSubtasks = 0;
     const subtasksArr = subtasks.map(subtask => {
         if (subtask.status) {
-            numCompleteSubtasks++;
             return (
                 <div className="subtask checked-subtask" key={subtask._id}>
-                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={updateNumCompleteSubtasks} defaultChecked />{subtask.subtask}</label>  
+                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={handleClick} defaultChecked />{subtask.subtask}</label>  
                 </div>
             );
         } else {
             return (
                 <div className="subtask" key={subtask._id}>
-                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={updateNumCompleteSubtasks} />{subtask.subtask}</label>
+                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={handleClick} />{subtask.subtask}</label>
                 </div>
             );
         };
     });
 
+    function handleClick(e) {
+        toggleSubtaskAppearance(e);
+        updateNumCompleteSubtasks();
+    };
+
+    function toggleSubtaskAppearance(e: React.MouseEvent<HTMLInputElement>) {
+        const subtask = e.target;
+        const parent: HTMLDivElement = subtask.closest("div");
+        console.log(parent);
+        if (subtask.checked) parent.classList.add("checked-subtask");
+        if (!subtask.checked) parent.classList.remove("checked-subtask");
+    };
+
     function updateNumCompleteSubtasks() {
-        // let numCompleteSubtasks = 0;
-        // const arr = [...document.querySelectorAll(`.a${taskId}-subtask-checkbox`)];
-        // arr.forEach(item => {
-        //     if (item.checked) numCompleteSubtasks++;
-        // });
-        // setNumCompleteSubtasks(numCompleteSubtasks);
-    }
+        let numCompleteSubtasks = 0;
+        const arr = [...document.querySelectorAll(`.a${taskId}-subtask-checkbox`)];
+        arr.forEach(item => {
+            if (item.checked) numCompleteSubtasks++;
+        });
+        setNumComplete(numCompleteSubtasks);
+    };
 
     let columnsArr: columnData[] = [];
     boardsData?.forEach(board => {
@@ -128,7 +140,7 @@ const ViewTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
                 </div>   
                 <p>{desc}</p>
                 <fieldset className="checkboxes-field"> 
-                    <legend>{`Subtasks (${numCompleteSubtasks} of ${subtasks.length})`}</legend>
+                    <legend>{`Subtasks (${numComplete} of ${subtasks.length})`}</legend>
                     {subtasksArr}
                 </fieldset>
                 <label htmlFor="column">Column</label>

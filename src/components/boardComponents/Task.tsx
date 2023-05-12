@@ -80,7 +80,7 @@ const Task: React.FC<Prop> = function({ id, name, desc, order, subtasks, colId, 
                     <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="#828FA3" stroke="#828FA3"><g id="SVGRepo_bgCarrier" strokeWidth="0"/><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"/><g id="SVGRepo_iconCarrier"><path d="M7 2a2 2 0 10.001 4.001A2 2 0 007 2zm0 6a2 2 0 10.001 4.001A2 2 0 007 8zm0 6a2 2 0 10.001 4.001A2 2 0 007 14zm6-8a2 2 0 10-.001-4.001A2 2 0 0013 6zm0 2a2 2 0 10.001 4.001A2 2 0 0013 8zm0 6a2 2 0 10.001 4.001A2 2 0 0013 14z" fill="#828FA3"/></g></svg>
                 </div>
             </div>
-            <ViewTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setDisplayMsg={setDisplayMsg} handleEditTaskModal={handleEditTaskModal} /> 
+            <ViewTask name={name} desc={desc} subtasks={subtasks} colId={colId} taskId={id} setDisplayMsg={setDisplayMsg} handleEditTaskModal={handleEditTaskModal} numCompleteSubtasks={numCompleteSubtasks} /> 
             <EditTask name={name} desc={desc} colId={colId} taskId={id} setDisplayMsg={setDisplayMsg} subtaskValues={subtaskValues} setSubtaskValues={setSubtaskValues} />
         </>
     );
