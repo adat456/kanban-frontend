@@ -34,11 +34,14 @@
     @media (max-width: 500px)
         position: absolute
         inset: 10rem 0 0 0
-        margin: auto
+        margin: 0 auto
         z-index: 2
         background-color: white
         border-radius: 0.5rem
-           
+        height: min-content
+        min-height: initial
+        width: 70%
+        
     .logo
         height: 3.5rem
         padding: 1rem 3rem 5rem 3rem
@@ -119,8 +122,11 @@
     padding: 0 3rem
 
     @media (max-width: 500px)
-        position: relative
-        padding: 7rem 2rem 2rem 2rem
+        position: initial
+        padding: 4rem 2rem 2rem 2rem
+
+        hr
+            padding-top: 2rem
 
     .mode-toggle
         background-color: base.$board-background

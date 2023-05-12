@@ -62,7 +62,6 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
             circleRef?.current?.classList.add("dark");
             circleRef?.current?.classList.remove("light");
         };
-
         if (mode === "dark") {
             setMode("light");
             circleRef?.current?.classList.add("light");
