@@ -70,7 +70,7 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
         if (field === "description") setDescription(input.value);
     };
 
-    function handleEditTaskModal(taskId: string) {
+    function handleEditTaskModal() {
         const editTaskModal: HTMLDialogElement | null = document.querySelector(".edit-task-modal");
         editTaskModal?.close();
         
@@ -78,9 +78,16 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
     };
 
     function handleDeleteTaskModal(action: string) {
-        const deleteTaskModal: HTMLDialogElement | null = document.querySelector(`#delete-task-modal-${taskId}`);
-        if (action === "show") deleteTaskModal?.showModal();
-        if (action === "close") deleteTaskModal?.close();
+        const deleteTaskModal: HTMLDialogElement | null = document.querySelector(`#delete-task-modal`);
+        if (action === "show") {
+            const editTaskModal: HTMLDialogElement | null = document.querySelector(".edit-task-modal");
+            editTaskModal?.close();
+            deleteTaskModal?.showModal();
+        };
+        if (action === "close") {
+            deleteTaskModal?.close();
+            setEditTaskVis(false);
+        };
     };
 
     async function handleSubmit(e) {
@@ -173,13 +180,13 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
                         {colOptions}
                     </select>
                     <button type="submit" className="save-btn">Save Changes</button>
-                    <button type="button" className="delete-btn" onClick={() => {handleEditTaskModal(taskId); handleDeleteTaskModal("show")}}>Delete Task</button>
-                    <button className="close-modal" type="button" onClick={() => handleEditTaskModal(taskId)}>
+                    <button type="button" className="delete-btn" onClick={() => handleDeleteTaskModal("show")}>Delete Task</button>
+                    <button className="close-modal" type="button" onClick={handleEditTaskModal}>
                         <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
                     </button>
                 </form>
             </dialog>
-            <dialog className="delete-modal" id={`delete-task-modal-${taskId}`}>
+            <dialog className="delete-modal" id="delete-task-modal">
                 <h2>Delete this task?</h2>
                 <p>{`Are you sure you want to delete the '${name}' task and its subtasks? This action cannot be reversed.`}</p>
                 <div className="delete-btn-cluster">

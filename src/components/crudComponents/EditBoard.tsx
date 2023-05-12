@@ -59,8 +59,15 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
 
     function handleDeleteBoardModal(action: string) {
         const deleteBoardModal: HTMLDialogElement | null = document.querySelector("#delete-board-modal");
-        if (action === "show") deleteBoardModal?.showModal();
-        if (action === "close") deleteBoardModal?.close();
+        if (action === "show") {
+            const editBoardModal: HTMLDialogElement | null = document.querySelector("#edit-board-modal");
+            editBoardModal?.close();
+            deleteBoardModal?.showModal();
+        };
+        if (action === "close") {
+            deleteBoardModal?.close();
+            setEditBoardVis(false);
+        };
     };
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -143,7 +150,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     {colValues ? <Fields type="col" values={colValues} setValues={setColValues} counterRef={counterRef} valuesTBD={colsTBD} setValuesTBD={setColsTBD} /> : null }
                     <button className="save-btn" type="submit">Save Changes</button>
-                    <button className="delete-btn" type="button" onClick={() => {handleEditBoardModal(); handleDeleteBoardModal("show");}}>Delete Board</button>
+                    <button className="delete-btn" type="button" onClick={() => handleDeleteBoardModal("show")}>Delete Board</button>
                     <button className="close-modal" type="button" onClick={handleEditBoardModal}>
                         <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
                     </button>
