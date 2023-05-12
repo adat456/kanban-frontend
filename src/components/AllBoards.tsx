@@ -8,7 +8,7 @@ import EditBoard from "./crudComponents/EditBoard";
 import Board from "./boardComponents/Board";
 
 const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>> }> = function({ setMode }) {
-    const [ sidebarVis, setSidebarVis ] = useState(true);
+    const [ sidebarVis, setSidebarVis ] = useState(window.innerWidth > 500 ? true : false);
     const [ displayMsg, setDisplayMsg ] = useState("");
 
     const [ boardsData, setBoardsData ] = useState<boardData[] | null>(null);
