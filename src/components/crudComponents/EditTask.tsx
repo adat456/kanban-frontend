@@ -1,26 +1,26 @@
 import { useState, useContext, useRef } from "react";
 
-import { BoardsContext, CurBoardIdContext } from "../../Context";
+import { BoardsContext, CurBoardIdContext, subtaskData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
 
 interface Prop {
     name: string,
     desc: string,
+    subtasks: subtaskData[],
     colId: string,
     taskId: string,
-    subtaskValues: {id: string, value: string}[],
-    setSubtaskValues: React.Dispatch<React.SetStateAction<{id: string, value: string}[]>>,
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
+    setEditTaskVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const EditTask: React.FC<Prop> = function({ name, desc, colId, taskId, setDisplayMsg, subtaskValues, setSubtaskValues }) {
+const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, setEditTaskVis }) {
     const [ task, setTask ] = useState(name);
     const [ errMsg, setErrMsg ] = useState("");
     const [ description, setDescription ] = useState(desc);
+    const [ subtaskValues, setSubtaskValues ] = useState(subtasks.map(subtask => { return {id: subtask._id, value: subtask.subtask}}));
     const [ subtasksTBD, setSubtasksTBD ] = useState([]);
     const [ updatedColId, setUpdatedColId ] = useState(colId);
-    const [ formKey, setFormKey ] = useState(0);
 
     const counterRef = useRef(subtaskValues.length);
 
@@ -71,9 +71,10 @@ const EditTask: React.FC<Prop> = function({ name, desc, colId, taskId, setDispla
     };
 
     function handleEditTaskModal(taskId: string) {
-        const editTaskModal: HTMLDialogElement | null = document.querySelector(`#edit-task-modal-${taskId}`);
+        const editTaskModal: HTMLDialogElement | null = document.querySelector(".edit-task-modal");
         editTaskModal?.close();
-        setFormKey(formKey + 1);
+        
+        setEditTaskVis(false);
     };
 
     function handleDeleteTaskModal(action: string) {
@@ -158,7 +159,7 @@ const EditTask: React.FC<Prop> = function({ name, desc, colId, taskId, setDispla
 
     return (
         <>
-            <dialog key={formKey} className="form-modal" id={`edit-task-modal-${taskId}`}>
+            <dialog className="form-modal edit-task-modal">
                 <form method="POST" className="edit-task" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Task</h2>
                     <label htmlFor="task">Title</label>

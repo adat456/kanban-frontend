@@ -11,10 +11,11 @@ interface Prop {
     colId: string,
     taskId: string,
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
-    handleEditTaskModal: (taskId: string) => void
+    setViewTaskVis: React.Dispatch<React.SetStateAction<boolean>>,
+    setEditTaskVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, subtasks, colId, taskId, setDisplayMsg, handleEditTaskModal }) {
+const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, subtasks, colId, taskId, setDisplayMsg, setViewTaskVis, setEditTaskVis }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
 
@@ -45,7 +46,6 @@ const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, sub
     function toggleSubtaskAppearance(e: React.MouseEvent<HTMLInputElement>) {
         const subtask = e.target;
         const parent: HTMLDivElement = subtask.closest("div");
-        console.log(parent);
         if (subtask.checked) parent.classList.add("checked-subtask");
         if (!subtask.checked) parent.classList.remove("checked-subtask");
     };
@@ -72,8 +72,10 @@ const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, sub
     });
 
     function handleViewTaskModal() {
-        const viewTaskModal: HTMLDialogElement | null = document.querySelector(`#view-task-modal-${taskId}`);
+        const viewTaskModal: HTMLDialogElement | null = document.querySelector(".view-task-modal");
         viewTaskModal?.close();
+
+        setViewTaskVis(false);
     };
 
     async function handleSubmitUpdates(e: React.FormEvent<HTMLFormElement>) {
@@ -132,11 +134,11 @@ const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, sub
     };
 
     return (
-        <dialog className="form-modal" id={`view-task-modal-${taskId}`}>
+        <dialog className="form-modal view-task-modal">
             <form method="POST" className="view-task">
                 <div className="view-task-header">
                     <h2>{name}</h2>
-                    <button type="button" onClick={() => {handleViewTaskModal(); handleEditTaskModal(taskId);}}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
+                    <button type="button" onClick={() => {handleViewTaskModal(); setEditTaskVis(true)}}><svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg></button>
                 </div>   
                 <p>{desc}</p>
                 <fieldset className="checkboxes-field"> 

@@ -80,7 +80,6 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
     }, [sidebarVis]);
 
     useEffect(() => {
-        console.log("wya");
         if (editBoardVis) {
             const editBoardModal: HTMLDialogElement | null = document.querySelector("#edit-board-modal");
             editBoardModal?.showModal();
