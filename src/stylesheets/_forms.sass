@@ -133,7 +133,6 @@
         @include base.l
         color: black
         padding: 0
-        margin-bottom: 2rem
 
     label, legend
         @include base.m
@@ -158,7 +157,7 @@
 
         svg
             margin-top: 1rem
-            height: 2rem
+            height: 1.5rem
             padding: 0 1rem
             fill: base.$grey
 
@@ -223,7 +222,61 @@
         width: 100%
         background-color: white
         @include base.med-body
+
+    // for the contributor modal
+    hr
+        margin: 2rem
         
+    .search-bar
+        display: flex
+
+        input
+            margin-top: 0
+            margin-right: 1rem
+            flex-grow: 1
+
+        button
+            padding: 1rem
+            border-radius: 0.5rem
+            background-color: base.$drk-blue-inactive
+            width: 5rem
+
+        button:hover, button:focus
+            background-color: base.$drk-blue-active
+
+        svg
+            height: 2rem
+            fill: base.$lite-blue-inactive
+
+    // for the contributor modal
+    .contributor
+        display: flex
+        align-items: center
+        margin-top: 1rem
+
+        p, select
+            width: calc((100% - 5rem)/2)
+
+        p
+            font-size: 1.3rem
+
+        select
+            margin-top: 0
+            margin-right: 1rem
+
+        button
+            padding: 1rem
+            width: 5rem
+
+        svg
+            margin-top: 0.25rem
+            height: 1.5rem
+            fill: base.$grey
+
+        button:hover, button:focus
+            svg
+                fill: base.$red-inactive
+
     button
         display: block
         width: 100%
@@ -257,7 +310,7 @@
         &:hover, &:focus
             background-color: base.$red-active
 
-.view-task-header
+.view-task-header, .create-board-header
     display: flex
     justify-content: space-between
     align-items: center
@@ -269,6 +322,15 @@
     button  
         width: auto
         padding: 1rem
+
+        &:hover, &:focus
+            svg
+                stroke: base.$drk-blue-active
+
+    svg
+        height: 3rem
+        fill: white
+        stroke: base.$drk-blue-inactive
 
 .delete-modal
     padding-bottom: 3rem

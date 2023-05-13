@@ -1,7 +1,8 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { BoardsContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
+import ContributorModal from "./ContributorModal";
 
 interface Prop {
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
@@ -15,10 +16,18 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
         { id: "1", value: "" },
         { id: "2", value: "" },
     ]);
+    const [ contributorModal, setContributorModal ]  = useState(false);
 
     const counterRef = useRef(3);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
+
+    useEffect(() => {
+        if (contributorModal) {
+            const modal: HTMLDialogElement | null = document.querySelector("#contributor-modal");
+            modal?.showModal();
+        };
+    }, [contributorModal]);
     
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const input = e.target;
@@ -112,7 +121,12 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
         <>
             <dialog className="form-modal" id="create-board-modal">
                 <form method="POST" onSubmit={handleSubmit} noValidate>
-                    <h2>Add New Board</h2>
+                    <div className="create-board-header">
+                        <h2>Add New Board</h2>
+                        <button type="button" onClick={() => setContributorModal(true)}>
+                            <svg className="add" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V16M8 12H16M7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </button>
+                    </div>
                     <label htmlFor="boardName">Board Name *</label>
                     <input type="text" id="boardName" onChange={handleChange} maxLength={20} required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
@@ -123,6 +137,7 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
                     <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
                 </button>
             </dialog>  
+            {contributorModal ? <ContributorModal setContributorModal={setContributorModal} /> : null}
         </>    
     );
 };

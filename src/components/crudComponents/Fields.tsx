@@ -10,6 +10,7 @@ interface Prop {
 };
 
 const Fields: React.FC<Prop> = function({ type, values, setValues, counterRef, valuesTBD, setValuesTBD }) {
+    // note that the React elements are NOT stored in state, only the values used to generate these elements
     let fields = values.map(item => {
         return (
             <label key={item.id} htmlFor={`${type}${item.id}`} className={`${type}-label`}>

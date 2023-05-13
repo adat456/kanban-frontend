@@ -706,7 +706,6 @@ main#no-brd-chosen p {
   letter-spacing: 0.05rem;
   color: black;
   padding: 0;
-  margin-bottom: 2rem;
 }
 .form-modal label, .form-modal legend, .delete-modal label, .delete-modal legend, .login-form label, .login-form legend, .signup-form label, .signup-form legend {
   font-size: 1.5rem;
@@ -731,7 +730,7 @@ main#no-brd-chosen p {
 }
 .form-modal label.col-label svg, .form-modal label.subtask-label svg, .delete-modal label.col-label svg, .delete-modal label.subtask-label svg, .login-form label.col-label svg, .login-form label.subtask-label svg, .signup-form label.col-label svg, .signup-form label.subtask-label svg {
   margin-top: 1rem;
-  height: 2rem;
+  height: 1.5rem;
   padding: 0 1rem;
   fill: #828FA3;
 }
@@ -798,6 +797,57 @@ main#no-brd-chosen p {
   line-height: 2.3rem;
   font-weight: 500;
 }
+.form-modal hr, .delete-modal hr, .login-form hr, .signup-form hr {
+  margin: 2rem;
+}
+.form-modal .search-bar, .delete-modal .search-bar, .login-form .search-bar, .signup-form .search-bar {
+  display: flex;
+}
+.form-modal .search-bar input, .delete-modal .search-bar input, .login-form .search-bar input, .signup-form .search-bar input {
+  margin-top: 0;
+  margin-right: 1rem;
+  flex-grow: 1;
+}
+.form-modal .search-bar button, .delete-modal .search-bar button, .login-form .search-bar button, .signup-form .search-bar button {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: #635FC7;
+  width: 5rem;
+}
+.form-modal .search-bar button:hover, .form-modal .search-bar button:focus, .delete-modal .search-bar button:hover, .delete-modal .search-bar button:focus, .login-form .search-bar button:hover, .login-form .search-bar button:focus, .signup-form .search-bar button:hover, .signup-form .search-bar button:focus {
+  background-color: #A8A4FF;
+}
+.form-modal .search-bar svg, .delete-modal .search-bar svg, .login-form .search-bar svg, .signup-form .search-bar svg {
+  height: 2rem;
+  fill: #E4EBFA;
+}
+.form-modal .contributor, .delete-modal .contributor, .login-form .contributor, .signup-form .contributor {
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+}
+.form-modal .contributor p, .form-modal .contributor select, .delete-modal .contributor p, .delete-modal .contributor select, .login-form .contributor p, .login-form .contributor select, .signup-form .contributor p, .signup-form .contributor select {
+  width: calc((100% - 5rem) / 2);
+}
+.form-modal .contributor p, .delete-modal .contributor p, .login-form .contributor p, .signup-form .contributor p {
+  font-size: 1.3rem;
+}
+.form-modal .contributor select, .delete-modal .contributor select, .login-form .contributor select, .signup-form .contributor select {
+  margin-top: 0;
+  margin-right: 1rem;
+}
+.form-modal .contributor button, .delete-modal .contributor button, .login-form .contributor button, .signup-form .contributor button {
+  padding: 1rem;
+  width: 5rem;
+}
+.form-modal .contributor svg, .delete-modal .contributor svg, .login-form .contributor svg, .signup-form .contributor svg {
+  margin-top: 0.25rem;
+  height: 1.5rem;
+  fill: #828FA3;
+}
+.form-modal .contributor button:hover svg, .form-modal .contributor button:focus svg, .delete-modal .contributor button:hover svg, .delete-modal .contributor button:focus svg, .login-form .contributor button:hover svg, .login-form .contributor button:focus svg, .signup-form .contributor button:hover svg, .signup-form .contributor button:focus svg {
+  fill: #EA5555;
+}
 .form-modal button, .delete-modal button, .login-form button, .signup-form button {
   display: block;
   width: 100%;
@@ -832,21 +882,29 @@ main#no-brd-chosen p {
   background-color: #FF9898;
 }
 
-.view-task-header {
+.view-task-header, .create-board-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.view-task-header h2 {
+.view-task-header h2, .create-board-header h2 {
   font-size: 1.8rem;
   line-height: 2.3rem;
   font-weight: 700;
   letter-spacing: 0.05rem;
   color: black;
 }
-.view-task-header button {
+.view-task-header button, .create-board-header button {
   width: auto;
   padding: 1rem;
+}
+.view-task-header button:hover svg, .view-task-header button:focus svg, .create-board-header button:hover svg, .create-board-header button:focus svg {
+  stroke: #A8A4FF;
+}
+.view-task-header svg, .create-board-header svg {
+  height: 3rem;
+  fill: white;
+  stroke: #635FC7;
 }
 
 .delete-modal {
