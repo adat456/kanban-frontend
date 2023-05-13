@@ -821,6 +821,18 @@ main#no-brd-chosen p {
   height: 2rem;
   fill: #E4EBFA;
 }
+.form-modal button.potential-contributor, .delete-modal button.potential-contributor, .login-form button.potential-contributor, .signup-form button.potential-contributor {
+  width: fit-content;
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  background-color: #E4EBFA;
+}
+.form-modal button.potential-contributor:hover, .form-modal button.potential-contributor:focus, .delete-modal button.potential-contributor:hover, .delete-modal button.potential-contributor:focus, .login-form button.potential-contributor:hover, .login-form button.potential-contributor:focus, .signup-form button.potential-contributor:hover, .signup-form button.potential-contributor:focus {
+  background-color: #F4F7FD;
+  color: #635FC7;
+}
 .form-modal .contributor, .delete-modal .contributor, .login-form .contributor, .signup-form .contributor {
   display: flex;
   align-items: center;

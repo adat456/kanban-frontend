@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 interface Prop {
     setContributorModal: React.Dispatch<React.SetStateAction<boolean>>
@@ -13,7 +13,7 @@ interface ContributorType {
 
 const ContributorModal: React.FC<Prop> = function({ setContributorModal }) {
     const [ search, setSearch ] = useState("");
-    const [ results, setResults ] = useState("");
+    const [ result, setResult ] = useState<ContributorType | null>(null);
     const [ contributors, setContributors ] = useState<ContributorType[]>([
         {
             key: 0,
@@ -29,15 +29,39 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal }) {
         },
     ]);
 
-    const counterRef = useRef(0);
+    const counterRef = useRef(2);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setSearch(e.target.value);
+        if (result) setResult(null);
     };
 
-    // fetch request that sends the search term and adds any matches to the results state to be rendered
+    async function fetchSearchMatches(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
 
-    // function to add the match to the contributors array with a default userStatus of "Member"
+        try {
+            const res = await fetch(`http://localhost:3000/search/${search}`, { credentials: "include"});
+            const message = await res.json();
+            if (res.ok) {
+                setResult(message);
+            } else {
+                throw new Error(message);
+            };
+        } catch(err) {
+            console.log(err.message);
+        };
+    };
+
+    // need to somehow display error message
+
+    function addContributor() {
+        if (result) setContributors([
+            ...contributors, 
+            { ...result, key: counterRef.current }
+        ]);
+        counterRef.current = counterRef.current + 1;
+        setResult(null);
+    };
 
     let contributorsArr = contributors?.map(contributor => {
         return (
@@ -68,7 +92,7 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal }) {
     return (
         <dialog className="form-modal" id="contributor-modal">
             <h2>Add Contributors</h2>
-            <form>
+            <form onSubmit={fetchSearchMatches}>
                 <label>Search by username or email:</label>
                 <div className="search-bar">
                     <input type="text" name="search" value={search} onChange={handleChange} placeholder='e.g., "lieutenantworf" or "lt.worf@starfleet.gov"' />
@@ -77,7 +101,9 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal }) {
                     </button>
                 </div>
             </form>
-            {results ? null : null}
+            {result ? 
+                <button type="button" className="potential-contributor" onClick={addContributor}>{`+ ${result.userName}`}</button> : null
+            }
             <hr />
             {contributorsArr}
             <form>
