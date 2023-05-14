@@ -1,16 +1,8 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
-import { BoardsContext } from "../../Context";
+import { BoardsContext, contributorType } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
 import ContributorModal from "./ContributorModal";
-
-export interface contributorType {
-    key: number,
-    userId: string,
-    userName: string,
-    userStatus: string,
-    alreadyAdded?: boolean,
-};
 
 interface Prop {
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
@@ -25,6 +17,7 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
         { id: "2", value: "" },
     ]);
 
+    // ContributorModal state
     const [ contributorModal, setContributorModal ]  = useState(false);
     const [ contributorsLifted, setContributorsLifted ] = useState<contributorType[] | null>(null);
     const [ contributorCounter, setContributorCounter ] = useState(0);
@@ -99,7 +92,7 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
                 body: JSON.stringify({ 
                     name: boardName, 
                     columns, 
-                    contributors 
+                    contributors
                 }),
                 // indicates whether user should receive AND send cookies
                 credentials: "include"

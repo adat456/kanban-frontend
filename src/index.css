@@ -799,6 +799,7 @@ main#no-brd-chosen p {
 }
 .form-modal hr, .delete-modal hr, .login-form hr, .signup-form hr {
   margin: 2rem;
+  border: 1px solid #E4EBFA;
 }
 .form-modal .search-bar, .delete-modal .search-bar, .login-form .search-bar, .signup-form .search-bar {
   display: flex;
@@ -898,26 +899,26 @@ main#no-brd-chosen p {
   background-color: #FF9898;
 }
 
-.view-task-header, .create-board-header {
+.view-task-header, .create-board-header, .edit-board-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.view-task-header h2, .create-board-header h2 {
+.view-task-header h2, .create-board-header h2, .edit-board-header h2 {
   font-size: 1.8rem;
   line-height: 2.3rem;
   font-weight: 700;
   letter-spacing: 0.05rem;
   color: black;
 }
-.view-task-header button, .create-board-header button {
+.view-task-header button, .create-board-header button, .edit-board-header button {
   width: auto;
   padding: 1rem;
 }
-.view-task-header button:hover svg, .view-task-header button:focus svg, .create-board-header button:hover svg, .create-board-header button:focus svg {
+.view-task-header button:hover svg, .view-task-header button:focus svg, .create-board-header button:hover svg, .create-board-header button:focus svg, .edit-board-header button:hover svg, .edit-board-header button:focus svg {
   stroke: #A8A4FF;
 }
-.view-task-header svg, .create-board-header svg {
+.view-task-header svg, .create-board-header svg, .edit-board-header svg {
   height: 3rem;
   fill: white;
   stroke: #635FC7;

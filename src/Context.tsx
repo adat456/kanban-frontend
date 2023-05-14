@@ -21,7 +21,16 @@ export interface boardData {
     _id: string,
     name: string,
     favorite: boolean,
+    group: boolean,
+    contributors: contributorType[],
     columns: columnData[]
+};
+export interface contributorType {
+    key?: number,
+    userId: string,
+    userName: string,
+    userStatus: string,
+    alreadyAdded?: boolean,
 };
 
 export interface boardsDataInterface {

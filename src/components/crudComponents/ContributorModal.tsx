@@ -1,17 +1,12 @@
 import React, { useState, useRef } from "react";
-
-export interface contributorType {
-    key: number,
-    userId: string,
-    userName: string,
-    userStatus: string,
-    alreadyAdded?: boolean,
-};
+import { contributorType } from "../../Context";
 
 interface Prop {
     setContributorModal: React.Dispatch<React.SetStateAction<boolean>>,
-    contributorsLifted: contributorType[] | null,
-    setContributorsLifted: React.Dispatch<React.SetStateAction<contributorType[] | null>>,
+    // initial value of contributorsLifted can be null, or a non-empty array if contributors have already been added during CreateBoard
+    // it can also be undefined or a non-empty array, if opened from EditBoard 
+    contributorsLifted: contributorType[] | null | undefined,
+    setContributorsLifted: React.Dispatch<React.SetStateAction<contributorType[] | null | undefined>>,
     contributorCounter: number,
     setContributorCounter: React.Dispatch<React.SetStateAction<number>>
 };
@@ -19,10 +14,10 @@ interface Prop {
 const ContributorModal: React.FC<Prop> = function({ setContributorModal, contributorsLifted, setContributorsLifted, contributorCounter, setContributorCounter }) {
     const [ search, setSearch ] = useState("");
     const [ result, setResult ] = useState<contributorType | null>(null);
-    // initial value will either be null, or a non-empty array if contributors have already been added during the process of board creation
-    const [ contributors, setContributors ] = useState<contributorType[] | null>(contributorsLifted);
+    // state is separate (only taking a prop in as an initial value) because this dialog has save and close buttons--the latter of which will delete any changes that were made without saving. if the parent's state was constantly being updated with a passed in setter, then changes that were not explicitly saved would still be saved, which is not desirable in this scenario
+    const [ contributors, setContributors ] = useState<contributorType[] | undefined | null>(contributorsLifted);
 
-    // keys will sometimes repeat if this modal is repeatedly opened and closed and changes are made, so parent tracks
+    // keys will sometimes repeat if this modal is repeatedly opened and closed and changes are made, so its true value is tracked by the parent
     const counterRef = useRef(contributorCounter);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -75,22 +70,23 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal, contrib
 
     let contributorsArr = contributors?.map(contributor => {
         return (
-            <div key={contributor.key} className="contributor">
+            // in the case of EditBoard, contributors will only have a userID, not a key; hence the || short circuiting, which returns the last value by default
+            <div key={contributor.key || contributor.userId} className="contributor">
                 <p>{contributor.userName}</p>
                 <select name="status" id="status" data-id={contributor.userId} defaultValue={contributor.userStatus} onChange={handleStatusChange}>
                     <option value="Co-creator">Co-creator</option>
                     <option value="Member">Member</option>
                     <option value="Viewer">Viewer</option>
                 </select>
-                <button type="button" onClick={() => handleRemoval(contributor.key)}>
+                <button type="button" onClick={() => handleRemoval(contributor.userId)}>
                     <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
                 </button>
             </div>
         );
     });
 
-    function handleRemoval(key: number) {
-        if (contributors) setContributors(contributors.filter(contributor => contributor.key !== key));
+    function handleRemoval(id: string) {
+        if (contributors) setContributors(contributors.filter(contributor => contributor.userId !== id));
     };
 
     function handleStatusChange(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -109,10 +105,15 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal, contrib
 
     function handleSubmitContributors(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        // sending contributor array back up to its parent CreateBoard
+
+        // if this is called from CreateBoard parent, send the updated contributors list to the parent, who will add it to board details during its own board creation POST request
         setContributorsLifted(contributors);
+
+        // if being called from EditBoard parent, a separate fetch request should be made here to edit contributors
+        
         // sending current value of counterRef back up to parent, so that parent can track what key we're on and prevent counterRef from resetting if ContributorModal is opened again... prevents key duplication
         setContributorCounter(counterRef.current);
+
         handleContributorModal();
     };
 
