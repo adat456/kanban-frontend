@@ -24,6 +24,9 @@ const Fields: React.FC<Prop> = function({ type, values, setValues, counterRef, v
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const id = e.target.getAttribute("data-id");
+        // really great way to replace/change an object in an array of objects
+        // if the object matches, change and return it
+        // if it does not, return it unchanged
         setValues(values.map(item => {
             if (id == item.id) {
                 return { id, value: e.target.value };

@@ -833,6 +833,10 @@ main#no-brd-chosen p {
   background-color: #F4F7FD;
   color: #635FC7;
 }
+.form-modal button.potential-contributor:disabled, .delete-modal button.potential-contributor:disabled, .login-form button.potential-contributor:disabled, .signup-form button.potential-contributor:disabled {
+  background-color: #E4EBFA;
+  color: #828FA3;
+}
 .form-modal .contributor, .delete-modal .contributor, .login-form .contributor, .signup-form .contributor {
   display: flex;
   align-items: center;

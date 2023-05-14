@@ -1,49 +1,51 @@
 import React, { useState, useRef } from "react";
 
-interface Prop {
-    setContributorModal: React.Dispatch<React.SetStateAction<boolean>>
-};
-
-interface ContributorType {
+export interface contributorType {
     key: number,
     userId: string,
     userName: string,
-    userStatus?: string,
+    userStatus: string,
+    alreadyAdded?: boolean,
 };
 
-const ContributorModal: React.FC<Prop> = function({ setContributorModal }) {
-    const [ search, setSearch ] = useState("");
-    const [ result, setResult ] = useState<ContributorType | null>(null);
-    const [ contributors, setContributors ] = useState<ContributorType[]>([
-        {
-            key: 0,
-            userId: "123",
-            userName: "Ada Truong",
-            userStatus: "Member",
-        },
-        {
-            key: 1,
-            userId: "456",
-            userName: "Erik Anderson",
-            userStatus: "Co-creator",
-        },
-    ]);
+interface Prop {
+    setContributorModal: React.Dispatch<React.SetStateAction<boolean>>,
+    contributorsLifted: contributorType[] | null,
+    setContributorsLifted: React.Dispatch<React.SetStateAction<contributorType[] | null>>,
+    contributorCounter: number,
+    setContributorCounter: React.Dispatch<React.SetStateAction<number>>
+};
 
-    const counterRef = useRef(2);
+const ContributorModal: React.FC<Prop> = function({ setContributorModal, contributorsLifted, setContributorsLifted, contributorCounter, setContributorCounter }) {
+    const [ search, setSearch ] = useState("");
+    const [ result, setResult ] = useState<contributorType | null>(null);
+    // initial value will either be null, or a non-empty array if contributors have already been added during the process of board creation
+    const [ contributors, setContributors ] = useState<contributorType[] | null>(contributorsLifted);
+
+    // keys will sometimes repeat if this modal is repeatedly opened and closed and changes are made, so parent tracks
+    const counterRef = useRef(contributorCounter);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setSearch(e.target.value);
         if (result) setResult(null);
     };
 
-    async function fetchSearchMatches(e: React.FormEvent<HTMLFormElement>) {
+    async function handleFetchSearchMatches(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         try {
             const res = await fetch(`http://localhost:3000/search/${search}`, { credentials: "include"});
             const message = await res.json();
             if (res.ok) {
-                setResult(message);
+                // adding a property to the results object if contributor had already been added - will be used to disable button
+                if (contributors && contributors?.find(contributor => contributor.userId === message.userId)) {
+                    setResult({
+                        ...message,
+                        alreadyAdded: true,
+                    });                
+                } else {
+                    setResult(message);
+                };
             } else {
                 throw new Error(message);
             };
@@ -55,10 +57,18 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal }) {
     // need to somehow display error message
 
     function addContributor() {
-        if (result) setContributors([
-            ...contributors, 
-            { ...result, key: counterRef.current }
-        ]);
+        if (result) {
+            if (contributors) {
+                setContributors([
+                    ...contributors, 
+                    { ...result, key: counterRef.current }
+                ]);
+            } else {
+                setContributors([
+                    {...result, key: counterRef.current }
+                ]);
+            };
+        };
         counterRef.current = counterRef.current + 1;
         setResult(null);
     };
@@ -67,7 +77,7 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal }) {
         return (
             <div key={contributor.key} className="contributor">
                 <p>{contributor.userName}</p>
-                <select name="status" id="status" defaultValue={contributor.userStatus}>
+                <select name="status" id="status" data-id={contributor.userId} defaultValue={contributor.userStatus} onChange={handleStatusChange}>
                     <option value="Co-creator">Co-creator</option>
                     <option value="Member">Member</option>
                     <option value="Viewer">Viewer</option>
@@ -80,7 +90,30 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal }) {
     });
 
     function handleRemoval(key: number) {
-        setContributors(contributors.filter(contributor => contributor.key !== key));
+        if (contributors) setContributors(contributors.filter(contributor => contributor.key !== key));
+    };
+
+    function handleStatusChange(e: React.ChangeEvent<HTMLSelectElement>) {
+        const id = e.target.getAttribute("data-id");
+        if (contributors) setContributors(contributors.map(contributor => {
+            if (contributor.userId === id) {
+                return {
+                    ...contributor,
+                    userStatus: e.target.value
+                };
+            } else {
+                return contributor;
+            };
+        }));
+    };
+
+    function handleSubmitContributors(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        // sending contributor array back up to its parent CreateBoard
+        setContributorsLifted(contributors);
+        // sending current value of counterRef back up to parent, so that parent can track what key we're on and prevent counterRef from resetting if ContributorModal is opened again... prevents key duplication
+        setContributorCounter(counterRef.current);
+        handleContributorModal();
     };
 
     function handleContributorModal() {
@@ -92,7 +125,7 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal }) {
     return (
         <dialog className="form-modal" id="contributor-modal">
             <h2>Add Contributors</h2>
-            <form onSubmit={fetchSearchMatches}>
+            <form onSubmit={handleFetchSearchMatches}>
                 <label>Search by username or email:</label>
                 <div className="search-bar">
                     <input type="text" name="search" value={search} onChange={handleChange} placeholder='e.g., "lieutenantworf" or "lt.worf@starfleet.gov"' />
@@ -102,19 +135,21 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal }) {
                 </div>
             </form>
             {result ? 
-                <button type="button" className="potential-contributor" onClick={addContributor}>{`+ ${result.userName}`}</button> : null
+                result.alreadyAdded ?
+                    <button type="button" className="potential-contributor" onClick={addContributor} disabled>{`+ ${result.userName}`}</button> :
+                    <button type="button" className="potential-contributor" onClick={addContributor}>{`+ ${result.userName}`}</button>
+                : null
             }
             <hr />
-            {contributorsArr}
-            <form>
-
+            <form onSubmit={handleSubmitContributors}>
+                {contributorsArr}
                 <button type="submit" className="save-btn">Save Contributors</button>
             </form>
             <button className="close-modal" type="button" onClick={handleContributorModal}>
                 <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
             </button>
         </dialog>
-    )
+    );
 };
 
 export default ContributorModal;

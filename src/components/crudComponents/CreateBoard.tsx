@@ -4,6 +4,14 @@ import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
 import ContributorModal from "./ContributorModal";
 
+export interface contributorType {
+    key: number,
+    userId: string,
+    userName: string,
+    userStatus: string,
+    alreadyAdded?: boolean,
+};
+
 interface Prop {
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
     setCreateBoardVis: React.Dispatch<React.SetStateAction<boolean>>
@@ -16,11 +24,13 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
         { id: "1", value: "" },
         { id: "2", value: "" },
     ]);
-    const [ contributorModal, setContributorModal ]  = useState(false);
 
-    const counterRef = useRef(3);
+    const [ contributorModal, setContributorModal ]  = useState(false);
+    const [ contributorsLifted, setContributorsLifted ] = useState<contributorType[] | null>(null);
+    const [ contributorCounter, setContributorCounter ] = useState(0);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
+    const counterRef = useRef(3);
 
     useEffect(() => {
         if (contributorModal) {
@@ -74,10 +84,23 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
                 if (col.value) columns.push({ name: col.value });
             });
 
+            // cleaning up the contributorsLifted state, removing unnecessary key and alreadyAdded key-value pairs. if it is equal to null, there will be no contributors property at all in req.body
+            const contributors = contributorsLifted?.map(contributor => {
+                return {
+                    userId: contributor.userId,
+                    userName: contributor.userName,
+                    userStatus: contributor.userStatus,
+                };
+            });
+
             const reqOptions: RequestInit = {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ name: boardName, columns }),
+                body: JSON.stringify({ 
+                    name: boardName, 
+                    columns, 
+                    contributors 
+                }),
                 // indicates whether user should receive AND send cookies
                 credentials: "include"
             };
@@ -137,7 +160,7 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
                     <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
                 </button>
             </dialog>  
-            {contributorModal ? <ContributorModal setContributorModal={setContributorModal} /> : null}
+            {contributorModal ? <ContributorModal setContributorModal={setContributorModal} contributorsLifted={contributorsLifted} setContributorsLifted={setContributorsLifted} contributorCounter={contributorCounter} setContributorCounter={setContributorCounter} /> : null}
         </>    
     );
 };
