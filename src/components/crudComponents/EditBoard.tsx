@@ -116,21 +116,22 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
             };
             
             try {
-                const res = await fetch("http://localhost:3000/update-board", reqOptions);
-                const updatedMongoBoard = await res.json();
-                if (res.ok) {
+                const req = await fetch("http://localhost:3000/update-board", reqOptions);
+                // either the updated board or an error message
+                const res = await req.json();
+                if (req.ok) {
                     handleDisplayMsg({ok: true, message: "Board updated.", msgSetter: setDisplayMsg});
     
                     // update context as well
                     const filteredBoardsData = boardsData?.filter(board => {
                         return (board._id !== curBoardId);
                     });
-                    if (filteredBoardsData) setBoardsData([...filteredBoardsData, updatedMongoBoard]);
+                    if (filteredBoardsData) setBoardsData([...filteredBoardsData, res]);
 
                     handleEditBoardModal();
                 } else {
                     // client-generated error message
-                    throw new Error("Failed to update board. Please try again later.");
+                    throw new Error(res);
                 };
             } catch(err) {
                 handleDisplayMsg({ok: false, message: err.message, msgSetter: setDisplayMsg});
@@ -142,9 +143,11 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
 
     async function handleDelete() {
         try {
-            const res = await fetch(`http://localhost:3000/delete-board/${curBoardId}`, { method: "DELETE", credentials: "include" });
-            if (res.ok) {
-                handleDisplayMsg({ok: true, message: "Board deleted.", msgSetter: setDisplayMsg});
+            const req = await fetch(`http://localhost:3000/delete-board/${curBoardId}`, { method: "DELETE", credentials: "include" });
+            // either a success or error message
+            const res = await req.json();
+            if (req.ok) {
+                handleDisplayMsg({ok: true, message: res, msgSetter: setDisplayMsg});
     
                 // update context as well
                 const filteredBoardsData = boardsData?.filter(board => {
@@ -155,7 +158,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
 
                 handleDeleteBoardModal("close");
             } else {
-                throw new Error("Unable to delete board.");
+                throw new Error(res);
             }
         } catch(err) {
             handleDisplayMsg({ok: false, message: err.message, msgSetter: setDisplayMsg});

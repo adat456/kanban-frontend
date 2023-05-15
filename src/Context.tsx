@@ -21,7 +21,7 @@ export interface boardData {
     _id: string,
     name: string,
     favorite: boolean,
-    group: boolean,
+    creator: string,
     contributors: contributorType[],
     columns: columnData[]
 };
@@ -33,16 +33,25 @@ export interface contributorType {
     alreadyAdded?: boolean,
 };
 
+export interface userInterface {
+    _id: string,
+    firstName: string,
+    lastName: string,
+    username: string,
+    password: string,
+    email: string,
+    boards: string[],
+};
 export interface boardsDataInterface {
     boardsData: boardData[] | null,
     setBoardsData: React.Dispatch<React.SetStateAction<boardData[] | null>>
 };
-
 export interface curBoardIdInterface {
     curBoardId: string,
     setCurBoardId: React.Dispatch<React.SetStateAction<string>>
 };
 
+export const UserContext = createContext<userInterface | null>(null);
 export const BoardsContext = createContext<boardsDataInterface>({ boardsData: null, setBoardsData: () => {} });
 export const CurBoardIdContext = createContext<curBoardIdInterface | null>({ curBoardId: "", setCurBoardId: () => {} });
 export const ModeContext = createContext("light");

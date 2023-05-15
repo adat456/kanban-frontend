@@ -105,13 +105,9 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal, contrib
 
     function handleSubmitContributors(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
-        // if this is called from CreateBoard parent, send the updated contributors list to the parent, who will add it to board details during its own board creation POST request
+        // send the updated contributors list to the parent, who will add it to board details during its own board creation POST request
         setContributorsLifted(contributors);
-
-        // if being called from EditBoard parent, a separate fetch request should be made here to edit contributors
-        
-        // sending current value of counterRef back up to parent, so that parent can track what key we're on and prevent counterRef from resetting if ContributorModal is opened again... prevents key duplication
+        // send current value of counterRef back up to parent, so that parent can track what key we're on and prevent counterRef from resetting if ContributorModal is opened again... prevents key duplication
         setContributorCounter(counterRef.current);
 
         handleContributorModal();

@@ -6,7 +6,8 @@ import Column from "./Column";
 import EditBoard from "../crudComponents/EditBoard";
 
 interface Prop {
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
+    curUserStatus: string
 };
 
 interface draggableInfoProp {
@@ -15,7 +16,7 @@ interface draggableInfoProp {
     colId: string
 };
 
-const Board: React.FC<Prop> = function({ setDisplayMsg }) {
+const Board: React.FC<Prop> = function({ setDisplayMsg, curUserStatus }) {
     const boardsDataPair = useContext(BoardsContext);
     const { boardsData, setBoardsData } = boardsDataPair;
     const curBoardIdPair = useContext(CurBoardIdContext);
@@ -115,8 +116,12 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
         <>
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {columns}
-                <button type="button" className="add-column-btn" onClick={() => setEditBoardVis(true)}>+ New Column</button>
-                {editBoardVis ? <EditBoard setDisplayMsg={setDisplayMsg} setEditBoardVis={setEditBoardVis} /> : null }
+                {(curUserStatus === "Creator" || curUserStatus === "Co-creator") ? 
+                    <>
+                        <button type="button" className="add-column-btn" onClick={() => setEditBoardVis(true)}>+ New Column</button>
+                        {editBoardVis ? <EditBoard setDisplayMsg={setDisplayMsg} setEditBoardVis={setEditBoardVis} /> : null }
+                    </> : null
+                }    
             </DndContext>
         </>
     );
