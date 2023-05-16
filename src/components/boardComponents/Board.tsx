@@ -33,7 +33,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg, curUserStatus }) {
 
     // rendering columns w/ their tasks
     const columns = columnsArr?.map(col => 
-        <Column key={col._id} col={col} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
+        <Column key={col._id} col={col} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} curUserStatus={curUserStatus} />
     );
 
     // although pointer sensor is one of the default sensors, I imported it with useSensor and useSensors to be passed along to DndContext so that an activation constraint could be added, and a simple click on a draggable opens the task preview instead of initiating a dragstart event

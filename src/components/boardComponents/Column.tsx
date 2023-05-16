@@ -8,10 +8,11 @@ import Task from "./Task";
 interface Prop {
     col: columnData,
     columnsArr: columnData[],
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>
+    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
+    curUserStatus: string
 };
 
-const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
+const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg, curUserStatus }) {
     const [ createTaskVis, setCreateTaskVis ] = useState(false);
 
     useEffect(() => {
@@ -33,7 +34,7 @@ const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
     const tasksArr = col.tasks;
     const tasks = tasksArr.map((task, index) => 
         <div key={task._id}>
-            <Task id={task._id} name={task.task} desc={task.desc} order={index} subtasks={task.subtasks} colId={col._id} setDisplayMsg={setDisplayMsg} />
+            <Task id={task._id} name={task.task} desc={task.desc} order={index} subtasks={task.subtasks} colId={col._id} setDisplayMsg={setDisplayMsg} curUserStatus={curUserStatus} />
             <DroppableSpace id={`${col._id}${index + 1}`} />
         </div>
     );
@@ -43,8 +44,13 @@ const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
             <h2>{`${col.name} (${col.tasks.length})`}</h2>
             {(tasks.length > 0) ? <DroppableSpace id={`${col._id}0`} /> : null }
             {tasks}
-            <button type="button" className="add-task-btn" onClick={() => setCreateTaskVis(true)}>+ New Task</button>
-            {createTaskVis? <CreateTask setCreateTaskVis={setCreateTaskVis} curCol={col._id} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} /> : null }
+            {(curUserStatus === "Creator" || curUserStatus === "Co-creator") ?
+                <>
+                    <button type="button" className="add-task-btn" onClick={() => setCreateTaskVis(true)}>+ New Task</button>
+                    {createTaskVis? <CreateTask setCreateTaskVis={setCreateTaskVis} curCol={col._id} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} /> : null }
+                </>
+                : null
+            }
         </section>
     );
 };
