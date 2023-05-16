@@ -52,6 +52,7 @@ export interface curBoardIdInterface {
 };
 
 export const UserContext = createContext<userInterface | null>(null);
+export const UserStatusContext = createContext<string | null>(null);
 export const BoardsContext = createContext<boardsDataInterface>({ boardsData: null, setBoardsData: () => {} });
 export const CurBoardIdContext = createContext<curBoardIdInterface | null>({ curBoardId: "", setCurBoardId: () => {} });
 export const ModeContext = createContext("light");

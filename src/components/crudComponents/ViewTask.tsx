@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import { BoardsContext, CurBoardIdContext, columnData, subtaskData } from "../../Context";
+import { BoardsContext, CurBoardIdContext, UserStatusContext, columnData, subtaskData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
 interface Prop {
@@ -13,12 +13,12 @@ interface Prop {
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
     setViewTaskVis: React.Dispatch<React.SetStateAction<boolean>>,
     setEditTaskVis: React.Dispatch<React.SetStateAction<boolean>>,
-    curUserStatus: string
 };
 
-const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, subtasks, colId, taskId, setDisplayMsg, setViewTaskVis, setEditTaskVis, curUserStatus }) {
+const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, subtasks, colId, taskId, setDisplayMsg, setViewTaskVis, setEditTaskVis }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
+    const userStatus = useContext(UserStatusContext);
 
     const [ updatedColId, setUpdatedColId ] = useState(colId);
     const [ numComplete, setNumComplete ] = useState(numCompleteSubtasks);
@@ -139,7 +139,7 @@ const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, sub
             <form method="POST" className="view-task">
                 <div className="view-task-header">
                     <h2>{name}</h2>
-                    {(curUserStatus === "Creator" || curUserStatus === "Co-creator") ?
+                    {(userStatus === "Creator" || userStatus === "Co-creator") ?
                         <button type="button" onClick={() => {handleViewTaskModal(); setEditTaskVis(true)}}>
                             <svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg>
                         </button> : null

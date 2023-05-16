@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 
-import { columnData } from "../../Context";
+import { UserStatusContext, columnData } from "../../Context";
 import CreateTask from "../crudComponents/CreateTask";
 import Task from "./Task";
 
@@ -9,11 +9,12 @@ interface Prop {
     col: columnData,
     columnsArr: columnData[],
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
-    curUserStatus: string
 };
 
-const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg, curUserStatus }) {
+const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
     const [ createTaskVis, setCreateTaskVis ] = useState(false);
+
+    const userStatus = useContext(UserStatusContext);
 
     useEffect(() => {
         if (createTaskVis) {
@@ -34,7 +35,7 @@ const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg, curUse
     const tasksArr = col.tasks;
     const tasks = tasksArr.map((task, index) => 
         <div key={task._id}>
-            <Task id={task._id} name={task.task} desc={task.desc} order={index} subtasks={task.subtasks} colId={col._id} setDisplayMsg={setDisplayMsg} curUserStatus={curUserStatus} />
+            <Task id={task._id} name={task.task} desc={task.desc} order={index} subtasks={task.subtasks} colId={col._id} setDisplayMsg={setDisplayMsg} />
             <DroppableSpace id={`${col._id}${index + 1}`} />
         </div>
     );
@@ -44,7 +45,7 @@ const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg, curUse
             <h2>{`${col.name} (${col.tasks.length})`}</h2>
             {(tasks.length > 0) ? <DroppableSpace id={`${col._id}0`} /> : null }
             {tasks}
-            {(curUserStatus === "Creator" || curUserStatus === "Co-creator") ?
+            {(userStatus === "Creator" || userStatus === "Co-creator") ?
                 <>
                     <button type="button" className="add-task-btn" onClick={() => setCreateTaskVis(true)}>+ New Task</button>
                     {createTaskVis? <CreateTask setCreateTaskVis={setCreateTaskVis} curCol={col._id} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} /> : null }

@@ -1,13 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
 import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from "@dnd-kit/core";
 
-import { BoardsContext, CurBoardIdContext, boardData } from "../../Context";
+import { BoardsContext, CurBoardIdContext, UserStatusContext } from "../../Context";
 import Column from "./Column";
 import EditBoard from "../crudComponents/EditBoard";
 
 interface Prop {
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
-    curUserStatus: string
 };
 
 interface draggableInfoProp {
@@ -16,11 +15,12 @@ interface draggableInfoProp {
     colId: string
 };
 
-const Board: React.FC<Prop> = function({ setDisplayMsg, curUserStatus }) {
+const Board: React.FC<Prop> = function({ setDisplayMsg }) {
     const boardsDataPair = useContext(BoardsContext);
     const { boardsData, setBoardsData } = boardsDataPair;
     const curBoardIdPair = useContext(CurBoardIdContext);
     const { curBoardId, setCurBoardId } = curBoardIdPair;
+    const userStatus = useContext(UserStatusContext);
     const curBoard = boardsData?.find(board => board._id === curBoardId);
     const columnsArr = curBoard?.columns;
 
@@ -33,7 +33,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg, curUserStatus }) {
 
     // rendering columns w/ their tasks
     const columns = columnsArr?.map(col => 
-        <Column key={col._id} col={col} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} curUserStatus={curUserStatus} />
+        <Column key={col._id} col={col} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
     );
 
     // although pointer sensor is one of the default sensors, I imported it with useSensor and useSensors to be passed along to DndContext so that an activation constraint could be added, and a simple click on a draggable opens the task preview instead of initiating a dragstart event
@@ -116,7 +116,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg, curUserStatus }) {
         <>
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 {columns}
-                {(curUserStatus === "Creator" || curUserStatus === "Co-creator") ? 
+                {(userStatus === "Creator" || userStatus === "Co-creator") ? 
                     <>
                         <button type="button" className="add-column-btn" onClick={() => setEditBoardVis(true)}>+ New Column</button>
                         {editBoardVis ? <EditBoard setDisplayMsg={setDisplayMsg} setEditBoardVis={setEditBoardVis} /> : null }
