@@ -35,7 +35,7 @@ const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
     const tasksArr = col.tasks;
     const tasks = tasksArr.map((task, index) => 
         <div key={task._id}>
-            <Task id={task._id} name={task.task} desc={task.desc} order={index} subtasks={task.subtasks} colId={col._id} setDisplayMsg={setDisplayMsg} />
+            <Task task={task} order={index} colId={col._id} setDisplayMsg={setDisplayMsg} />
             <DroppableSpace id={`${col._id}${index + 1}`} />
         </div>
     );

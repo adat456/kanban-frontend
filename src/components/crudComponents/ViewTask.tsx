@@ -1,21 +1,18 @@
 import React, { useContext, useState } from "react";
 
-import { BoardsContext, CurBoardIdContext, UserStatusContext, columnData, subtaskData } from "../../Context";
+import { BoardsContext, CurBoardIdContext, UserStatusContext, columnData, taskData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
 interface Prop {
-    name: string,
-    desc: string,
+    task: taskData,
     numCompleteSubtasks: number,
-    subtasks: subtaskData[],
     colId: string,
-    taskId: string,
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
     setViewTaskVis: React.Dispatch<React.SetStateAction<boolean>>,
     setEditTaskVis: React.Dispatch<React.SetStateAction<boolean>>,
 };
 
-const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, subtasks, colId, taskId, setDisplayMsg, setViewTaskVis, setEditTaskVis }) {
+const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, setDisplayMsg, setViewTaskVis, setEditTaskVis }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const userStatus = useContext(UserStatusContext);
@@ -23,17 +20,21 @@ const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, sub
     const [ updatedColId, setUpdatedColId ] = useState(colId);
     const [ numComplete, setNumComplete ] = useState(numCompleteSubtasks);
 
-    const subtasksArr = subtasks.map(subtask => {
+    const year = task.deadline?.slice(0, 4);
+    const month = task.deadline?.slice(5, 7);
+    const day = task.deadline?.slice(8, 10);
+
+    const subtasksArr = task.subtasks.map(subtask => {
         if (subtask.status) {
             return (
                 <div className="subtask checked-subtask" key={subtask._id}>
-                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={handleClick} defaultChecked />{subtask.subtask}</label>  
+                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${task._id}-subtask-checkbox`} onClick={handleClick} defaultChecked />{subtask.subtask}</label>  
                 </div>
             );
         } else {
             return (
                 <div className="subtask" key={subtask._id}>
-                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${taskId}-subtask-checkbox`} onClick={handleClick} />{subtask.subtask}</label>
+                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${task._id}-subtask-checkbox`} onClick={handleClick} />{subtask.subtask}</label>
                 </div>
             );
         };
@@ -53,7 +54,7 @@ const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, sub
 
     function updateNumCompleteSubtasks() {
         let numCompleteSubtasks = 0;
-        const arr = [...document.querySelectorAll(`.a${taskId}-subtask-checkbox`)];
+        const arr = [...document.querySelectorAll(`.a${task._id}-subtask-checkbox`)];
         arr.forEach(item => {
             if (item.checked) numCompleteSubtasks++;
         });
@@ -96,9 +97,10 @@ const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, sub
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({  
                 boardId: curBoardId,
-                colId, taskId,
+                taskId: task._id,
                 updatedSubtasks: subtasks,
-                updatedColId
+                updatedColId,
+                colId
             }),
             credentials: "include"
         };
@@ -138,16 +140,23 @@ const ViewTask: React.FC<Prop> = function({ name, desc, numCompleteSubtasks, sub
         <dialog className="form-modal view-task-modal">
             <form method="POST" className="view-task">
                 <div className="view-task-header">
-                    <h2>{name}</h2>
+                    <h2>{task.task}</h2>
                     {(userStatus === "Creator" || userStatus === "Co-creator") ?
                         <button type="button" onClick={() => {handleViewTaskModal(); setEditTaskVis(true)}}>
                             <svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg>
-                        </button> : null
+                        </button> : null       
                     }
                 </div>   
-                <p>{desc}</p>
+                {task.deadline || task.assignees.length > 0 ? 
+                    <p className="deadline-assignees">
+                        {task.deadline ? `Deadline: ${month}/${day}/${year}` : ""}
+                        <br />
+                        {task.assignees.length > 0 ? `Assigned to: ${task.assignees.map(assignee => assignee.userName).join(", ")}` : ""}    
+                    </p> : null
+                }
+                <p className="desc">{task.desc}</p>
                 <fieldset className="checkboxes-field"> 
-                    <legend>{`Subtasks (${numComplete} of ${subtasks.length})`}</legend>
+                    <legend>{`Subtasks (${numComplete} of ${task.subtasks.length})`}</legend>
                     {subtasksArr}
                 </fieldset>
                 <label htmlFor="column">Column</label>

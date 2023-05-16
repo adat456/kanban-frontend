@@ -10,7 +10,14 @@ export interface taskData {
     _id: string,
     task: string,
     desc: string,
-    subtasks: subtaskData[]
+    subtasks: subtaskData[],
+    // need to change to object
+    assignees: {
+        userId: string,
+        userName: string
+    }[],
+    created: string,
+    deadline: string
 };
 export interface columnData {
     _id: string,

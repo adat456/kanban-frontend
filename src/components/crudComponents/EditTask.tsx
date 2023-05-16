@@ -1,28 +1,32 @@
-import { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef } from "react";
 
-import { BoardsContext, CurBoardIdContext, subtaskData } from "../../Context";
+import { BoardsContext, CurBoardIdContext, taskData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
 
 interface Prop {
-    name: string,
-    desc: string,
-    subtasks: subtaskData[],
+    task: taskData,
     colId: string,
-    taskId: string,
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
     setEditTaskVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId, setDisplayMsg, setEditTaskVis }) {
-    const [ task, setTask ] = useState(name);
+interface assigneeInfo {
+    userId: string,
+    userName: string
+};
+
+const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditTaskVis }) {
+    const [ taskName, setTaskName ] = useState(task.task);
     const [ errMsg, setErrMsg ] = useState("");
-    const [ description, setDescription ] = useState(desc);
-    const [ subtaskValues, setSubtaskValues ] = useState(subtasks.map(subtask => { return {id: subtask._id, value: subtask.subtask}}));
+    const [ description, setDescription ] = useState(task.desc);
+    const [ subtaskValues, setSubtaskValues ] = useState(task.subtasks.map(subtask => { return {id: subtask._id, value: subtask.subtask}}));
     const [ subtasksTBD, setSubtasksTBD ] = useState([]);
     const [ updatedColId, setUpdatedColId ] = useState(colId);
+    const [ assignees, setAssignees ] = useState<assigneeInfo[]>(task.assignees);
 
     const counterRef = useRef(subtaskValues.length);
+    const deadlineRef = useRef<HTMLInputElement | null>(null);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
@@ -44,8 +48,8 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
                 // check that the task name is unique 
                 let valid = true;
                 curBoard?.columns.forEach(col => {
-                    col.tasks.forEach(task => {
-                        if (task._id !== taskId && task.task.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
+                    col.tasks.forEach(existingTask => {
+                        if (existingTask._id !== task._id && existingTask.task.trim().toLowerCase() === input.value.trim().toLowerCase()) valid = false;
                     });
                 }); 
 
@@ -64,10 +68,40 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
                 input.setCustomValidity("");
             };
 
-            setTask(input.value);
+            setTaskName(input.value);
         };
 
         if (field === "description") setDescription(input.value);
+    };
+
+    const assigneeOptions = curBoard?.contributors?.map(contributor => {
+        return (
+            <option key={contributor.userId} value={contributor.userId}>{contributor.userName}</option>
+        );
+    });
+
+    const chosenAssignees = assignees?.map(assignee => {
+        return (
+            <button type="button" key={assignee.userId} className="chosen-assignee" onClick={() => handleRemoveAssignee(assignee.userId)}>
+                <p>{`${assignee.userName}`}</p>
+                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+            </button>
+        );
+    });
+
+    function handleAddAssignee(e: React.ChangeEvent<HTMLSelectElement>) {
+        const userId = e.target.value;
+        let userName;
+        curBoard?.contributors.forEach(contributor => {
+            if (contributor.userId === userId) userName = contributor.userName;
+        });
+        if (!assignees.find(assignee => assignee.userId === userId)) {
+            setAssignees([...assignees, {userId, userName}]);
+        };
+    };
+
+    function handleRemoveAssignee(userId: string) {
+        setAssignees(assignees.filter(assignee => assignee.userId !== userId));
     };
 
     function handleEditTaskModal() {
@@ -90,7 +124,7 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
         };
     };
 
-    async function handleSubmit(e) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         if (!errMsg) {
@@ -105,11 +139,13 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
                 body: JSON.stringify({  
                     boardId: curBoardId,
                     colId, 
-                    taskId,
-                    task,
+                    taskId: task._id,
+                    task: taskName,
                     desc: description,
                     updatedSubtasks: [...subtasks, ...subtasksTBD],
-                    updatedColId
+                    updatedColId,
+                    deadline: deadlineRef?.current?.value,
+                    assignees
                 }),
                 credentials: "include"
             };
@@ -128,7 +164,7 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
                         setBoardsData(updatedBoardsData);
                     };
 
-                    handleEditTaskModal(taskId);
+                    handleEditTaskModal();
                 } else {
                     throw new Error("Failed to update task. Please try again later.");
                 };
@@ -142,7 +178,7 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
 
     async function handleDelete() {
         try {
-            const res = await fetch(`http://localhost:3000/delete-task/${curBoardId}/${colId}/${taskId}`, { method: "DELETE", credentials: "include" });;
+            const res = await fetch(`http://localhost:3000/delete-task/${curBoardId}/${colId}/${task._id}`, { method: "DELETE", credentials: "include" });;
             if (res.ok) {
                 handleDisplayMsg({ok: true, message: "Task deleted.", msgSetter: setDisplayMsg});
 
@@ -170,7 +206,7 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
                 <form method="POST" className="edit-task" onSubmit={handleSubmit} noValidate>
                     <h2>Edit Task</h2>
                     <label htmlFor="task">Title</label>
-                    <input type="text" id="task" name="task" defaultValue={name} onChange={handleChange} maxLength={30} required />
+                    <input type="text" id="task" name="task" defaultValue={task.task} onChange={handleChange} maxLength={30} required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     <label htmlFor="description">Description</label>
                     <textarea id="description" name="description" value={description} onChange={handleChange} rows={5} maxLength={200} />
@@ -179,6 +215,20 @@ const EditTask: React.FC<Prop> = function({ name, desc, subtasks, colId, taskId,
                     <select name="column" id="column" defaultValue={colId} onChange={(e) => setUpdatedColId(e.target.value)} >
                         {colOptions}
                     </select>
+                    {curBoard?.contributors?.length > 0 ?
+                        <>
+                            <label htmlFor="assignees">Assign to:</label>
+                            <select name="assignees" id="assignees" onChange={handleAddAssignee} value="">
+                                <option disabled value="" />
+                                {assigneeOptions}
+                            </select>
+                            <div className="chosen-assignees">
+                                {chosenAssignees}
+                            </div>
+                        </> : null
+                    }
+                    <label htmlFor="deadline">Deadline</label>
+                    <input ref={deadlineRef} type="date" id="deadline" name="deadline" defaultValue={task?.deadline?.slice(0, 10)} />
                     <button type="submit" className="save-btn">Save Changes</button>
                     <button type="button" className="delete-btn" onClick={() => handleDeleteTaskModal("show")}>Delete Task</button>
                     <button className="close-modal" type="button" onClick={handleEditTaskModal}>

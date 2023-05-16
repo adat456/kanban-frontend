@@ -130,9 +130,6 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
             // both dates formatted as a string "YYYY-MM-DD"
             const today = new Date().toISOString().slice(0, 10);
 
-            // removing names from assignees
-            const assigneeIds = assignees.map(assignee => assignee.userId);
-
             const reqOptions: RequestInit = {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
@@ -144,7 +141,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                     subtasks,
                     created: today,
                     deadline: deadlineRef?.current?.value,
-                    assignees: assigneeIds
+                    assignees,
                 }),
                 credentials: "include"
             };

@@ -707,6 +707,13 @@ main#no-brd-chosen p {
   color: black;
   padding: 0;
 }
+.form-modal p, .delete-modal p, .login-form p, .signup-form p {
+  font-size: 1.3rem;
+}
+.form-modal p.deadline-assignees, .delete-modal p.deadline-assignees, .login-form p.deadline-assignees, .signup-form p.deadline-assignees {
+  margin-bottom: 1.5rem;
+  line-height: 2rem;
+}
 .form-modal label, .form-modal legend, .delete-modal label, .delete-modal legend, .login-form label, .login-form legend, .signup-form label, .signup-form legend {
   font-size: 1.5rem;
   line-height: 1.9rem;
