@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React, { useState, useContext, useRef } from "react";
 import { BoardsContext, CurBoardIdContext, columnData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
@@ -10,6 +10,11 @@ interface Prop {
     setCreateTaskVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
+interface assigneeInfo {
+    userId: string,
+    userName: string
+};
+
 const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg, setCreateTaskVis }) {
     const [ task, setTask ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required.");
@@ -19,11 +24,13 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
         { id: "2", value: "" },
     ]);
     const [ updatedColId, setUpdatedColId ] = useState(curCol);
+    const [ assignees, setAssignees ] = useState<assigneeInfo[]>([]);
     
     const counterRef = useRef(3);
+    const deadlineRef = useRef<HTMLInputElement | null>(null);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
-    const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
+    const { curBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData?.find(board => board._id === curBoardId);
 
     const colOptions = columnsArr.map(col => {
@@ -31,6 +38,36 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
             <option key={col._id} value={col._id}>{col.name}</option>
         );
     });
+
+    const assigneeOptions = curBoard?.contributors?.map(contributor => {
+        return (
+            <option key={contributor.userId} value={contributor.userId}>{contributor.userName}</option>
+        );
+    });
+
+    const chosenAssignees = assignees?.map(assignee => {
+        return (
+            <button type="button" key={assignee.userId} className="chosen-assignee" onClick={() => handleRemoveAssignee(assignee.userId)}>
+                <p>{`${assignee.userName}`}</p>
+                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+            </button>
+        );
+    });
+
+    function handleAddAssignee(e: React.ChangeEvent<HTMLSelectElement>) {
+        const userId = e.target.value;
+        let userName;
+        curBoard?.contributors.forEach(contributor => {
+            if (contributor.userId === userId) userName = contributor.userName;
+        });
+        if (!assignees.find(assignee => assignee.userId === userId)) {
+            setAssignees([...assignees, {userId, userName}]);
+        };
+    };
+
+    function handleRemoveAssignee(userId: string) {
+        setAssignees(assignees.filter(assignee => assignee.userId !== userId));
+    };
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
         const input = e.target;
@@ -90,6 +127,12 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                 };
             });
 
+            // both dates formatted as a string "YYYY-MM-DD"
+            const today = new Date().toISOString().slice(0, 10);
+
+            // removing names from assignees
+            const assigneeIds = assignees.map(assignee => assignee.userId);
+
             const reqOptions: RequestInit = {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
@@ -98,12 +141,13 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                     columnId: updatedColId, 
                     task, 
                     desc, 
-                    subtasks
+                    subtasks,
+                    created: today,
+                    deadline: deadlineRef?.current?.value,
+                    assignees: assigneeIds
                 }),
                 credentials: "include"
             };
-
-            console.log(reqOptions.body);
             
             try {
                 const res = await fetch("http://localhost:3000/create-task", reqOptions);
@@ -146,27 +190,39 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
     };
 
     return (
-        <>
-            <dialog className="form-modal" id="create-task-modal">
-                <form method="POST" onSubmit={handleSubmit} noValidate>
-                    <h2>Add New Task</h2>
-                    <label htmlFor="task">Title</label>
-                    <input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" maxLength={30} required />
-                    {errMsg ? <p className="err-msg">{errMsg}</p> : null}
-                    <label htmlFor="desc">Description</label>
-                    <textarea rows={5} id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." maxLength={200} />
-                    <Fields type="subtask" values={subtaskValues} setValues={setSubtaskValues} counterRef={counterRef} />
-                    <label htmlFor="column">Column</label>
-                    <select name="column" id="column" defaultValue={curCol} onChange={(e) => setUpdatedColId(e.target.value)}>
-                        {colOptions}
-                    </select>
-                    <button type="submit" className="save-btn">Create Task</button>
-                </form>
-                <button className="close-modal" type="button" onClick={handleCreateTaskModal}>
-                    <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
-                </button>
-            </dialog>
-        </>
+        <dialog className="form-modal" id="create-task-modal">
+            <form method="POST" onSubmit={handleSubmit} noValidate>
+                <h2>Add New Task</h2>
+                <label htmlFor="task">Title *</label>
+                <input type="text" id="task" name="task" onChange={handleChange} placeholder="e.g., Take coffee break" maxLength={30} required />
+                {errMsg ? <p className="err-msg">{errMsg}</p> : null}
+                <label htmlFor="desc">Description</label>
+                <textarea rows={5} id="desc" name="desc" onChange={handleChange} placeholder="e.g., It's always good to take a break. his 15 minute break will recharge the batteries a little." maxLength={200} />
+                <Fields type="subtask" values={subtaskValues} setValues={setSubtaskValues} counterRef={counterRef} />
+                <label htmlFor="column">Column *</label>
+                <select name="column" id="column" defaultValue={curCol} onChange={(e) => setUpdatedColId(e.target.value)}>
+                    {colOptions}
+                </select>
+                {curBoard?.contributors?.length > 0 ?
+                    <>
+                        <label htmlFor="assignees">Assign to:</label>
+                        <select name="assignees" id="assignees" onChange={handleAddAssignee} value="">
+                            <option disabled value="" />
+                            {assigneeOptions}
+                        </select>
+                        <div className="chosen-assignees">
+                            {chosenAssignees}
+                        </div>
+                    </> : null
+                }
+                <label htmlFor="deadline">Deadline</label>
+                <input ref={deadlineRef} type="date" id="deadline" name="deadline" />
+                <button type="submit" className="save-btn">Create Task</button>
+            </form>
+            <button className="close-modal" type="button" onClick={handleCreateTaskModal}>
+                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+            </button>
+        </dialog>
     );
 };
 

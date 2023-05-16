@@ -822,7 +822,7 @@ main#no-brd-chosen p {
   height: 2rem;
   fill: #E4EBFA;
 }
-.form-modal button.potential-contributor, .delete-modal button.potential-contributor, .login-form button.potential-contributor, .signup-form button.potential-contributor {
+.form-modal button.potential-contributor, .form-modal button.chosen-assignee, .delete-modal button.potential-contributor, .delete-modal button.chosen-assignee, .login-form button.potential-contributor, .login-form button.chosen-assignee, .signup-form button.potential-contributor, .signup-form button.chosen-assignee {
   width: fit-content;
   font-size: 1.3rem;
   margin-top: 1rem;
@@ -830,13 +830,37 @@ main#no-brd-chosen p {
   border-radius: 0.5rem;
   background-color: #E4EBFA;
 }
-.form-modal button.potential-contributor:hover, .form-modal button.potential-contributor:focus, .delete-modal button.potential-contributor:hover, .delete-modal button.potential-contributor:focus, .login-form button.potential-contributor:hover, .login-form button.potential-contributor:focus, .signup-form button.potential-contributor:hover, .signup-form button.potential-contributor:focus {
+.form-modal button.potential-contributor:hover, .form-modal button.potential-contributor:focus, .form-modal button.chosen-assignee:hover, .form-modal button.chosen-assignee:focus, .delete-modal button.potential-contributor:hover, .delete-modal button.potential-contributor:focus, .delete-modal button.chosen-assignee:hover, .delete-modal button.chosen-assignee:focus, .login-form button.potential-contributor:hover, .login-form button.potential-contributor:focus, .login-form button.chosen-assignee:hover, .login-form button.chosen-assignee:focus, .signup-form button.potential-contributor:hover, .signup-form button.potential-contributor:focus, .signup-form button.chosen-assignee:hover, .signup-form button.chosen-assignee:focus {
   background-color: #F4F7FD;
   color: #635FC7;
 }
-.form-modal button.potential-contributor:disabled, .delete-modal button.potential-contributor:disabled, .login-form button.potential-contributor:disabled, .signup-form button.potential-contributor:disabled {
+.form-modal button.potential-contributor:disabled, .form-modal button.chosen-assignee:disabled, .delete-modal button.potential-contributor:disabled, .delete-modal button.chosen-assignee:disabled, .login-form button.potential-contributor:disabled, .login-form button.chosen-assignee:disabled, .signup-form button.potential-contributor:disabled, .signup-form button.chosen-assignee:disabled {
   background-color: #E4EBFA;
   color: #828FA3;
+}
+.form-modal div.chosen-assignees, .delete-modal div.chosen-assignees, .login-form div.chosen-assignees, .signup-form div.chosen-assignees {
+  display: flex;
+  row-gap: 1rem;
+  column-gap: 1rem;
+  margin: 1rem 0;
+}
+.form-modal button.chosen-assignee, .delete-modal button.chosen-assignee, .login-form button.chosen-assignee, .signup-form button.chosen-assignee {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+.form-modal button.chosen-assignee p, .delete-modal button.chosen-assignee p, .login-form button.chosen-assignee p, .signup-form button.chosen-assignee p {
+  font-size: 1.3rem;
+}
+.form-modal button.chosen-assignee svg, .delete-modal button.chosen-assignee svg, .login-form button.chosen-assignee svg, .signup-form button.chosen-assignee svg {
+  margin-left: 1rem;
+  height: 1.3rem;
+}
+.form-modal button.chosen-assignee:hover p, .form-modal button.chosen-assignee:focus p, .delete-modal button.chosen-assignee:hover p, .delete-modal button.chosen-assignee:focus p, .login-form button.chosen-assignee:hover p, .login-form button.chosen-assignee:focus p, .signup-form button.chosen-assignee:hover p, .signup-form button.chosen-assignee:focus p {
+  color: #635FC7;
+}
+.form-modal button.chosen-assignee:hover svg, .form-modal button.chosen-assignee:focus svg, .delete-modal button.chosen-assignee:hover svg, .delete-modal button.chosen-assignee:focus svg, .login-form button.chosen-assignee:hover svg, .login-form button.chosen-assignee:focus svg, .signup-form button.chosen-assignee:hover svg, .signup-form button.chosen-assignee:focus svg {
+  fill: #635FC7;
 }
 .form-modal .contributor, .delete-modal .contributor, .login-form .contributor, .signup-form .contributor {
   display: flex;

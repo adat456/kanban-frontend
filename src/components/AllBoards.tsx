@@ -56,7 +56,6 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
             try {
                 const req = await fetch("http://localhost:3000/user-info", { credentials: "include" });
                 const userInfo = await req.json();
-                console.log(userInfo);
                 setUser(userInfo);
             } catch(err) {
                 handleDisplayMsg({

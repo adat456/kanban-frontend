@@ -249,7 +249,7 @@
             height: 2rem
             fill: base.$lite-blue-inactive
 
-    button.potential-contributor
+    button.potential-contributor, button.chosen-assignee
         width: fit-content
         font-size: 1.3rem
         margin-top: 1rem
@@ -264,6 +264,31 @@
         &:disabled     
             background-color: base.$outline
             color: base.$grey
+
+    // for assignees in create task
+    div.chosen-assignees
+        display: flex
+        row-gap: 1rem
+        column-gap: 1rem
+        margin: 1rem 0
+
+    button.chosen-assignee
+        display: flex  
+        align-items: center
+        margin: 0
+
+        p
+            font-size: 1.3rem
+
+        svg
+            margin-left: 1rem
+            height: 1.3rem
+
+        &:hover, &:focus
+            p
+                color: base.$drk-blue-inactive 
+            svg
+                fill: base.$drk-blue-inactive 
 
     // for the contributor modal
     .contributor
