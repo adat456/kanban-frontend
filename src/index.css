@@ -712,7 +712,8 @@ main#no-brd-chosen p {
 }
 .form-modal .assignee-icons, .delete-modal .assignee-icons, .login-form .assignee-icons, .signup-form .assignee-icons {
   display: flex;
-  column-gap: 1rem;
+  flex-wrap: wrap;
+  column-gap: 1.25rem;
   margin: 1rem 0 3.5rem 0;
   font-size: 1.3rem;
   color: #828FA3;
@@ -812,7 +813,7 @@ main#no-brd-chosen p {
   color: #EA5555;
   font-size: 1.25rem;
 }
-.form-modal .checkboxes-field .subtask, .delete-modal .checkboxes-field .subtask, .login-form .checkboxes-field .subtask, .signup-form .checkboxes-field .subtask {
+.form-modal .checkboxes-field .subtask-box, .delete-modal .checkboxes-field .subtask-box, .login-form .checkboxes-field .subtask-box, .signup-form .checkboxes-field .subtask-box {
   position: relative;
 }
 .form-modal .checkboxes-field input, .delete-modal .checkboxes-field input, .login-form .checkboxes-field input, .signup-form .checkboxes-field input {
@@ -915,6 +916,7 @@ main#no-brd-chosen p {
   row-gap: 1rem;
   column-gap: 1rem;
   margin: 1rem 0;
+  flex-wrap: wrap;
 }
 .form-modal button.chosen-assignee, .delete-modal button.chosen-assignee, .login-form button.chosen-assignee, .signup-form button.chosen-assignee {
   display: flex;

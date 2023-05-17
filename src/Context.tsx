@@ -4,7 +4,11 @@ import { createContext } from "react";
 export interface subtaskData {
     _id: string,
     subtask: string,
-    status: boolean
+    status: boolean,
+    completedBy: {
+        userId: string,
+        userInitials: string,
+    }
 };
 export interface taskData {
     _id: string,

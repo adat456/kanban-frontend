@@ -139,7 +139,8 @@
 
     .assignee-icons
         display: flex
-        column-gap: 1rem
+        flex-wrap: wrap
+        column-gap: 1.25rem
         margin: 1rem 0 3.5rem 0
         font-size: 1.3rem
         color: base.$grey
@@ -238,7 +239,7 @@
 
     // specifically for checkboxes in ViewTask (inputs also nested in labels here)
     .checkboxes-field
-        .subtask
+        .subtask-box
             position: relative
 
         input
@@ -341,6 +342,7 @@
         row-gap: 1rem
         column-gap: 1rem
         margin: 1rem 0
+        flex-wrap: wrap
 
     button.chosen-assignee
         display: flex  

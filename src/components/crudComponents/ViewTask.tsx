@@ -17,6 +17,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const userStatus = useContext(UserStatusContext);
     const user = useContext(UserContext);
+    const userInitials = `${user?.firstName.slice(0,1)}${user?.lastName.slice(0,1)}`; 
 
     const [ updatedColId, setUpdatedColId ] = useState(colId);
     const [ numComplete, setNumComplete ] = useState(numCompleteSubtasks);
@@ -30,7 +31,6 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         const assigneeNamePopup = document.querySelector(`#assignee-name-${userId}`);
         assigneeNamePopup?.classList.toggle("hidden");
     };
-
     const assigneeIcons = task.assignees.map(assignee => {
         const nameArr = assignee.userName.split(" ");
         const initials = nameArr.map(name => name.slice(0, 1)).join("");
@@ -45,24 +45,46 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         );
     });
 
+    // very complicated :(
     const subtasksArr = task.subtasks.map(subtask => {
         return (
-            <div className="subtask" key={subtask._id} onClick={handleClick}>
+            <div className="subtask-box" key={subtask._id} onClick={handleClick}>
                 <div className="before" />
                 {subtask.status ?
-                    <input type="checkbox" name="subtasks" id={subtask._id} className={`a${task._id}-subtask-checkbox`} defaultChecked /> :
-                    <input type="checkbox" name="subtasks" id={subtask._id} className={`a${task._id}-subtask-checkbox`} />
+                    // if the subtask was completed, check whether the completedBy userId matches the user's id. if it was completed...
+                    (subtask.completedBy.userId === user?._id ? 
+                        // ...by current user, make it defaultChecked so that user can toggle checked status
+                        <input type="checkbox" name="subtask" id={subtask._id} data-user-info={`${subtask.completedBy.userInitials}${subtask.completedBy.userId}`} defaultChecked /> :
+                        // ...by another user, make it checked and disabled so that it is read-only, and add a class specifying that it was completed by another
+                        <input type="checkbox" name="subtask" id={subtask._id} className="completed-by-other" data-user-info={`${subtask.completedBy.userInitials}${subtask.completedBy.userId}`} checked disabled />
+                        // either way, add the data-user-info data attribute with completedBy info
+                    ): <input type="checkbox" name="subtask" id={subtask._id} />
                 }
-                <div className="after">{`${user?.firstName.slice(0,1)}${user?.lastName.slice(0,1)}`}</div>
+                {subtask.status ?
+                    // if the subtask has been completed, then initials should belong to that user
+                    <div className="after">{subtask.completedBy.userInitials}</div> :
+                    // if not, then current user's initials will be used whenever a subtask is completed
+                    <div className="after">{userInitials}</div>
+                }       
                 <label htmlFor={subtask._id}>{subtask.subtask}</label>  
             </div>
         );
     });
-
-    function handleClick() {
-        // updating number of complete subtasks
+    function handleClick(e: React.MouseEvent<HTMLDivElement>) {
+        addUserInfoToSubtask(e);
+        updateNumCompleteSubtasks();
+    };
+    function addUserInfoToSubtask(e: React.MouseEvent<HTMLDivElement>) {
+        const subtaskBox = e.target.closest("div");
+        const input = subtaskBox.querySelector("input");
+        // data string consists of current user's initials + id
+        // if the input is now checked AND the input was not completed by another user (so that it is always checked), add the current user's data
+        if (input.checked && !input.classList.contains("completed-by-other")) input.setAttribute("data-user-info", `${userInitials}${user?._id}`);
+        if (!input.checked) input.setAttribute("data-user-info", "");
+    };
+    function updateNumCompleteSubtasks() {
         let numCompleteSubtasks = 0;
-        const arr = [...document.querySelectorAll(`.a${task._id}-subtask-checkbox`)];
+        const arr = [...document.getElementsByName("subtask")];
         arr.forEach(item => {
             if (item.checked) numCompleteSubtasks++;
         });
@@ -92,11 +114,24 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         e.preventDefault();
 
         // getting subtask IDs and their statuses
-        let subtasks: {id: string, status: boolean}[] = [];
-        document.getElementsByName("subtasks").forEach(subtask => {
+        let subtasks: {
+            id: string, 
+            status: boolean,
+            completedBy?: {
+                userInitials: string | undefined,
+                userId: string | undefined,
+            } | undefined,
+        }[] = [];
+        document.getElementsByName("subtask").forEach(subtask => {
+            const dataUserInfo = subtask.getAttribute("data-user-info");
+
             subtasks.push({
                 id: subtask.id,
-                status: subtask.checked
+                status: subtask.checked,
+                completedBy: {
+                    userInitials: dataUserInfo?.slice(0, 2),
+                    userId: dataUserInfo?.slice(2),
+                },
             });
         });
         
