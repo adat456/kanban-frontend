@@ -713,7 +713,7 @@ main#no-brd-chosen p {
 .form-modal .assignee-icons, .delete-modal .assignee-icons, .login-form .assignee-icons, .signup-form .assignee-icons {
   display: flex;
   column-gap: 1rem;
-  margin: 1rem 0 2rem 0;
+  margin: 1rem 0 3.5rem 0;
   font-size: 1.3rem;
   color: #828FA3;
   position: relative;
@@ -812,20 +812,55 @@ main#no-brd-chosen p {
   color: #EA5555;
   font-size: 1.25rem;
 }
-.form-modal .checkboxes-field .checked-subtask label, .delete-modal .checkboxes-field .checked-subtask label, .login-form .checkboxes-field .checked-subtask label, .signup-form .checkboxes-field .checked-subtask label {
-  text-decoration: line-through;
+.form-modal .checkboxes-field .subtask, .delete-modal .checkboxes-field .subtask, .login-form .checkboxes-field .subtask, .signup-form .checkboxes-field .subtask {
+  position: relative;
+}
+.form-modal .checkboxes-field input, .delete-modal .checkboxes-field input, .login-form .checkboxes-field input, .signup-form .checkboxes-field input {
+  position: absolute;
+  opacity: 0;
+  width: 2rem;
+  height: 2rem;
+  left: 1rem;
+  top: 0.5rem;
+}
+.form-modal .checkboxes-field div.before, .delete-modal .checkboxes-field div.before, .login-form .checkboxes-field div.before, .signup-form .checkboxes-field div.before {
+  position: absolute;
+  left: 1rem;
+  top: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid #635FC7;
+}
+.form-modal .checkboxes-field div.after, .delete-modal .checkboxes-field div.after, .login-form .checkboxes-field div.after, .signup-form .checkboxes-field div.after {
+  opacity: 0;
+  position: absolute;
+  left: 1rem;
+  top: 1.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid #635FC7;
+  background-color: #635FC7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+}
+.form-modal .checkboxes-field input:checked + div.after, .delete-modal .checkboxes-field input:checked + div.after, .login-form .checkboxes-field input:checked + div.after, .signup-form .checkboxes-field input:checked + div.after {
+  opacity: 1;
 }
 .form-modal .checkboxes-field label, .delete-modal .checkboxes-field label, .login-form .checkboxes-field label, .signup-form .checkboxes-field label {
   padding: 1.5rem;
+  padding-left: 4.5rem;
   margin: 1rem 0;
   background-color: #F4F7FD;
   border-radius: 0.5rem;
 }
-.form-modal .checkboxes-field input, .delete-modal .checkboxes-field input, .login-form .checkboxes-field input, .signup-form .checkboxes-field input {
-  display: inline;
-  width: auto;
-  margin: 0;
-  margin-right: 1.5rem;
+.form-modal .checkboxes-field .checked-subtask, .delete-modal .checkboxes-field .checked-subtask, .login-form .checkboxes-field .checked-subtask, .signup-form .checkboxes-field .checked-subtask {
+  text-decoration: line-through;
 }
 .form-modal select, .delete-modal select, .login-form select, .signup-form select {
   width: 100%;

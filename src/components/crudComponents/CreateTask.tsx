@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from "react";
-import { BoardsContext, CurBoardIdContext, columnData } from "../../Context";
+import { BoardsContext, CurBoardIdContext, columnData, UserContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
 
@@ -32,6 +32,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData?.find(board => board._id === curBoardId);
+    const user = useContext(UserContext);
 
     const colOptions = columnsArr.map(col => {
         return (
@@ -60,6 +61,8 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
         curBoard?.contributors.forEach(contributor => {
             if (contributor.userId === userId) userName = contributor.userName;
         });
+        // if the user id does not match a user id in the contributors list, then it must be the creator's user id --> manually set name below
+        if (!userName) userName = user?.firstName + " " + user?.lastName;
         if (!assignees.find(assignee => assignee.userId === userId)) {
             setAssignees([...assignees, {userId, userName}]);
         };
@@ -205,6 +208,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                         <label htmlFor="assignees">Assign to:</label>
                         <select name="assignees" id="assignees" onChange={handleAddAssignee} value="">
                             <option disabled value="" />
+                            <option key={user?._id} value={user?._id}>{`${user?.firstName} ${user?.lastName}`}</option>
                             {assigneeOptions}
                         </select>
                         <div className="chosen-assignees">

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef } from "react";
 
-import { BoardsContext, CurBoardIdContext, UserStatusContext, columnData, taskData } from "../../Context";
+import { BoardsContext, CurBoardIdContext, UserStatusContext, UserContext, columnData, taskData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 
 interface Prop {
@@ -16,6 +16,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const userStatus = useContext(UserStatusContext);
+    const user = useContext(UserContext);
 
     const [ updatedColId, setUpdatedColId ] = useState(colId);
     const [ numComplete, setNumComplete ] = useState(numCompleteSubtasks);
@@ -45,34 +46,21 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
     });
 
     const subtasksArr = task.subtasks.map(subtask => {
-        if (subtask.status) {
-            return (
-                <div className="subtask checked-subtask" key={subtask._id}>
-                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${task._id}-subtask-checkbox`} onClick={handleClick} defaultChecked />{subtask.subtask}</label>  
-                </div>
-            );
-        } else {
-            return (
-                <div className="subtask" key={subtask._id}>
-                    <label htmlFor={subtask._id}><input type="checkbox" name="subtasks" id={subtask._id} className={`a${task._id}-subtask-checkbox`} onClick={handleClick} />{subtask.subtask}</label>
-                </div>
-            );
-        };
+        return (
+            <div className="subtask" key={subtask._id} onClick={handleClick}>
+                <div className="before" />
+                {subtask.status ?
+                    <input type="checkbox" name="subtasks" id={subtask._id} className={`a${task._id}-subtask-checkbox`} defaultChecked /> :
+                    <input type="checkbox" name="subtasks" id={subtask._id} className={`a${task._id}-subtask-checkbox`} />
+                }
+                <div className="after">{`${user?.firstName.slice(0,1)}${user?.lastName.slice(0,1)}`}</div>
+                <label htmlFor={subtask._id}>{subtask.subtask}</label>  
+            </div>
+        );
     });
 
-    function handleClick(e: React.MouseEvent<HTMLInputElement>) {
-        toggleSubtaskAppearance(e);
-        updateNumCompleteSubtasks();
-    };
-
-    function toggleSubtaskAppearance(e: React.MouseEvent<HTMLInputElement>) {
-        const subtask = e.target;
-        const parent: HTMLDivElement = subtask.closest("div");
-        if (subtask.checked) parent.classList.add("checked-subtask");
-        if (!subtask.checked) parent.classList.remove("checked-subtask");
-    };
-
-    function updateNumCompleteSubtasks() {
+    function handleClick() {
+        // updating number of complete subtasks
         let numCompleteSubtasks = 0;
         const arr = [...document.querySelectorAll(`.a${task._id}-subtask-checkbox`)];
         arr.forEach(item => {

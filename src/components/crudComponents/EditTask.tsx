@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from "react";
 
-import { BoardsContext, CurBoardIdContext, taskData } from "../../Context";
+import { BoardsContext, CurBoardIdContext, taskData, UserContext } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
 
@@ -31,6 +31,7 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData?.find(board => (board._id === curBoardId));
+    const user = useContext(UserContext);
 
     const colOptions = curBoard?.columns.map(col => {
         return (
@@ -95,6 +96,8 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
         curBoard?.contributors.forEach(contributor => {
             if (contributor.userId === userId) userName = contributor.userName;
         });
+        // if the user id does not match a user id in the contributors list, then it must be the creator's user id --> manually set name below
+        if (!userName) userName = user?.firstName + " " + user?.lastName;
         if (!assignees.find(assignee => assignee.userId === userId)) {
             setAssignees([...assignees, {userId, userName}]);
         };
@@ -220,6 +223,7 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
                             <label htmlFor="assignees">Assign to:</label>
                             <select name="assignees" id="assignees" onChange={handleAddAssignee} value="">
                                 <option disabled value="" />
+                                <option key={user?._id} value={user?._id}>{`${user?.firstName} ${user?.lastName}`}</option>
                                 {assigneeOptions}
                             </select>
                             <div className="chosen-assignees">
@@ -238,7 +242,7 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
             </dialog>
             <dialog className="delete-modal" id="delete-task-modal">
                 <h2>Delete this task?</h2>
-                <p>{`Are you sure you want to delete the '${name}' task and its subtasks? This action cannot be reversed.`}</p>
+                <p>{`Are you sure you want to delete the '${task.task}' task and its subtasks? This action cannot be reversed.`}</p>
                 <div className="delete-btn-cluster">
                     <button type="button" onClick={handleDelete} className="delete-btn">Delete</button>
                     <button type="button" onClick={() => handleDeleteTaskModal("close")} className="add-btn">Cancel</button>
