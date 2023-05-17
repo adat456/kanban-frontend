@@ -134,12 +134,42 @@
         color: black
         padding: 0
 
+    p.deadline
+        margin-top: 0.25rem
+
+    .assignee-icons
+        display: flex
+        column-gap: 1rem
+        margin: 1rem 0 2rem 0
+        font-size: 1.3rem
+        color: base.$grey
+        position: relative
+
+        .assignee-icon
+            padding: 1.25rem
+            border-radius: 5rem
+            background-color: base.$lite-blue-inactive
+            letter-spacing: 0.1rem
+
+        .assignee-full-name
+            position: absolute
+            top: 6rem
+            background-color: base.$lite-blue-active
+            padding: 0.5rem 1rem
+            border-radius: 0.5rem
+            
+            .pointer
+                position: absolute
+                top: -1rem
+                left: 0
+                width: 0
+                height: 0
+                border-left: 0.75rem solid transparent
+                border-right: 0.75rem solid transparent
+                border-bottom: 1.25rem solid base.$lite-blue-active
+
     p
         font-size: 1.3rem
-
-    p.deadline-assignees
-        margin-bottom: 1.5rem
-        line-height: 2rem
 
     label, legend
         @include base.m

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 
 import { BoardsContext, CurBoardIdContext, UserStatusContext, columnData, taskData } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
@@ -24,6 +24,26 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
     const month = task.deadline?.slice(5, 7);
     const day = task.deadline?.slice(8, 10);
 
+    const assigneeIconRef = useRef<HTMLDivElement | null>(null);
+    function handleNamePopup(userId: string) {
+        const assigneeNamePopup = document.querySelector(`#assignee-name-${userId}`);
+        assigneeNamePopup?.classList.toggle("hidden");
+    };
+
+    const assigneeIcons = task.assignees.map(assignee => {
+        const nameArr = assignee.userName.split(" ");
+        const initials = nameArr.map(name => name.slice(0, 1)).join("");
+        return (
+            <div key={assignee.userId} ref={assigneeIconRef} className="assignee-icon" onMouseEnter={() => handleNamePopup(assignee.userId)} onMouseLeave={() => handleNamePopup(assignee.userId)}>
+                <p>{initials}</p>
+                <div className="assignee-full-name hidden" id={`assignee-name-${assignee.userId}`}>
+                    <div className="pointer"></div>
+                    <p>{assignee.userName}</p>
+                </div>
+            </div>
+        );
+    });
+
     const subtasksArr = task.subtasks.map(subtask => {
         if (subtask.status) {
             return (
@@ -40,7 +60,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         };
     });
 
-    function handleClick(e) {
+    function handleClick(e: React.MouseEvent<HTMLInputElement>) {
         toggleSubtaskAppearance(e);
         updateNumCompleteSubtasks();
     };
@@ -140,25 +160,30 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         <dialog className="form-modal view-task-modal">
             <form method="POST" className="view-task">
                 <div className="view-task-header">
-                    <h2>{task.task}</h2>
+                    <div>
+                        <h2>{task.task}</h2>
+                        {task.deadline ? 
+                            <p className="deadline">{task.deadline ? `${month}/${day}/${year}` : ""}</p> : null
+                        }
+                    </div>
                     {(userStatus === "Creator" || userStatus === "Co-creator") ?
                         <button type="button" onClick={() => {handleViewTaskModal(); setEditTaskVis(true)}}>
                             <svg viewBox="0 0 5 20" width="5" height="20" xmlns="http://www.w3.org/2000/svg"><g fill="#828FA3" fillRule="evenodd"><circle cx="2.308" cy="2.308" r="2.308"/><circle cx="2.308" cy="10" r="2.308"/><circle cx="2.308" cy="17.692" r="2.308"/></g></svg>
                         </button> : null       
                     }
                 </div>   
-                {task.deadline || task.assignees.length > 0 ? 
-                    <p className="deadline-assignees">
-                        {task.deadline ? `Deadline: ${month}/${day}/${year}` : ""}
-                        <br />
-                        {task.assignees.length > 0 ? `Assigned to: ${task.assignees.map(assignee => assignee.userName).join(", ")}` : ""}    
-                    </p> : null
+                {task.assignees.length > 0 ?
+                    <div className="assignee-icons">
+                        {assigneeIcons}
+                    </div> : null
                 }
                 <p className="desc">{task.desc}</p>
-                <fieldset className="checkboxes-field"> 
-                    <legend>{`Subtasks (${numComplete} of ${task.subtasks.length})`}</legend>
-                    {subtasksArr}
-                </fieldset>
+                {task.subtasks.length > 0 ? 
+                    <fieldset className="checkboxes-field"> 
+                        <legend>{`Subtasks (${numComplete} of ${task.subtasks.length})`}</legend>
+                        {subtasksArr}
+                    </fieldset> : null
+                }
                 <label htmlFor="column">Column</label>
                 <select name="column" id="column" defaultValue={colId} onChange={(e) => setUpdatedColId(e.target.value)} >
                     {colOptions}

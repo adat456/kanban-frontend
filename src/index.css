@@ -707,12 +707,42 @@ main#no-brd-chosen p {
   color: black;
   padding: 0;
 }
+.form-modal p.deadline, .delete-modal p.deadline, .login-form p.deadline, .signup-form p.deadline {
+  margin-top: 0.25rem;
+}
+.form-modal .assignee-icons, .delete-modal .assignee-icons, .login-form .assignee-icons, .signup-form .assignee-icons {
+  display: flex;
+  column-gap: 1rem;
+  margin: 1rem 0 2rem 0;
+  font-size: 1.3rem;
+  color: #828FA3;
+  position: relative;
+}
+.form-modal .assignee-icons .assignee-icon, .delete-modal .assignee-icons .assignee-icon, .login-form .assignee-icons .assignee-icon, .signup-form .assignee-icons .assignee-icon {
+  padding: 1.25rem;
+  border-radius: 5rem;
+  background-color: #E4EBFA;
+  letter-spacing: 0.1rem;
+}
+.form-modal .assignee-icons .assignee-full-name, .delete-modal .assignee-icons .assignee-full-name, .login-form .assignee-icons .assignee-full-name, .signup-form .assignee-icons .assignee-full-name {
+  position: absolute;
+  top: 6rem;
+  background-color: #F4F7FD;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+.form-modal .assignee-icons .assignee-full-name .pointer, .delete-modal .assignee-icons .assignee-full-name .pointer, .login-form .assignee-icons .assignee-full-name .pointer, .signup-form .assignee-icons .assignee-full-name .pointer {
+  position: absolute;
+  top: -1rem;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 0.75rem solid transparent;
+  border-right: 0.75rem solid transparent;
+  border-bottom: 1.25rem solid #F4F7FD;
+}
 .form-modal p, .delete-modal p, .login-form p, .signup-form p {
   font-size: 1.3rem;
-}
-.form-modal p.deadline-assignees, .delete-modal p.deadline-assignees, .login-form p.deadline-assignees, .signup-form p.deadline-assignees {
-  margin-bottom: 1.5rem;
-  line-height: 2rem;
 }
 .form-modal label, .form-modal legend, .delete-modal label, .delete-modal legend, .login-form label, .login-form legend, .signup-form label, .signup-form legend {
   font-size: 1.5rem;
