@@ -32,7 +32,6 @@ export interface columnData {
 export interface boardData {
     _id: string,
     name: string,
-    favorite: boolean,
     creator: string,
     contributors: contributorType[],
     columns: columnData[]
@@ -53,6 +52,7 @@ export interface userInterface {
     password: string,
     email: string,
     boards: string[],
+    favorites: string[],
 };
 export interface boardsDataInterface {
     boardsData: boardData[] | null,
@@ -68,3 +68,7 @@ export const UserStatusContext = createContext<string | null>(null);
 export const BoardsContext = createContext<boardsDataInterface>({ boardsData: null, setBoardsData: () => {} });
 export const CurBoardIdContext = createContext<curBoardIdInterface | null>({ curBoardId: "", setCurBoardId: () => {} });
 export const ModeContext = createContext("light");
+// filter by: assigned, incomplete, overdue
+export const FilterContext = createContext<string[]>([]);
+// sort by: creation date, deadline ascending, deadline descending
+export const SortContext = createContext<string>("");
