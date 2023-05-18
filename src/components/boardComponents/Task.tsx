@@ -69,7 +69,7 @@ const Task: React.FC<Prop> = function({ task, order, colId, setDisplayMsg }) {
 
     return (
         <>
-            <div ref={setNodeRef} style={style} className="task" onMouseEnter={() => handleDragHandleVis(true)} onMouseLeave={() => handleDragHandleVis(false)} onClick={() => setViewTaskVis(true)}>
+          <div ref={setNodeRef} style={style} className={task.completed ? "task completed" : "task"} onMouseEnter={() => handleDragHandleVis(true)} onMouseLeave={() => handleDragHandleVis(false)} onClick={() => setViewTaskVis(true)}>
                 <div className="task-brief">
                     <h3>{task.task}</h3>
                     {task.subtasks ? 

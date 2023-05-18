@@ -21,7 +21,8 @@ export interface taskData {
         userName: string
     }[],
     created: string,
-    deadline: string
+    deadline: string,
+    completed: string
 };
 export interface columnData {
     _id: string,

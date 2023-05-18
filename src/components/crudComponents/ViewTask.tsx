@@ -21,6 +21,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
 
     const [ updatedColId, setUpdatedColId ] = useState(colId);
     const [ numComplete, setNumComplete ] = useState(numCompleteSubtasks);
+    const [ completionDate, setCompletionDate ] = useState(task.completed);
 
     const year = task.deadline?.slice(0, 4);
     const month = task.deadline?.slice(5, 7);
@@ -103,6 +104,12 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         );
     });
 
+    // only used when there are no subtasks, and task can only be either complete or incomplete
+    function handleToggleCompletion() {
+        if (completionDate) setCompletionDate("");
+        if (!completionDate) setCompletionDate(new Date().toISOString().slice(0, 10));
+    };
+
     function handleViewTaskModal() {
         const viewTaskModal: HTMLDialogElement | null = document.querySelector(".view-task-modal");
         viewTaskModal?.close();
@@ -135,6 +142,14 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
             });
         });
         
+        let today = "";
+        // checks for completion in two ways:
+        // 1. there is a list of subtasks and they are all complete
+        // 2. there are no subtasks and there is a completion date
+        if ((task.subtasks.length > 0 && numComplete === task.subtasks.length) || (task.subtasks.length === 0 && completionDate)) {
+            today = new Date().toISOString().slice(0, 10);
+        };
+
         const reqOptions: RequestInit = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -143,7 +158,8 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
                 taskId: task._id,
                 updatedSubtasks: subtasks,
                 updatedColId,
-                colId
+                colId,
+                completed: today,
             }),
             credentials: "include"
         };
@@ -211,6 +227,10 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
                 <select name="column" id="column" defaultValue={colId} onChange={(e) => setUpdatedColId(e.target.value)} >
                     {colOptions}
                 </select>
+                {task.subtasks.length > 0 ?
+                    null :
+                    <button type="button" className="add-btn" onClick={handleToggleCompletion}>{`Mark as ${completionDate ? "incomplete" : "complete"}`}</button>
+                }
                 <button type="submit" className="save-btn" onClick={handleSubmitUpdates}>Save Changes</button>
             </form>
             <button className="close-modal" type="button" onClick={handleViewTaskModal}>

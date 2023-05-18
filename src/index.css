@@ -230,6 +230,13 @@ main > p {
   color: #635FC7;
 }
 
+.task.completed {
+  background-color: #E4EBFA;
+}
+.task.completed h3 {
+  color: #828FA3;
+}
+
 .add-column-btn {
   width: 250px;
   flex-shrink: 0;
