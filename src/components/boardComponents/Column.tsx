@@ -1,19 +1,22 @@
 import { useEffect, useState, useContext } from "react";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 
-import { UserStatusContext, columnData } from "../../Context";
+import { UserStatusContext, UserContext, columnData, taskData } from "../../Context";
 import CreateTask from "../crudComponents/CreateTask";
 import Task from "./Task";
 
 interface Prop {
     col: columnData,
     columnsArr: columnData[],
+    filters: string[],
+    sorter: string,
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
 };
 
-const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
+const Column: React.FC<Prop> = function({ col, columnsArr, filters, sorter, setDisplayMsg }) {
     const [ createTaskVis, setCreateTaskVis ] = useState(false);
 
+    const user = useContext(UserContext);
     const userStatus = useContext(UserStatusContext);
 
     useEffect(() => {
@@ -32,8 +35,59 @@ const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
         } : undefined;
 
     // but there are also droppable spaces, which consist of the joined column ID and order
-    const tasksArr = col.tasks;
-    const tasks = tasksArr.map((task, index) => 
+    function filterAndSortTasks(taskArr: taskData[]) {
+        let updatedTaskArr = taskArr;
+        // filters
+        if (filters.includes("assigned")) {
+            updatedTaskArr = updatedTaskArr.filter(task => {
+                let match;
+                task.assignees.forEach(assignee => {
+                    if (assignee.userId === user?._id) match = true;
+                });
+                // returns true if the task's assignees include the user, which will allow that task to pass the filter
+                return match;
+            });
+        };
+        if (filters.includes("incomplete")) {
+            updatedTaskArr = updatedTaskArr.filter(task => {
+                if (!task.completed) return true;
+            });
+        };
+        if (filters.includes("overdue")) {
+            const today = new Date().toISOString().slice(0, 10);
+            updatedTaskArr = updatedTaskArr.filter(task => {
+                if (task.deadline < today) return true;
+            });
+        };
+        // sorts
+        if (sorter === "creation-asc") {
+            updatedTaskArr.sort((a, b) => {
+                if (a.created > b.created) return 1;
+                if (a.created < b.created) return -1;
+            });
+        };
+        if (sorter === "deadline-asc") {
+            updatedTaskArr.sort((a, b) => {
+                if (a.deadline > b.deadline) return 1;
+                if (a.deadline < b.deadline) return -1;
+            });
+        };
+        if (sorter === "creation-desc") {
+            updatedTaskArr.sort((a, b) => {
+                if (a.created < b.created) return 1;
+                if (a.created > b.created) return -1;
+            });
+        };
+        if (sorter === "deadline-desc") {
+            updatedTaskArr.sort((a, b) => {
+                if (a.deadline < b.deadline) return 1;
+                if (a.deadline > b.deadline) return -1;
+            });
+        };
+        return updatedTaskArr;
+    };
+    const filteredAndSortedTasks = filterAndSortTasks(col.tasks);
+    const taskArr = filteredAndSortedTasks?.map((task, index) => 
         <div key={task._id}>
             <Task task={task} order={index} colId={col._id} setDisplayMsg={setDisplayMsg} />
             <DroppableSpace id={`${col._id}${index + 1}`} />
@@ -43,8 +97,8 @@ const Column: React.FC<Prop> = function({ col, columnsArr, setDisplayMsg }) {
     return (
         <section style={style} ref={setNodeRef} className="column">
             <h2>{`${col.name} (${col.tasks.length})`}</h2>
-            {(tasks.length > 0) ? <DroppableSpace id={`${col._id}0`} /> : null }
-            {tasks}
+            {(col.tasks.length > 0) ? <DroppableSpace id={`${col._id}0`} /> : null }
+            {taskArr}
             {(userStatus === "Creator" || userStatus === "Co-creator") ?
                 <>
                     <button type="button" className="add-task-btn" onClick={() => setCreateTaskVis(true)}>+ New Task</button>

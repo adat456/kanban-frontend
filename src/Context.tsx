@@ -68,7 +68,7 @@ export const UserStatusContext = createContext<string | null>(null);
 export const BoardsContext = createContext<boardsDataInterface>({ boardsData: null, setBoardsData: () => {} });
 export const CurBoardIdContext = createContext<curBoardIdInterface | null>({ curBoardId: "", setCurBoardId: () => {} });
 export const ModeContext = createContext("light");
-// filter by: assigned, incomplete, overdue
-export const FilterContext = createContext<string[]>([]);
-// sort by: creation date, deadline ascending, deadline descending
-export const SortContext = createContext<string>("");
+// // filter by: assigned, incomplete, overdue
+// export const FilterContext = createContext<string[]>([]);
+// // sort by: creation date, deadline ascending, deadline descending
+// export const SortContext = createContext<string>("");

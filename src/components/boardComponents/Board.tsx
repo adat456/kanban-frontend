@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from "@dnd-kit/core";
 
-import { BoardsContext, CurBoardIdContext, UserStatusContext } from "../../Context";
+import { BoardsContext, CurBoardIdContext, UserStatusContext, FilterContext, SortContext } from "../../Context";
 import Column from "./Column";
 import EditBoard from "../crudComponents/EditBoard";
 
@@ -24,6 +24,8 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
     const curBoard = boardsData?.find(board => board._id === curBoardId);
     const columnsArr = curBoard?.columns;
 
+    const [ filters, setFilters ] = useState<string[]>([]);
+    const [ sorter, setSorter ] = useState<string>("");
     const [ editBoardVis, setEditBoardVis ] = useState(false);
     const [ draggableInfo, setDraggableInfo ] = useState<draggableInfoProp | null>({ 
         order: "", 
@@ -31,9 +33,25 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
         colId: ""
     });
 
+    function handleFilterClick(e: React.MouseEvent<HTMLInputElement>) {
+        const input = e.target as HTMLInputElement;
+        const filter = input.getAttribute("id");
+        if (input.checked && filter) setFilters([...filters, filter]);
+        if (!input.checked && filter) setFilters(filters.filter(existingFilter => existingFilter !== filter));
+    };
+    function handleSortClick(e: React.MouseEvent<HTMLInputElement>) {
+        const input = e.target as HTMLInputElement;
+        const sort = input.getAttribute("id");
+        if (sort) setSorter(sort);
+    };
+    function handleResetAll(e: React.MouseEvent<HTMLButtonElement>) {
+        setSorter("creation-asc");
+        setFilters([]);
+    };
+
     // rendering columns w/ their tasks
     const columns = columnsArr?.map(col => 
-        <Column key={col._id} col={col} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
+        <Column key={col._id} col={col} filters={filters} sorter={sorter} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
     );
 
     // although pointer sensor is one of the default sensors, I imported it with useSensor and useSensors to be passed along to DndContext so that an activation constraint could be added, and a simple click on a draggable opens the task preview instead of initiating a dragstart event
@@ -114,15 +132,58 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
 
     return (
         <>
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-                {columns}
-                {(userStatus === "Creator" || userStatus === "Co-creator") ? 
-                    <>
-                        <button type="button" className="add-column-btn" onClick={() => setEditBoardVis(true)}>+ New Column</button>
-                        {editBoardVis ? <EditBoard setDisplayMsg={setDisplayMsg} setEditBoardVis={setEditBoardVis} /> : null }
-                    </> : null
-                }    
-            </DndContext>
+        {/* // <FilterContext.Provider value={filters}>
+        //     <SortContext.Provider value={sorter}> */}
+                <form className="sort-and-filter">
+                    <fieldset>
+                        <legend>Filter by:</legend>
+                        <div>
+                            <input type="checkbox" id="assigned" name="filter" onClick={handleFilterClick}/>
+                            <label htmlFor="assigned">Assigned</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="incomplete" name="filter" onClick={handleFilterClick} />
+                            <label htmlFor="incomplete">Incomplete</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="overdue" name="filter" onClick={handleFilterClick} />
+                            <label htmlFor="overdue">Overdue</label>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Sort by:</legend>
+                        <div>
+                            <input type="radio" id="creation-asc" name="sorter" onClick={handleSortClick} />
+                            <label htmlFor="creation-asc">Creation ascending</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="creation-desc" name="sorter" onClick={handleSortClick} />
+                            <label htmlFor="creation-desc">Creation descending</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="deadline-asc" name="sorter" onClick={handleSortClick} />
+                            <label htmlFor="deadline-asc">Deadline ascending</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="deadline-desc" name="sorter" onClick={handleSortClick} />
+                            <label htmlFor="deadline-desc">Deadline descending</label>
+                        </div>
+                    </fieldset>
+                    <button type="reset" onClick={handleResetAll}>Reset</button>
+                </form>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+                    <section className="board">
+                        {columns}
+                        {(userStatus === "Creator" || userStatus === "Co-creator") ? 
+                            <>
+                                <button type="button" className="add-column-btn" onClick={() => setEditBoardVis(true)}>+ New Column</button>
+                                {editBoardVis ? <EditBoard setDisplayMsg={setDisplayMsg} setEditBoardVis={setEditBoardVis} /> : null }
+                            </> : null
+                        }    
+                    </section>
+                </DndContext>
+            {/* </SortContext.Provider>
+        </FilterContext.Provider> */}
         </>
     );
 };

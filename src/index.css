@@ -133,9 +133,7 @@ header .nav-arrow {
 
 main {
   background-color: #F4F7FD;
-  column-gap: 2rem;
   padding: 0 2rem 2rem 2rem;
-  display: flex;
   flex-grow: 1;
   max-width: calc(100vw - 300px);
   max-height: 90vh;
@@ -162,6 +160,25 @@ main::-webkit-scrollbar-thumb {
 
 main > p {
   text-align: center;
+}
+
+.sort-and-filter {
+  flex-grow: 1;
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  column-gap: 2rem;
+}
+.sort-and-filter fieldset {
+  border: none;
+}
+.sort-and-filter legend {
+  margin-bottom: 0.5rem;
+}
+
+.board {
+  display: flex;
+  column-gap: 2rem;
 }
 
 .column {

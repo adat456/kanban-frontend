@@ -76,10 +76,8 @@ header
         height: 1.25rem
 
 main
-    background-color: base.$board-background
-    column-gap: 2rem
-    padding: 0 2rem 2rem 2rem
-    display: flex
+    background-color: base.$board-background   
+    padding: 0 2rem 2rem 2rem    
     flex-grow: 1
     max-width: calc(100vw - 300px)
     max-height: 90vh
@@ -103,6 +101,24 @@ main
 
 main > p
     text-align: center
+
+.sort-and-filter
+    flex-grow: 1
+    width: 100%
+    margin-top: 2rem
+    display: flex
+    column-gap: 2rem
+
+    fieldset    
+        border: none
+    
+    legend
+        margin-bottom: 0.5rem
+
+
+.board
+    display: flex
+    column-gap: 2rem 
 
 .column
     width: 250px
