@@ -484,8 +484,31 @@
 #app.dark .form-modal, #app.dark .delete-modal, #app.dark form, #app.dark .edit-task
     background-color: base.$dark-background-2
 
+    .edit-board-header svg
+        stroke: white
+        fill: base.$dark-background-2
+
     .view-task-header button
         background-color: base.$dark-background-2
+
+    p
+        color: white
+
+    .assignee-icon, .assignee-full-name
+        color: white
+        background-color: base.$dark-background-1
+    .pointer
+        border-bottom-color: base.$dark-background-1
+
+    button.potential-contributor, button.chosen-assignee
+        background-color: base.$drk-blue-inactive
+        color: white
+
+        svg
+            fill: white
+
+        &:hover, &:focus
+            background-color: base.$drk-blue-active
 
     h2, label, legend
         color: white

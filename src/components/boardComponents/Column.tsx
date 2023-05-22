@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 
-import { UserStatusContext, UserContext, columnData, taskData } from "../../Context";
+import { UserStatusContext, UserContext, ModeContext, columnData, taskData } from "../../Context";
 import CreateTask from "../crudComponents/CreateTask";
 import Task from "./Task";
 
@@ -18,6 +18,7 @@ const Column: React.FC<Prop> = function({ col, columnsArr, filters, setDisplayMs
 
     const user = useContext(UserContext);
     const userStatus = useContext(UserStatusContext);
+    const mode = useContext(ModeContext);
 
     useEffect(() => {
         if (createTaskVis) {
@@ -28,11 +29,17 @@ const Column: React.FC<Prop> = function({ col, columnsArr, filters, setDisplayMs
 
     // each column is a droppable...
     const { isOver, setNodeRef } = useDroppable({ id: col._id });
-    const style = isOver ? 
-        {
-            backgroundColor: "#E9EFFA",
+    const style = isOver ?  
+        mode === "dark" ? 
+            {
+                backgroundColor: "rgba(43, 44, 55, 0.3)",
+                padding: "2rem 1rem 0 1rem"
+            } : 
+            {
+                backgroundColor: "#E9EFFA",
             padding: "2rem 1rem 0 1rem"
-        } : undefined;
+            }         
+        : undefined;
 
     // but there are also droppable spaces, which consist of the joined column ID and order
     function filterAndSortTasks(taskArr: taskData[]) {
@@ -59,31 +66,6 @@ const Column: React.FC<Prop> = function({ col, columnsArr, filters, setDisplayMs
                 if (task.deadline < today) return true;
             });
         };
-        // sorts
-        // if (sorter === "creation-asc") {
-        //     updatedTaskArr.sort((a, b) => {
-        //         if (a.created > b.created) return 1;
-        //         if (a.created < b.created) return -1;
-        //     });
-        // };
-        // if (sorter === "deadline-asc") {
-        //     updatedTaskArr.sort((a, b) => {
-        //         if (a.deadline > b.deadline) return 1;
-        //         if (a.deadline < b.deadline) return -1;
-        //     });
-        // };
-        // if (sorter === "creation-desc") {
-        //     updatedTaskArr.sort((a, b) => {
-        //         if (a.created < b.created) return 1;
-        //         if (a.created > b.created) return -1;
-        //     });
-        // };
-        // if (sorter === "deadline-desc") {
-        //     updatedTaskArr.sort((a, b) => {
-        //         if (a.deadline < b.deadline) return 1;
-        //         if (a.deadline > b.deadline) return -1;
-        //     });
-        // };
         return updatedTaskArr;
     };
     const filteredAndSortedTasks = filterAndSortTasks(col.tasks);

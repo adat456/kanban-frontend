@@ -165,15 +165,14 @@ main > p {
 .sort-and-filter {
   flex-grow: 1;
   width: 100%;
-  margin-top: 2rem;
-  display: flex;
-  column-gap: 2rem;
-}
-.sort-and-filter fieldset {
-  border: none;
+  margin: 2.5rem 0 0.5rem 0;
   display: flex;
   align-items: center;
-  column-gap: 1.5rem;
+  column-gap: 2rem;
+}
+.sort-and-filter p {
+  font-size: 1.5rem;
+  display: block;
 }
 .sort-and-filter div {
   display: flex;
@@ -200,6 +199,7 @@ main > p {
 .board {
   display: flex;
   column-gap: 2rem;
+  height: calc(100% - 8rem);
 }
 
 .column {
@@ -322,6 +322,9 @@ main#no-brd-chosen p {
 #app.dark main::-webkit-scrollbar-track {
   background-color: #2B2C37;
 }
+#app.dark main .sort-and-filter {
+  background-color: #20212C;
+}
 #app.dark main .task {
   background-color: #2B2C37;
   box-shadow: none;
@@ -331,6 +334,9 @@ main#no-brd-chosen p {
 }
 #app.dark main .task:hover h3, #app.dark main .task:focus h3 {
   color: #635FC7;
+}
+#app.dark main .task.completed {
+  background-color: rgba(43, 44, 55, 0.3);
 }
 #app.dark main .add-column-btn, #app.dark main .add-task-btn {
   background-color: rgba(43, 44, 55, 0.3);
@@ -660,6 +666,9 @@ main#no-brd-chosen p {
   background-color: #2B2C37;
   border-right-color: #3E3F4E;
 }
+#app.dark > .sidebar h2 {
+  color: white;
+}
 #app.dark > .sidebar hr {
   border-color: #3E3F4E;
 }
@@ -668,6 +677,13 @@ main#no-brd-chosen p {
 }
 #app.dark > .sidebar .hide-sidebar, #app.dark > .sidebar .create-brd-btn {
   background-color: #2B2C37;
+}
+#app.dark > .sidebar .notifications-modal {
+  background-color: #2B2C37;
+}
+#app.dark > .sidebar .notification {
+  background-color: #20212C;
+  color: white;
 }
 
 .display-msg-modal {
@@ -1183,8 +1199,32 @@ main#no-brd-chosen p {
 #app.dark .form-modal, #app.dark .delete-modal, #app.dark form, #app.dark .edit-task {
   background-color: #2B2C37;
 }
+#app.dark .form-modal .edit-board-header svg, #app.dark .delete-modal .edit-board-header svg, #app.dark form .edit-board-header svg, #app.dark .edit-task .edit-board-header svg {
+  stroke: white;
+  fill: #2B2C37;
+}
 #app.dark .form-modal .view-task-header button, #app.dark .delete-modal .view-task-header button, #app.dark form .view-task-header button, #app.dark .edit-task .view-task-header button {
   background-color: #2B2C37;
+}
+#app.dark .form-modal p, #app.dark .delete-modal p, #app.dark form p, #app.dark .edit-task p {
+  color: white;
+}
+#app.dark .form-modal .assignee-icon, #app.dark .form-modal .assignee-full-name, #app.dark .delete-modal .assignee-icon, #app.dark .delete-modal .assignee-full-name, #app.dark form .assignee-icon, #app.dark form .assignee-full-name, #app.dark .edit-task .assignee-icon, #app.dark .edit-task .assignee-full-name {
+  color: white;
+  background-color: #20212C;
+}
+#app.dark .form-modal .pointer, #app.dark .delete-modal .pointer, #app.dark form .pointer, #app.dark .edit-task .pointer {
+  border-bottom-color: #20212C;
+}
+#app.dark .form-modal button.potential-contributor, #app.dark .form-modal button.chosen-assignee, #app.dark .delete-modal button.potential-contributor, #app.dark .delete-modal button.chosen-assignee, #app.dark form button.potential-contributor, #app.dark form button.chosen-assignee, #app.dark .edit-task button.potential-contributor, #app.dark .edit-task button.chosen-assignee {
+  background-color: #635FC7;
+  color: white;
+}
+#app.dark .form-modal button.potential-contributor svg, #app.dark .form-modal button.chosen-assignee svg, #app.dark .delete-modal button.potential-contributor svg, #app.dark .delete-modal button.chosen-assignee svg, #app.dark form button.potential-contributor svg, #app.dark form button.chosen-assignee svg, #app.dark .edit-task button.potential-contributor svg, #app.dark .edit-task button.chosen-assignee svg {
+  fill: white;
+}
+#app.dark .form-modal button.potential-contributor:hover, #app.dark .form-modal button.potential-contributor:focus, #app.dark .form-modal button.chosen-assignee:hover, #app.dark .form-modal button.chosen-assignee:focus, #app.dark .delete-modal button.potential-contributor:hover, #app.dark .delete-modal button.potential-contributor:focus, #app.dark .delete-modal button.chosen-assignee:hover, #app.dark .delete-modal button.chosen-assignee:focus, #app.dark form button.potential-contributor:hover, #app.dark form button.potential-contributor:focus, #app.dark form button.chosen-assignee:hover, #app.dark form button.chosen-assignee:focus, #app.dark .edit-task button.potential-contributor:hover, #app.dark .edit-task button.potential-contributor:focus, #app.dark .edit-task button.chosen-assignee:hover, #app.dark .edit-task button.chosen-assignee:focus {
+  background-color: #A8A4FF;
 }
 #app.dark .form-modal h2, #app.dark .form-modal label, #app.dark .form-modal legend, #app.dark .delete-modal h2, #app.dark .delete-modal label, #app.dark .delete-modal legend, #app.dark form h2, #app.dark form label, #app.dark form legend, #app.dark .edit-task h2, #app.dark .edit-task label, #app.dark .edit-task legend {
   color: white;

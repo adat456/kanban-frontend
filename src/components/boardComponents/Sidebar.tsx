@@ -127,11 +127,13 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
             setMode("dark");
             circleRef?.current?.classList.add("dark");
             circleRef?.current?.classList.remove("light");
+            console.log(circleRef.current);
         };
         if (mode === "dark") {
             setMode("light");
             circleRef?.current?.classList.add("light");
             circleRef?.current?.classList.remove("dark");
+            console.log(circleRef.current);
         };
     };
 

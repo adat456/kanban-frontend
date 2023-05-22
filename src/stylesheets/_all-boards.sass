@@ -105,15 +105,14 @@ main > p
 .sort-and-filter
     flex-grow: 1
     width: 100%
-    margin-top: 2rem
+    margin: 2.5rem 0 0.5rem 0
     display: flex
+    align-items: center
     column-gap: 2rem
 
-    fieldset    
-        border: none
-        display: flex
-        align-items: center
-        column-gap: 1.5rem
+    p
+        font-size: 1.5rem
+        display: block
         
     div
         display: flex
@@ -139,6 +138,7 @@ main > p
 .board
     display: flex
     column-gap: 2rem 
+    height: calc(100% - 8rem)
 
 .column
     width: 250px
@@ -237,6 +237,9 @@ main#no-brd-chosen
     &::-webkit-scrollbar-track
         background-color: base.$dark-background-2
 
+    .sort-and-filter
+        background-color: base.$dark-background-1
+
     .task
         background-color: base.$dark-background-2
         box-shadow: none
@@ -247,6 +250,9 @@ main#no-brd-chosen
         &:hover, &:focus
             h3
                 color: base.$drk-blue-inactive
+
+    .task.completed
+        background-color: rgba(43, 44, 55, 0.3)
 
     .add-column-btn, .add-task-btn
         background-color: rgba(43, 44, 55, 0.3)
