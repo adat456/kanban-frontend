@@ -72,3 +72,13 @@ export const ModeContext = createContext("light");
 // export const FilterContext = createContext<string[]>([]);
 // // sort by: creation date, deadline ascending, deadline descending
 // export const SortContext = createContext<string>("");
+
+export interface NotificationInterface {
+    _id: string,
+    recipientId: string,
+    senderId: string,
+    senderFullName: string,
+    message: string,
+    sent: string,
+    acknowledged: boolean,
+};

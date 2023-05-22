@@ -171,9 +171,30 @@ main > p {
 }
 .sort-and-filter fieldset {
   border: none;
+  display: flex;
+  align-items: center;
+  column-gap: 1.5rem;
 }
-.sort-and-filter legend {
-  margin-bottom: 0.5rem;
+.sort-and-filter div {
+  display: flex;
+  align-items: center;
+}
+.sort-and-filter label {
+  margin-left: 0.5rem;
+  color: #828FA3;
+}
+.sort-and-filter legend, .sort-and-filter label, .sort-and-filter button {
+  font-size: 1.3rem;
+}
+.sort-and-filter button {
+  height: fit-content;
+  padding: 0.75rem 1.25rem;
+  background-color: #635FC7;
+  border-radius: 5rem;
+  color: white;
+}
+.sort-and-filter button:hover, .sort-and-filter button:focus {
+  background-color: #A8A4FF;
 }
 
 .board {
@@ -381,20 +402,93 @@ main#no-brd-chosen p {
     display: none;
   }
 }
-.sidebar h2 {
+.sidebar h2, .sidebar h3 {
   font-weight: bold;
-  font-size: 1.2rem;
-  letter-spacing: 0.2rem;
+  font-size: 1.4rem;
+  letter-spacing: 0.3rem;
   color: #828FA3;
   padding: 0 3rem 3rem 3rem;
 }
 @media (max-width: 500px) {
-  .sidebar h2 {
+  .sidebar h2, .sidebar h3 {
     padding: 0 2rem 1rem 2rem;
   }
 }
+.sidebar .board-links-header {
+  padding: 2rem 3rem 0 3rem;
+  display: flex;
+}
+@media (max-width: 500px) {
+  .sidebar .board-links-header {
+    padding: 1rem 2rem 0 2rem;
+  }
+}
+.sidebar .board-links-header h3 {
+  letter-spacing: 0;
+  font-size: 1.5rem;
+  padding: 0;
+}
+.sidebar .board-links-header .notification-button svg {
+  height: 2rem;
+  margin-left: 2rem;
+  fill: #635FC7;
+}
+.sidebar .board-links-header .notification-button:hover svg, .sidebar .board-links-header .notification-button:focus svg {
+  fill: #A8A4FF;
+}
 .sidebar hr {
   border: 1px solid #F4F7FD;
+}
+
+.notifications-modal .notifications-header {
+  border-bottom: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.notifications-modal .notifications-header button {
+  width: fit-content;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  background-color: #635FC7;
+  color: white;
+}
+.notifications-modal .notifications-header button:hover, .notifications-modal .notifications-header button:focus {
+  background-color: #A8A4FF;
+}
+.notifications-modal .notification {
+  margin: 2rem 0 3rem 0;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 3rem;
+  background-color: #F4F7FD;
+}
+.notifications-modal .notification .timestamp {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+.notifications-modal .notification button {
+  width: fit-content;
+  padding: 1rem 1.25rem;
+  background-color: #635FC7;
+  border-radius: 0.5rem;
+}
+.notifications-modal .notification svg {
+  height: 1.75rem;
+  fill: white;
+}
+.notifications-modal .notification button:hover, .notifications-modal .notification button:focus {
+  background-color: #A8A4FF;
+}
+
+.notifications-modal > p {
+  text-align: center;
+  margin: 2rem 0 3rem 0;
 }
 
 .board-container {
@@ -464,11 +558,11 @@ main#no-brd-chosen p {
 }
 
 .create-brd-container {
-  padding: 1.25rem 3rem;
+  padding: 3rem 3rem 1.25rem 3rem;
 }
 @media (max-width: 500px) {
   .create-brd-container {
-    padding: 0.75rem 2rem;
+    padding: 1.5rem 2rem;
   }
 }
 .create-brd-container svg {
@@ -674,7 +768,7 @@ main#no-brd-chosen p {
   color: #635FC7;
 }
 
-.form-modal, .delete-modal, .login-form, .signup-form {
+.notifications-modal, .form-modal, .delete-modal, .login-form, .signup-form {
   border: none;
   width: 500px;
   padding: 3rem 3rem 0rem 3rem;
@@ -682,30 +776,29 @@ main#no-brd-chosen p {
   margin: auto;
   max-height: 80%;
 }
-.form-modal::-webkit-scrollbar, .delete-modal::-webkit-scrollbar, .login-form::-webkit-scrollbar, .signup-form::-webkit-scrollbar {
+.notifications-modal::-webkit-scrollbar, .form-modal::-webkit-scrollbar, .delete-modal::-webkit-scrollbar, .login-form::-webkit-scrollbar, .signup-form::-webkit-scrollbar {
   width: 1rem;
 }
-.form-modal::-webkit-scrollbar-track, .delete-modal::-webkit-scrollbar-track, .login-form::-webkit-scrollbar-track, .signup-form::-webkit-scrollbar-track {
+.notifications-modal::-webkit-scrollbar-track, .form-modal::-webkit-scrollbar-track, .delete-modal::-webkit-scrollbar-track, .login-form::-webkit-scrollbar-track, .signup-form::-webkit-scrollbar-track {
   background-color: #E9EFFA;
 }
-.form-modal::-webkit-scrollbar-thumb, .delete-modal::-webkit-scrollbar-thumb, .login-form::-webkit-scrollbar-thumb, .signup-form::-webkit-scrollbar-thumb {
-  border-radius: 1rem;
+.notifications-modal::-webkit-scrollbar-thumb, .form-modal::-webkit-scrollbar-thumb, .delete-modal::-webkit-scrollbar-thumb, .login-form::-webkit-scrollbar-thumb, .signup-form::-webkit-scrollbar-thumb {
   background-color: #828FA3;
 }
 @media (max-width: 950px) {
-  .form-modal, .delete-modal, .login-form, .signup-form {
+  .notifications-modal, .form-modal, .delete-modal, .login-form, .signup-form {
     width: 60%;
   }
 }
 @media (max-width: 500px) {
-  .form-modal, .delete-modal, .login-form, .signup-form {
+  .notifications-modal, .form-modal, .delete-modal, .login-form, .signup-form {
     width: 70%;
   }
 }
-.form-modal::backdrop, .delete-modal::backdrop, .login-form::backdrop, .signup-form::backdrop {
+.notifications-modal::backdrop, .form-modal::backdrop, .delete-modal::backdrop, .login-form::backdrop, .signup-form::backdrop {
   background-color: rgba(0, 0, 0, 0.4);
 }
-.form-modal button.close-modal, .delete-modal button.close-modal, .login-form button.close-modal, .signup-form button.close-modal {
+.notifications-modal button.close-modal, .form-modal button.close-modal, .delete-modal button.close-modal, .login-form button.close-modal, .signup-form button.close-modal {
   margin: 2rem auto;
   width: 3rem;
   height: 3rem;
@@ -716,14 +809,14 @@ main#no-brd-chosen p {
   align-items: center;
   justify-content: center;
 }
-.form-modal button.close-modal:hover, .form-modal button.close-modal:focus, .delete-modal button.close-modal:hover, .delete-modal button.close-modal:focus, .login-form button.close-modal:hover, .login-form button.close-modal:focus, .signup-form button.close-modal:hover, .signup-form button.close-modal:focus {
+.notifications-modal button.close-modal:hover, .notifications-modal button.close-modal:focus, .form-modal button.close-modal:hover, .form-modal button.close-modal:focus, .delete-modal button.close-modal:hover, .delete-modal button.close-modal:focus, .login-form button.close-modal:hover, .login-form button.close-modal:focus, .signup-form button.close-modal:hover, .signup-form button.close-modal:focus {
   background-color: #F4F7FD;
 }
-.form-modal button.close-modal svg, .delete-modal button.close-modal svg, .login-form button.close-modal svg, .signup-form button.close-modal svg {
+.notifications-modal button.close-modal svg, .form-modal button.close-modal svg, .delete-modal button.close-modal svg, .login-form button.close-modal svg, .signup-form button.close-modal svg {
   height: 1rem;
   fill: #635FC7;
 }
-.form-modal h2, .delete-modal h2, .login-form h2, .signup-form h2 {
+.notifications-modal h2, .form-modal h2, .delete-modal h2, .login-form h2, .signup-form h2 {
   font-size: 1.8rem;
   line-height: 2.3rem;
   font-weight: 700;
@@ -731,10 +824,10 @@ main#no-brd-chosen p {
   color: black;
   padding: 0;
 }
-.form-modal p.deadline, .delete-modal p.deadline, .login-form p.deadline, .signup-form p.deadline {
+.notifications-modal p.deadline, .form-modal p.deadline, .delete-modal p.deadline, .login-form p.deadline, .signup-form p.deadline {
   margin-top: 0.25rem;
 }
-.form-modal .assignee-icons, .delete-modal .assignee-icons, .login-form .assignee-icons, .signup-form .assignee-icons {
+.notifications-modal .assignee-icons, .form-modal .assignee-icons, .delete-modal .assignee-icons, .login-form .assignee-icons, .signup-form .assignee-icons {
   display: flex;
   flex-wrap: wrap;
   column-gap: 1.25rem;
@@ -743,20 +836,20 @@ main#no-brd-chosen p {
   color: #828FA3;
   position: relative;
 }
-.form-modal .assignee-icons .assignee-icon, .delete-modal .assignee-icons .assignee-icon, .login-form .assignee-icons .assignee-icon, .signup-form .assignee-icons .assignee-icon {
+.notifications-modal .assignee-icons .assignee-icon, .form-modal .assignee-icons .assignee-icon, .delete-modal .assignee-icons .assignee-icon, .login-form .assignee-icons .assignee-icon, .signup-form .assignee-icons .assignee-icon {
   padding: 1.25rem;
   border-radius: 5rem;
   background-color: #E4EBFA;
   letter-spacing: 0.1rem;
 }
-.form-modal .assignee-icons .assignee-full-name, .delete-modal .assignee-icons .assignee-full-name, .login-form .assignee-icons .assignee-full-name, .signup-form .assignee-icons .assignee-full-name {
+.notifications-modal .assignee-icons .assignee-full-name, .form-modal .assignee-icons .assignee-full-name, .delete-modal .assignee-icons .assignee-full-name, .login-form .assignee-icons .assignee-full-name, .signup-form .assignee-icons .assignee-full-name {
   position: absolute;
   top: 6rem;
   background-color: #F4F7FD;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
 }
-.form-modal .assignee-icons .assignee-full-name .pointer, .delete-modal .assignee-icons .assignee-full-name .pointer, .login-form .assignee-icons .assignee-full-name .pointer, .signup-form .assignee-icons .assignee-full-name .pointer {
+.notifications-modal .assignee-icons .assignee-full-name .pointer, .form-modal .assignee-icons .assignee-full-name .pointer, .delete-modal .assignee-icons .assignee-full-name .pointer, .login-form .assignee-icons .assignee-full-name .pointer, .signup-form .assignee-icons .assignee-full-name .pointer {
   position: absolute;
   top: -1rem;
   left: 0;
@@ -766,10 +859,10 @@ main#no-brd-chosen p {
   border-right: 0.75rem solid transparent;
   border-bottom: 1.25rem solid #F4F7FD;
 }
-.form-modal p, .delete-modal p, .login-form p, .signup-form p {
+.notifications-modal p, .form-modal p, .delete-modal p, .login-form p, .signup-form p {
   font-size: 1.3rem;
 }
-.form-modal label, .form-modal legend, .delete-modal label, .delete-modal legend, .login-form label, .login-form legend, .signup-form label, .signup-form legend {
+.notifications-modal label, .notifications-modal legend, .form-modal label, .form-modal legend, .delete-modal label, .delete-modal legend, .login-form label, .login-form legend, .signup-form label, .signup-form legend {
   font-size: 1.5rem;
   line-height: 1.9rem;
   font-weight: 700;
@@ -778,36 +871,36 @@ main#no-brd-chosen p {
   display: block;
   margin: 1.5rem 0;
 }
-.form-modal label.col-label, .form-modal label.subtask-label, .delete-modal label.col-label, .delete-modal label.subtask-label, .login-form label.col-label, .login-form label.subtask-label, .signup-form label.col-label, .signup-form label.subtask-label {
+.notifications-modal label.col-label, .notifications-modal label.subtask-label, .form-modal label.col-label, .form-modal label.subtask-label, .delete-modal label.col-label, .delete-modal label.subtask-label, .login-form label.col-label, .login-form label.subtask-label, .signup-form label.col-label, .signup-form label.subtask-label {
   width: 100%;
   display: flex;
   align-items: center;
   margin: 0;
 }
-.form-modal label.col-label input, .form-modal label.subtask-label input, .delete-modal label.col-label input, .delete-modal label.subtask-label input, .login-form label.col-label input, .login-form label.subtask-label input, .signup-form label.col-label input, .signup-form label.subtask-label input {
+.notifications-modal label.col-label input, .notifications-modal label.subtask-label input, .form-modal label.col-label input, .form-modal label.subtask-label input, .delete-modal label.col-label input, .delete-modal label.subtask-label input, .login-form label.col-label input, .login-form label.subtask-label input, .signup-form label.col-label input, .signup-form label.subtask-label input {
   flex-grow: 1;
 }
-.form-modal label.col-label button, .form-modal label.subtask-label button, .delete-modal label.col-label button, .delete-modal label.subtask-label button, .login-form label.col-label button, .login-form label.subtask-label button, .signup-form label.col-label button, .signup-form label.subtask-label button {
+.notifications-modal label.col-label button, .notifications-modal label.subtask-label button, .form-modal label.col-label button, .form-modal label.subtask-label button, .delete-modal label.col-label button, .delete-modal label.subtask-label button, .login-form label.col-label button, .login-form label.subtask-label button, .signup-form label.col-label button, .signup-form label.subtask-label button {
   width: 7rem;
 }
-.form-modal label.col-label svg, .form-modal label.subtask-label svg, .delete-modal label.col-label svg, .delete-modal label.subtask-label svg, .login-form label.col-label svg, .login-form label.subtask-label svg, .signup-form label.col-label svg, .signup-form label.subtask-label svg {
+.notifications-modal label.col-label svg, .notifications-modal label.subtask-label svg, .form-modal label.col-label svg, .form-modal label.subtask-label svg, .delete-modal label.col-label svg, .delete-modal label.subtask-label svg, .login-form label.col-label svg, .login-form label.subtask-label svg, .signup-form label.col-label svg, .signup-form label.subtask-label svg {
   margin-top: 1rem;
   height: 1.5rem;
   padding: 0 1rem;
   fill: #828FA3;
 }
-.form-modal label.col-label button:hover svg, .form-modal label.col-label button:focus svg, .form-modal label.subtask-label button:hover svg, .form-modal label.subtask-label button:focus svg, .delete-modal label.col-label button:hover svg, .delete-modal label.col-label button:focus svg, .delete-modal label.subtask-label button:hover svg, .delete-modal label.subtask-label button:focus svg, .login-form label.col-label button:hover svg, .login-form label.col-label button:focus svg, .login-form label.subtask-label button:hover svg, .login-form label.subtask-label button:focus svg, .signup-form label.col-label button:hover svg, .signup-form label.col-label button:focus svg, .signup-form label.subtask-label button:hover svg, .signup-form label.subtask-label button:focus svg {
+.notifications-modal label.col-label button:hover svg, .notifications-modal label.col-label button:focus svg, .notifications-modal label.subtask-label button:hover svg, .notifications-modal label.subtask-label button:focus svg, .form-modal label.col-label button:hover svg, .form-modal label.col-label button:focus svg, .form-modal label.subtask-label button:hover svg, .form-modal label.subtask-label button:focus svg, .delete-modal label.col-label button:hover svg, .delete-modal label.col-label button:focus svg, .delete-modal label.subtask-label button:hover svg, .delete-modal label.subtask-label button:focus svg, .login-form label.col-label button:hover svg, .login-form label.col-label button:focus svg, .login-form label.subtask-label button:hover svg, .login-form label.subtask-label button:focus svg, .signup-form label.col-label button:hover svg, .signup-form label.col-label button:focus svg, .signup-form label.subtask-label button:hover svg, .signup-form label.subtask-label button:focus svg {
   fill: #EA5555;
 }
-.form-modal fieldset, .delete-modal fieldset, .login-form fieldset, .signup-form fieldset {
+.notifications-modal fieldset, .form-modal fieldset, .delete-modal fieldset, .login-form fieldset, .signup-form fieldset {
   border: none;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
-.form-modal fieldset legend, .delete-modal fieldset legend, .login-form fieldset legend, .signup-form fieldset legend {
+.notifications-modal fieldset legend, .form-modal fieldset legend, .delete-modal fieldset legend, .login-form fieldset legend, .signup-form fieldset legend {
   margin-bottom: 0;
 }
-.form-modal input, .form-modal textarea, .form-modal select, .delete-modal input, .delete-modal textarea, .delete-modal select, .login-form input, .login-form textarea, .login-form select, .signup-form input, .signup-form textarea, .signup-form select {
+.notifications-modal input, .notifications-modal textarea, .notifications-modal select, .form-modal input, .form-modal textarea, .form-modal select, .delete-modal input, .delete-modal textarea, .delete-modal select, .login-form input, .login-form textarea, .login-form select, .signup-form input, .signup-form textarea, .signup-form select {
   display: block;
   box-sizing: border-box;
   width: 100%;
@@ -819,28 +912,28 @@ main#no-brd-chosen p {
   border-radius: 0.5rem;
   margin-top: 1rem;
 }
-.form-modal input:focus, .form-modal textarea:focus, .form-modal select:focus, .delete-modal input:focus, .delete-modal textarea:focus, .delete-modal select:focus, .login-form input:focus, .login-form textarea:focus, .login-form select:focus, .signup-form input:focus, .signup-form textarea:focus, .signup-form select:focus {
+.notifications-modal input:focus, .notifications-modal textarea:focus, .notifications-modal select:focus, .form-modal input:focus, .form-modal textarea:focus, .form-modal select:focus, .delete-modal input:focus, .delete-modal textarea:focus, .delete-modal select:focus, .login-form input:focus, .login-form textarea:focus, .login-form select:focus, .signup-form input:focus, .signup-form textarea:focus, .signup-form select:focus {
   outline: transparent;
   border: 2px solid #A8A4FF;
 }
-.form-modal input:invalid, .form-modal textarea:invalid, .form-modal select:invalid, .delete-modal input:invalid, .delete-modal textarea:invalid, .delete-modal select:invalid, .login-form input:invalid, .login-form textarea:invalid, .login-form select:invalid, .signup-form input:invalid, .signup-form textarea:invalid, .signup-form select:invalid {
+.notifications-modal input:invalid, .notifications-modal textarea:invalid, .notifications-modal select:invalid, .form-modal input:invalid, .form-modal textarea:invalid, .form-modal select:invalid, .delete-modal input:invalid, .delete-modal textarea:invalid, .delete-modal select:invalid, .login-form input:invalid, .login-form textarea:invalid, .login-form select:invalid, .signup-form input:invalid, .signup-form textarea:invalid, .signup-form select:invalid {
   border-color: #EA5555;
 }
-.form-modal ::placeholder, .delete-modal ::placeholder, .login-form ::placeholder, .signup-form ::placeholder {
+.notifications-modal ::placeholder, .form-modal ::placeholder, .delete-modal ::placeholder, .login-form ::placeholder, .signup-form ::placeholder {
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
   color: #E4EBFA;
 }
-.form-modal .err-msg, .delete-modal .err-msg, .login-form .err-msg, .signup-form .err-msg {
+.notifications-modal .err-msg, .form-modal .err-msg, .delete-modal .err-msg, .login-form .err-msg, .signup-form .err-msg {
   margin-top: 0.5rem;
   color: #EA5555;
   font-size: 1.25rem;
 }
-.form-modal .checkboxes-field .subtask-box, .delete-modal .checkboxes-field .subtask-box, .login-form .checkboxes-field .subtask-box, .signup-form .checkboxes-field .subtask-box {
+.notifications-modal .checkboxes-field .subtask-box, .form-modal .checkboxes-field .subtask-box, .delete-modal .checkboxes-field .subtask-box, .login-form .checkboxes-field .subtask-box, .signup-form .checkboxes-field .subtask-box {
   position: relative;
 }
-.form-modal .checkboxes-field input, .delete-modal .checkboxes-field input, .login-form .checkboxes-field input, .signup-form .checkboxes-field input {
+.notifications-modal .checkboxes-field input, .form-modal .checkboxes-field input, .delete-modal .checkboxes-field input, .login-form .checkboxes-field input, .signup-form .checkboxes-field input {
   position: absolute;
   opacity: 0;
   width: 2rem;
@@ -848,7 +941,7 @@ main#no-brd-chosen p {
   left: 1rem;
   top: 0.5rem;
 }
-.form-modal .checkboxes-field div.before, .delete-modal .checkboxes-field div.before, .login-form .checkboxes-field div.before, .signup-form .checkboxes-field div.before {
+.notifications-modal .checkboxes-field div.before, .form-modal .checkboxes-field div.before, .delete-modal .checkboxes-field div.before, .login-form .checkboxes-field div.before, .signup-form .checkboxes-field div.before {
   position: absolute;
   left: 1rem;
   top: 1.5rem;
@@ -857,7 +950,7 @@ main#no-brd-chosen p {
   border-radius: 0.5rem;
   border: 1px solid #635FC7;
 }
-.form-modal .checkboxes-field div.after, .delete-modal .checkboxes-field div.after, .login-form .checkboxes-field div.after, .signup-form .checkboxes-field div.after {
+.notifications-modal .checkboxes-field div.after, .form-modal .checkboxes-field div.after, .delete-modal .checkboxes-field div.after, .login-form .checkboxes-field div.after, .signup-form .checkboxes-field div.after {
   opacity: 0;
   position: absolute;
   left: 1rem;
@@ -874,52 +967,52 @@ main#no-brd-chosen p {
   font-weight: 700;
   color: white;
 }
-.form-modal .checkboxes-field input:checked + div.after, .delete-modal .checkboxes-field input:checked + div.after, .login-form .checkboxes-field input:checked + div.after, .signup-form .checkboxes-field input:checked + div.after {
+.notifications-modal .checkboxes-field input:checked + div.after, .form-modal .checkboxes-field input:checked + div.after, .delete-modal .checkboxes-field input:checked + div.after, .login-form .checkboxes-field input:checked + div.after, .signup-form .checkboxes-field input:checked + div.after {
   opacity: 1;
 }
-.form-modal .checkboxes-field label, .delete-modal .checkboxes-field label, .login-form .checkboxes-field label, .signup-form .checkboxes-field label {
+.notifications-modal .checkboxes-field label, .form-modal .checkboxes-field label, .delete-modal .checkboxes-field label, .login-form .checkboxes-field label, .signup-form .checkboxes-field label {
   padding: 1.5rem;
   padding-left: 4.5rem;
   margin: 1rem 0;
   background-color: #F4F7FD;
   border-radius: 0.5rem;
 }
-.form-modal .checkboxes-field .checked-subtask, .delete-modal .checkboxes-field .checked-subtask, .login-form .checkboxes-field .checked-subtask, .signup-form .checkboxes-field .checked-subtask {
+.notifications-modal .checkboxes-field .checked-subtask, .form-modal .checkboxes-field .checked-subtask, .delete-modal .checkboxes-field .checked-subtask, .login-form .checkboxes-field .checked-subtask, .signup-form .checkboxes-field .checked-subtask {
   text-decoration: line-through;
 }
-.form-modal select, .delete-modal select, .login-form select, .signup-form select {
+.notifications-modal select, .form-modal select, .delete-modal select, .login-form select, .signup-form select {
   width: 100%;
   background-color: white;
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
 }
-.form-modal hr, .delete-modal hr, .login-form hr, .signup-form hr {
+.notifications-modal hr, .form-modal hr, .delete-modal hr, .login-form hr, .signup-form hr {
   margin: 2rem;
   border: 1px solid #E4EBFA;
 }
-.form-modal .search-bar, .delete-modal .search-bar, .login-form .search-bar, .signup-form .search-bar {
+.notifications-modal .search-bar, .form-modal .search-bar, .delete-modal .search-bar, .login-form .search-bar, .signup-form .search-bar {
   display: flex;
 }
-.form-modal .search-bar input, .delete-modal .search-bar input, .login-form .search-bar input, .signup-form .search-bar input {
+.notifications-modal .search-bar input, .form-modal .search-bar input, .delete-modal .search-bar input, .login-form .search-bar input, .signup-form .search-bar input {
   margin-top: 0;
   margin-right: 1rem;
   flex-grow: 1;
 }
-.form-modal .search-bar button, .delete-modal .search-bar button, .login-form .search-bar button, .signup-form .search-bar button {
+.notifications-modal .search-bar button, .form-modal .search-bar button, .delete-modal .search-bar button, .login-form .search-bar button, .signup-form .search-bar button {
   padding: 1rem;
   border-radius: 0.5rem;
   background-color: #635FC7;
   width: 5rem;
 }
-.form-modal .search-bar button:hover, .form-modal .search-bar button:focus, .delete-modal .search-bar button:hover, .delete-modal .search-bar button:focus, .login-form .search-bar button:hover, .login-form .search-bar button:focus, .signup-form .search-bar button:hover, .signup-form .search-bar button:focus {
+.notifications-modal .search-bar button:hover, .notifications-modal .search-bar button:focus, .form-modal .search-bar button:hover, .form-modal .search-bar button:focus, .delete-modal .search-bar button:hover, .delete-modal .search-bar button:focus, .login-form .search-bar button:hover, .login-form .search-bar button:focus, .signup-form .search-bar button:hover, .signup-form .search-bar button:focus {
   background-color: #A8A4FF;
 }
-.form-modal .search-bar svg, .delete-modal .search-bar svg, .login-form .search-bar svg, .signup-form .search-bar svg {
+.notifications-modal .search-bar svg, .form-modal .search-bar svg, .delete-modal .search-bar svg, .login-form .search-bar svg, .signup-form .search-bar svg {
   height: 2rem;
   fill: #E4EBFA;
 }
-.form-modal button.potential-contributor, .form-modal button.chosen-assignee, .delete-modal button.potential-contributor, .delete-modal button.chosen-assignee, .login-form button.potential-contributor, .login-form button.chosen-assignee, .signup-form button.potential-contributor, .signup-form button.chosen-assignee {
+.notifications-modal button.potential-contributor, .notifications-modal button.chosen-assignee, .form-modal button.potential-contributor, .form-modal button.chosen-assignee, .delete-modal button.potential-contributor, .delete-modal button.chosen-assignee, .login-form button.potential-contributor, .login-form button.chosen-assignee, .signup-form button.potential-contributor, .signup-form button.chosen-assignee {
   width: fit-content;
   font-size: 1.3rem;
   margin-top: 1rem;
@@ -927,67 +1020,67 @@ main#no-brd-chosen p {
   border-radius: 0.5rem;
   background-color: #E4EBFA;
 }
-.form-modal button.potential-contributor:hover, .form-modal button.potential-contributor:focus, .form-modal button.chosen-assignee:hover, .form-modal button.chosen-assignee:focus, .delete-modal button.potential-contributor:hover, .delete-modal button.potential-contributor:focus, .delete-modal button.chosen-assignee:hover, .delete-modal button.chosen-assignee:focus, .login-form button.potential-contributor:hover, .login-form button.potential-contributor:focus, .login-form button.chosen-assignee:hover, .login-form button.chosen-assignee:focus, .signup-form button.potential-contributor:hover, .signup-form button.potential-contributor:focus, .signup-form button.chosen-assignee:hover, .signup-form button.chosen-assignee:focus {
+.notifications-modal button.potential-contributor:hover, .notifications-modal button.potential-contributor:focus, .notifications-modal button.chosen-assignee:hover, .notifications-modal button.chosen-assignee:focus, .form-modal button.potential-contributor:hover, .form-modal button.potential-contributor:focus, .form-modal button.chosen-assignee:hover, .form-modal button.chosen-assignee:focus, .delete-modal button.potential-contributor:hover, .delete-modal button.potential-contributor:focus, .delete-modal button.chosen-assignee:hover, .delete-modal button.chosen-assignee:focus, .login-form button.potential-contributor:hover, .login-form button.potential-contributor:focus, .login-form button.chosen-assignee:hover, .login-form button.chosen-assignee:focus, .signup-form button.potential-contributor:hover, .signup-form button.potential-contributor:focus, .signup-form button.chosen-assignee:hover, .signup-form button.chosen-assignee:focus {
   background-color: #F4F7FD;
   color: #635FC7;
 }
-.form-modal button.potential-contributor:disabled, .form-modal button.chosen-assignee:disabled, .delete-modal button.potential-contributor:disabled, .delete-modal button.chosen-assignee:disabled, .login-form button.potential-contributor:disabled, .login-form button.chosen-assignee:disabled, .signup-form button.potential-contributor:disabled, .signup-form button.chosen-assignee:disabled {
+.notifications-modal button.potential-contributor:disabled, .notifications-modal button.chosen-assignee:disabled, .form-modal button.potential-contributor:disabled, .form-modal button.chosen-assignee:disabled, .delete-modal button.potential-contributor:disabled, .delete-modal button.chosen-assignee:disabled, .login-form button.potential-contributor:disabled, .login-form button.chosen-assignee:disabled, .signup-form button.potential-contributor:disabled, .signup-form button.chosen-assignee:disabled {
   background-color: #E4EBFA;
   color: #828FA3;
 }
-.form-modal div.chosen-assignees, .delete-modal div.chosen-assignees, .login-form div.chosen-assignees, .signup-form div.chosen-assignees {
+.notifications-modal div.chosen-assignees, .form-modal div.chosen-assignees, .delete-modal div.chosen-assignees, .login-form div.chosen-assignees, .signup-form div.chosen-assignees {
   display: flex;
   row-gap: 1rem;
   column-gap: 1rem;
   margin: 1rem 0;
   flex-wrap: wrap;
 }
-.form-modal button.chosen-assignee, .delete-modal button.chosen-assignee, .login-form button.chosen-assignee, .signup-form button.chosen-assignee {
+.notifications-modal button.chosen-assignee, .form-modal button.chosen-assignee, .delete-modal button.chosen-assignee, .login-form button.chosen-assignee, .signup-form button.chosen-assignee {
   display: flex;
   align-items: center;
   margin: 0;
 }
-.form-modal button.chosen-assignee p, .delete-modal button.chosen-assignee p, .login-form button.chosen-assignee p, .signup-form button.chosen-assignee p {
+.notifications-modal button.chosen-assignee p, .form-modal button.chosen-assignee p, .delete-modal button.chosen-assignee p, .login-form button.chosen-assignee p, .signup-form button.chosen-assignee p {
   font-size: 1.3rem;
 }
-.form-modal button.chosen-assignee svg, .delete-modal button.chosen-assignee svg, .login-form button.chosen-assignee svg, .signup-form button.chosen-assignee svg {
+.notifications-modal button.chosen-assignee svg, .form-modal button.chosen-assignee svg, .delete-modal button.chosen-assignee svg, .login-form button.chosen-assignee svg, .signup-form button.chosen-assignee svg {
   margin-left: 1rem;
   height: 1.3rem;
 }
-.form-modal button.chosen-assignee:hover p, .form-modal button.chosen-assignee:focus p, .delete-modal button.chosen-assignee:hover p, .delete-modal button.chosen-assignee:focus p, .login-form button.chosen-assignee:hover p, .login-form button.chosen-assignee:focus p, .signup-form button.chosen-assignee:hover p, .signup-form button.chosen-assignee:focus p {
+.notifications-modal button.chosen-assignee:hover p, .notifications-modal button.chosen-assignee:focus p, .form-modal button.chosen-assignee:hover p, .form-modal button.chosen-assignee:focus p, .delete-modal button.chosen-assignee:hover p, .delete-modal button.chosen-assignee:focus p, .login-form button.chosen-assignee:hover p, .login-form button.chosen-assignee:focus p, .signup-form button.chosen-assignee:hover p, .signup-form button.chosen-assignee:focus p {
   color: #635FC7;
 }
-.form-modal button.chosen-assignee:hover svg, .form-modal button.chosen-assignee:focus svg, .delete-modal button.chosen-assignee:hover svg, .delete-modal button.chosen-assignee:focus svg, .login-form button.chosen-assignee:hover svg, .login-form button.chosen-assignee:focus svg, .signup-form button.chosen-assignee:hover svg, .signup-form button.chosen-assignee:focus svg {
+.notifications-modal button.chosen-assignee:hover svg, .notifications-modal button.chosen-assignee:focus svg, .form-modal button.chosen-assignee:hover svg, .form-modal button.chosen-assignee:focus svg, .delete-modal button.chosen-assignee:hover svg, .delete-modal button.chosen-assignee:focus svg, .login-form button.chosen-assignee:hover svg, .login-form button.chosen-assignee:focus svg, .signup-form button.chosen-assignee:hover svg, .signup-form button.chosen-assignee:focus svg {
   fill: #635FC7;
 }
-.form-modal .contributor, .delete-modal .contributor, .login-form .contributor, .signup-form .contributor {
+.notifications-modal .contributor, .form-modal .contributor, .delete-modal .contributor, .login-form .contributor, .signup-form .contributor {
   display: flex;
   align-items: center;
   margin-top: 1rem;
 }
-.form-modal .contributor p, .form-modal .contributor select, .delete-modal .contributor p, .delete-modal .contributor select, .login-form .contributor p, .login-form .contributor select, .signup-form .contributor p, .signup-form .contributor select {
+.notifications-modal .contributor p, .notifications-modal .contributor select, .form-modal .contributor p, .form-modal .contributor select, .delete-modal .contributor p, .delete-modal .contributor select, .login-form .contributor p, .login-form .contributor select, .signup-form .contributor p, .signup-form .contributor select {
   width: calc((100% - 5rem) / 2);
 }
-.form-modal .contributor p, .delete-modal .contributor p, .login-form .contributor p, .signup-form .contributor p {
+.notifications-modal .contributor p, .form-modal .contributor p, .delete-modal .contributor p, .login-form .contributor p, .signup-form .contributor p {
   font-size: 1.3rem;
 }
-.form-modal .contributor select, .delete-modal .contributor select, .login-form .contributor select, .signup-form .contributor select {
+.notifications-modal .contributor select, .form-modal .contributor select, .delete-modal .contributor select, .login-form .contributor select, .signup-form .contributor select {
   margin-top: 0;
   margin-right: 1rem;
 }
-.form-modal .contributor button, .delete-modal .contributor button, .login-form .contributor button, .signup-form .contributor button {
+.notifications-modal .contributor button, .form-modal .contributor button, .delete-modal .contributor button, .login-form .contributor button, .signup-form .contributor button {
   padding: 1rem;
   width: 5rem;
 }
-.form-modal .contributor svg, .delete-modal .contributor svg, .login-form .contributor svg, .signup-form .contributor svg {
+.notifications-modal .contributor svg, .form-modal .contributor svg, .delete-modal .contributor svg, .login-form .contributor svg, .signup-form .contributor svg {
   margin-top: 0.25rem;
   height: 1.5rem;
   fill: #828FA3;
 }
-.form-modal .contributor button:hover svg, .form-modal .contributor button:focus svg, .delete-modal .contributor button:hover svg, .delete-modal .contributor button:focus svg, .login-form .contributor button:hover svg, .login-form .contributor button:focus svg, .signup-form .contributor button:hover svg, .signup-form .contributor button:focus svg {
+.notifications-modal .contributor button:hover svg, .notifications-modal .contributor button:focus svg, .form-modal .contributor button:hover svg, .form-modal .contributor button:focus svg, .delete-modal .contributor button:hover svg, .delete-modal .contributor button:focus svg, .login-form .contributor button:hover svg, .login-form .contributor button:focus svg, .signup-form .contributor button:hover svg, .signup-form .contributor button:focus svg {
   fill: #EA5555;
 }
-.form-modal button, .delete-modal button, .login-form button, .signup-form button {
+.notifications-modal button, .form-modal button, .delete-modal button, .login-form button, .signup-form button {
   display: block;
   width: 100%;
   padding: 1.5rem 0;
@@ -995,29 +1088,29 @@ main#no-brd-chosen p {
   font-weight: bold;
   border-radius: 10rem;
 }
-.form-modal .add-btn, .form-modal .cancel-btn, .delete-modal .add-btn, .delete-modal .cancel-btn, .login-form .add-btn, .login-form .cancel-btn, .signup-form .add-btn, .signup-form .cancel-btn {
+.notifications-modal .add-btn, .notifications-modal .cancel-btn, .form-modal .add-btn, .form-modal .cancel-btn, .delete-modal .add-btn, .delete-modal .cancel-btn, .login-form .add-btn, .login-form .cancel-btn, .signup-form .add-btn, .signup-form .cancel-btn {
   margin-top: 1rem;
   background-color: #E4EBFA;
   color: #635FC7;
 }
-.form-modal .add-btn:hover, .form-modal .add-btn:focus, .form-modal .cancel-btn:hover, .form-modal .cancel-btn:focus, .delete-modal .add-btn:hover, .delete-modal .add-btn:focus, .delete-modal .cancel-btn:hover, .delete-modal .cancel-btn:focus, .login-form .add-btn:hover, .login-form .add-btn:focus, .login-form .cancel-btn:hover, .login-form .cancel-btn:focus, .signup-form .add-btn:hover, .signup-form .add-btn:focus, .signup-form .cancel-btn:hover, .signup-form .cancel-btn:focus {
+.notifications-modal .add-btn:hover, .notifications-modal .add-btn:focus, .notifications-modal .cancel-btn:hover, .notifications-modal .cancel-btn:focus, .form-modal .add-btn:hover, .form-modal .add-btn:focus, .form-modal .cancel-btn:hover, .form-modal .cancel-btn:focus, .delete-modal .add-btn:hover, .delete-modal .add-btn:focus, .delete-modal .cancel-btn:hover, .delete-modal .cancel-btn:focus, .login-form .add-btn:hover, .login-form .add-btn:focus, .login-form .cancel-btn:hover, .login-form .cancel-btn:focus, .signup-form .add-btn:hover, .signup-form .add-btn:focus, .signup-form .cancel-btn:hover, .signup-form .cancel-btn:focus {
   background-color: #F4F7FD;
 }
-.form-modal .save-btn, .delete-modal .save-btn, .login-form .save-btn, .signup-form .save-btn {
+.notifications-modal .save-btn, .form-modal .save-btn, .delete-modal .save-btn, .login-form .save-btn, .signup-form .save-btn {
   background-color: #635FC7;
   color: white;
   margin-top: 3rem;
   margin-bottom: 1rem;
 }
-.form-modal .save-btn:hover, .form-modal .save-btn:focus, .delete-modal .save-btn:hover, .delete-modal .save-btn:focus, .login-form .save-btn:hover, .login-form .save-btn:focus, .signup-form .save-btn:hover, .signup-form .save-btn:focus {
+.notifications-modal .save-btn:hover, .notifications-modal .save-btn:focus, .form-modal .save-btn:hover, .form-modal .save-btn:focus, .delete-modal .save-btn:hover, .delete-modal .save-btn:focus, .login-form .save-btn:hover, .login-form .save-btn:focus, .signup-form .save-btn:hover, .signup-form .save-btn:focus {
   background-color: #A8A4FF;
 }
-.form-modal .delete-btn, .delete-modal .delete-btn, .login-form .delete-btn, .signup-form .delete-btn {
+.notifications-modal .delete-btn, .form-modal .delete-btn, .delete-modal .delete-btn, .login-form .delete-btn, .signup-form .delete-btn {
   background-color: #EA5555;
   color: white;
   margin-bottom: 1rem;
 }
-.form-modal .delete-btn:hover, .form-modal .delete-btn:focus, .delete-modal .delete-btn:hover, .delete-modal .delete-btn:focus, .login-form .delete-btn:hover, .login-form .delete-btn:focus, .signup-form .delete-btn:hover, .signup-form .delete-btn:focus {
+.notifications-modal .delete-btn:hover, .notifications-modal .delete-btn:focus, .form-modal .delete-btn:hover, .form-modal .delete-btn:focus, .delete-modal .delete-btn:hover, .delete-modal .delete-btn:focus, .login-form .delete-btn:hover, .login-form .delete-btn:focus, .signup-form .delete-btn:hover, .signup-form .delete-btn:focus {
   background-color: #FF9898;
 }
 

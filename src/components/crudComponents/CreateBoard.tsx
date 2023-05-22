@@ -1,4 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
+// import { io } from "socket.io-client";
 import { BoardsContext, contributorType } from "../../Context";
 import { handleDisplayMsg } from "../helpers";
 import Fields from "./Fields";
@@ -24,6 +25,10 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const counterRef = useRef(3);
+
+    // const socket = io("http://localhost:5500", {
+    //     withCredentials: true,
+    // });
 
     useEffect(() => {
         if (contributorModal) {
@@ -97,6 +102,8 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
                 // indicates whether user should receive AND send cookies
                 credentials: "include"
             };
+
+            // socket.on("contributor-message", msg => console.log(msg));
             
             try {
                 const res = await fetch("http://localhost:3000/create-board", reqOptions);

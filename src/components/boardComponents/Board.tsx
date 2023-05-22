@@ -25,7 +25,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
     const columnsArr = curBoard?.columns;
 
     const [ filters, setFilters ] = useState<string[]>([]);
-    const [ sorter, setSorter ] = useState<string>("");
+    // const [ sorter, setSorter ] = useState<string>("");
     const [ editBoardVis, setEditBoardVis ] = useState(false);
     const [ draggableInfo, setDraggableInfo ] = useState<draggableInfoProp | null>({ 
         order: "", 
@@ -39,19 +39,19 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
         if (input.checked && filter) setFilters([...filters, filter]);
         if (!input.checked && filter) setFilters(filters.filter(existingFilter => existingFilter !== filter));
     };
-    function handleSortClick(e: React.MouseEvent<HTMLInputElement>) {
-        const input = e.target as HTMLInputElement;
-        const sort = input.getAttribute("id");
-        if (sort) setSorter(sort);
-    };
+    // function handleSortClick(e: React.MouseEvent<HTMLInputElement>) {
+    //     const input = e.target as HTMLInputElement;
+    //     const sort = input.getAttribute("id");
+    //     if (sort) setSorter(sort);
+    // };
     function handleResetAll(e: React.MouseEvent<HTMLButtonElement>) {
-        setSorter("creation-asc");
+        // setSorter("");
         setFilters([]);
     };
 
     // rendering columns w/ their tasks
     const columns = columnsArr?.map(col => 
-        <Column key={col._id} col={col} filters={filters} sorter={sorter} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
+        <Column key={col._id} col={col} filters={filters} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
     );
 
     // although pointer sensor is one of the default sensors, I imported it with useSensor and useSensors to be passed along to DndContext so that an activation constraint could be added, and a simple click on a draggable opens the task preview instead of initiating a dragstart event
@@ -108,10 +108,10 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
             const res = await fetch("http://localhost:3000/update-task", reqOptions);
             if (res.ok) {
                 const updatedBoard = await res.json();
-                let updatedBoardsData = boardsData?.filter(board => {
-                    return (board._id !== curBoardId);
-                })
-                updatedBoardsData?.push(updatedBoard);
+                let updatedBoardsData = boardsData?.map(board => {
+                    if (board._id !== curBoardId) return board;
+                    if (board._id === curBoardId) return updatedBoard;
+                });
                 if (updatedBoardsData) setBoardsData(updatedBoardsData);
 
                 setDraggableInfo(null);
@@ -150,7 +150,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
                             <label htmlFor="overdue">Overdue</label>
                         </div>
                     </fieldset>
-                    <fieldset>
+                    {/* <fieldset>
                         <legend>Sort by:</legend>
                         <div>
                             <input type="radio" id="creation-asc" name="sorter" onClick={handleSortClick} />
@@ -168,7 +168,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
                             <input type="radio" id="deadline-desc" name="sorter" onClick={handleSortClick} />
                             <label htmlFor="deadline-desc">Deadline descending</label>
                         </div>
-                    </fieldset>
+                    </fieldset> */}
                     <button type="reset" onClick={handleResetAll}>Reset</button>
                 </form>
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>

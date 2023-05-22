@@ -9,11 +9,11 @@ interface Prop {
     col: columnData,
     columnsArr: columnData[],
     filters: string[],
-    sorter: string,
+    // sorter: string,
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
 };
 
-const Column: React.FC<Prop> = function({ col, columnsArr, filters, sorter, setDisplayMsg }) {
+const Column: React.FC<Prop> = function({ col, columnsArr, filters, setDisplayMsg }) {
     const [ createTaskVis, setCreateTaskVis ] = useState(false);
 
     const user = useContext(UserContext);
@@ -60,39 +60,41 @@ const Column: React.FC<Prop> = function({ col, columnsArr, filters, sorter, setD
             });
         };
         // sorts
-        if (sorter === "creation-asc") {
-            updatedTaskArr.sort((a, b) => {
-                if (a.created > b.created) return 1;
-                if (a.created < b.created) return -1;
-            });
-        };
-        if (sorter === "deadline-asc") {
-            updatedTaskArr.sort((a, b) => {
-                if (a.deadline > b.deadline) return 1;
-                if (a.deadline < b.deadline) return -1;
-            });
-        };
-        if (sorter === "creation-desc") {
-            updatedTaskArr.sort((a, b) => {
-                if (a.created < b.created) return 1;
-                if (a.created > b.created) return -1;
-            });
-        };
-        if (sorter === "deadline-desc") {
-            updatedTaskArr.sort((a, b) => {
-                if (a.deadline < b.deadline) return 1;
-                if (a.deadline > b.deadline) return -1;
-            });
-        };
+        // if (sorter === "creation-asc") {
+        //     updatedTaskArr.sort((a, b) => {
+        //         if (a.created > b.created) return 1;
+        //         if (a.created < b.created) return -1;
+        //     });
+        // };
+        // if (sorter === "deadline-asc") {
+        //     updatedTaskArr.sort((a, b) => {
+        //         if (a.deadline > b.deadline) return 1;
+        //         if (a.deadline < b.deadline) return -1;
+        //     });
+        // };
+        // if (sorter === "creation-desc") {
+        //     updatedTaskArr.sort((a, b) => {
+        //         if (a.created < b.created) return 1;
+        //         if (a.created > b.created) return -1;
+        //     });
+        // };
+        // if (sorter === "deadline-desc") {
+        //     updatedTaskArr.sort((a, b) => {
+        //         if (a.deadline < b.deadline) return 1;
+        //         if (a.deadline > b.deadline) return -1;
+        //     });
+        // };
         return updatedTaskArr;
     };
     const filteredAndSortedTasks = filterAndSortTasks(col.tasks);
-    const taskArr = filteredAndSortedTasks?.map((task, index) => 
-        <div key={task._id}>
-            <Task task={task} order={index} colId={col._id} setDisplayMsg={setDisplayMsg} />
-            <DroppableSpace id={`${col._id}${index + 1}`} />
-        </div>
-    );
+    const taskArr = filteredAndSortedTasks?.map((task, index) => {
+        return (
+            <div key={task._id}>
+                <Task task={task} order={index} colId={col._id} setDisplayMsg={setDisplayMsg} />
+                <DroppableSpace id={`${col._id}${index + 1}`} />
+            </div>
+        );
+    });
 
     return (
         <section style={style} ref={setNodeRef} className="column">

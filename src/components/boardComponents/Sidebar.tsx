@@ -1,7 +1,8 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
-import { BoardsContext, CurBoardIdContext, ModeContext, UserContext, userInterface, boardData } from "../../Context";
+import { BoardsContext, CurBoardIdContext, ModeContext, UserContext, userInterface, NotificationInterface, boardData } from "../../Context";
 import { useNavigate } from "react-router-dom";
 import { handleDisplayMsg } from "../helpers";
+import Notifications from "./Notifications";
 import CreateBoard from "../crudComponents/CreateBoard";
 
 interface Prop {
@@ -20,6 +21,8 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
     const mode = useContext(ModeContext);
     const user = useContext(UserContext);
 
+    const [ notifications, setNotifications ] = useState<NotificationInterface[]>([]);
+    const [ notificationsVis, setNotificationsVis ] = useState(false);
     const [ createBoardVis, setCreateBoardVis ] = useState(false);
 
     const circleRef = useRef<null | HTMLDivElement>(null);
@@ -37,20 +40,32 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
         };
     }, [createBoardVis]);
 
-    let boardLinks;
+    let privateLinks: JSX.Element[] = [];
+    let groupLinks: JSX.Element[] = [];
     if (!loading) {
-        boardLinks = boardsData?.map(board => {
-            const id = (board._id === curBoardId) ? "current" : "";
-    
-            return (
-                <div key={board._id} className="board-container" id={id}>
-                    <div className="board-links-item">
-                        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z" /></svg>
-                        <a data-id={board._id} onClick={handleSetCurBoard}>{board.name}</a>
-                        <button type="button" id={`star-btn-${board._id}`} className={user?.favorites.includes(board._id) ? "star-btn favorite" : "star-btn" } onClick={() => handleToggleFavorite(board._id)}><svg className="star" version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64" enableBackground="new 0 0 64 64" xmlSpace="preserve"><g><path d="M49.302,63.999c-0.664,0-1.332-0.164-1.938-0.5l-15.365-8.498l-15.366,8.498c-1.344,0.742-2.993,0.652-4.243-0.23c-1.25-0.883-1.891-2.403-1.645-3.915l2.981-18.261L1.138,28.185c-1.047-1.074-1.406-2.641-0.93-4.063c0.477-1.422,1.707-2.457,3.188-2.684l17.237-2.633L28.376,2.31c0.661-1.407,2.071-2.301,3.622-2.301s2.961,0.895,3.622,2.301l7.743,16.495l17.237,2.633c1.48,0.227,2.711,1.262,3.188,2.684c0.477,1.423,0.117,2.989-0.93,4.063L50.271,41.093l2.98,18.261c0.246,1.512-0.395,3.032-1.645,3.915C50.919,63.753,50.11,63.999,49.302,63.999z M31.998,46.43c0.668,0,1.332,0.168,1.938,0.5l10.092,5.579l-1.98-12.119c-0.203-1.254,0.199-2.527,1.086-3.438l8.563-8.779l-11.654-1.781c-1.316-0.199-2.449-1.043-3.016-2.255l-5.028-10.712L26.97,24.137c-0.566,1.212-1.699,2.056-3.016,2.255L12.3,28.173l8.563,8.779c0.887,0.91,1.289,2.184,1.086,3.438l-1.98,12.119l10.092-5.579C30.666,46.598,31.33,46.43,31.998,46.43z"/><path d="M31.998,46.43c0.668,0,1.332,0.168,1.938,0.5l10.092,5.579l-1.98-12.119c-0.203-1.254,0.199-2.527,1.086-3.438l8.563-8.779l-11.654-1.781c-1.316-0.199-2.449-1.043-3.016-2.255l-5.028-10.712L26.97,24.137c-0.566,1.212-1.699,2.056-3.016,2.255L12.3,28.173l8.563,8.779c0.887,0.91,1.289,2.184,1.086,3.438l-1.98,12.119l10.092-5.579C30.666,46.598,31.33,46.43,31.998,46.43z"/></g></svg></button> 
+        boardsData?.forEach(board => {
+            if (board.contributors.length === 0) {
+                privateLinks.push(
+                    <div key={board._id} className="board-container" id={board._id === curBoardId ? "current" : ""}>
+                        <div className="board-links-item">
+                            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z" /></svg>
+                            <a data-id={board._id} onClick={handleSetCurBoard}>{board.name}</a>
+                            <button type="button" id={`star-btn-${board._id}`} className={user?.favorites.includes(board._id) ? "star-btn favorite" : "star-btn" } onClick={() => handleToggleFavorite(board._id)}><svg className="star" version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64" enableBackground="new 0 0 64 64" xmlSpace="preserve"><g><path d="M49.302,63.999c-0.664,0-1.332-0.164-1.938-0.5l-15.365-8.498l-15.366,8.498c-1.344,0.742-2.993,0.652-4.243-0.23c-1.25-0.883-1.891-2.403-1.645-3.915l2.981-18.261L1.138,28.185c-1.047-1.074-1.406-2.641-0.93-4.063c0.477-1.422,1.707-2.457,3.188-2.684l17.237-2.633L28.376,2.31c0.661-1.407,2.071-2.301,3.622-2.301s2.961,0.895,3.622,2.301l7.743,16.495l17.237,2.633c1.48,0.227,2.711,1.262,3.188,2.684c0.477,1.423,0.117,2.989-0.93,4.063L50.271,41.093l2.98,18.261c0.246,1.512-0.395,3.032-1.645,3.915C50.919,63.753,50.11,63.999,49.302,63.999z M31.998,46.43c0.668,0,1.332,0.168,1.938,0.5l10.092,5.579l-1.98-12.119c-0.203-1.254,0.199-2.527,1.086-3.438l8.563-8.779l-11.654-1.781c-1.316-0.199-2.449-1.043-3.016-2.255l-5.028-10.712L26.97,24.137c-0.566,1.212-1.699,2.056-3.016,2.255L12.3,28.173l8.563,8.779c0.887,0.91,1.289,2.184,1.086,3.438l-1.98,12.119l10.092-5.579C30.666,46.598,31.33,46.43,31.998,46.43z"/><path d="M31.998,46.43c0.668,0,1.332,0.168,1.938,0.5l10.092,5.579l-1.98-12.119c-0.203-1.254,0.199-2.527,1.086-3.438l8.563-8.779l-11.654-1.781c-1.316-0.199-2.449-1.043-3.016-2.255l-5.028-10.712L26.97,24.137c-0.566,1.212-1.699,2.056-3.016,2.255L12.3,28.173l8.563,8.779c0.887,0.91,1.289,2.184,1.086,3.438l-1.98,12.119l10.092-5.579C30.666,46.598,31.33,46.43,31.998,46.43z"/></g></svg></button> 
+                        </div>
                     </div>
-                </div>
-            );
+                );
+            };
+            if (board.contributors.length > 0) {
+                groupLinks.push(
+                    <div key={board._id} className="board-container" id={board._id === curBoardId ? "current" : ""}>
+                        <div className="board-links-item">
+                            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z" /></svg>
+                            <a data-id={board._id} onClick={handleSetCurBoard}>{board.name}</a>
+                            <button type="button" id={`star-btn-${board._id}`} className={user?.favorites.includes(board._id) ? "star-btn favorite" : "star-btn" } onClick={() => handleToggleFavorite(board._id)}><svg className="star" version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 64 64" enableBackground="new 0 0 64 64" xmlSpace="preserve"><g><path d="M49.302,63.999c-0.664,0-1.332-0.164-1.938-0.5l-15.365-8.498l-15.366,8.498c-1.344,0.742-2.993,0.652-4.243-0.23c-1.25-0.883-1.891-2.403-1.645-3.915l2.981-18.261L1.138,28.185c-1.047-1.074-1.406-2.641-0.93-4.063c0.477-1.422,1.707-2.457,3.188-2.684l17.237-2.633L28.376,2.31c0.661-1.407,2.071-2.301,3.622-2.301s2.961,0.895,3.622,2.301l7.743,16.495l17.237,2.633c1.48,0.227,2.711,1.262,3.188,2.684c0.477,1.423,0.117,2.989-0.93,4.063L50.271,41.093l2.98,18.261c0.246,1.512-0.395,3.032-1.645,3.915C50.919,63.753,50.11,63.999,49.302,63.999z M31.998,46.43c0.668,0,1.332,0.168,1.938,0.5l10.092,5.579l-1.98-12.119c-0.203-1.254,0.199-2.527,1.086-3.438l8.563-8.779l-11.654-1.781c-1.316-0.199-2.449-1.043-3.016-2.255l-5.028-10.712L26.97,24.137c-0.566,1.212-1.699,2.056-3.016,2.255L12.3,28.173l8.563,8.779c0.887,0.91,1.289,2.184,1.086,3.438l-1.98,12.119l10.092-5.579C30.666,46.598,31.33,46.43,31.998,46.43z"/><path d="M31.998,46.43c0.668,0,1.332,0.168,1.938,0.5l10.092,5.579l-1.98-12.119c-0.203-1.254,0.199-2.527,1.086-3.438l8.563-8.779l-11.654-1.781c-1.316-0.199-2.449-1.043-3.016-2.255l-5.028-10.712L26.97,24.137c-0.566,1.212-1.699,2.056-3.016,2.255L12.3,28.173l8.563,8.779c0.887,0.91,1.289,2.184,1.086,3.438l-1.98,12.119l10.092-5.579C30.666,46.598,31.33,46.43,31.998,46.43z"/></g></svg></button> 
+                        </div>
+                    </div>
+                );
+            };
         });
     };
 
@@ -80,6 +95,33 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
         };
     };
 
+    async function pullNotifications() {
+        try {
+            const res = await fetch("http://localhost:3000/get-notifications", {credentials: "include"});
+            if (res.ok) {
+                const notifications = await res.json();
+                setNotifications(notifications);
+            } else {
+                throw new Error("Unable to retrieve notifications.");
+            };
+        } catch(err) {
+            handleDisplayMsg({
+                ok: false,
+                message: err.message,
+                msgSetter: setDisplayMsg,
+            });
+        };
+
+        setNotificationsVis(true);
+    };
+
+    useEffect(() => {
+        if (notificationsVis) {
+            const notificationsModal: HTMLDialogElement | null = document.querySelector(".notifications-modal");
+            if (notificationsModal) notificationsModal.showModal();
+        }
+    }, [notificationsVis]);
+
     function handleModeToggle() {
         if (mode === "light") {
             setMode("dark");
@@ -103,7 +145,11 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                 throw new Error("Unable to log out.");
             };
         } catch(err) {
-            console.log(err);
+            handleDisplayMsg({
+                ok: false,
+                message: err.message,
+                msgSetter: setDisplayMsg,
+            });
         };
     };
 
@@ -116,7 +162,23 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
             {loading ? <p>Loading...</p>:
                 <div className="board-links">
                     <h2>{`ALL BOARDS (${boardsData?.length})`}</h2>
-                    <nav>{boardLinks}</nav>
+                    <nav>
+                        {privateLinks.length > 0 ? 
+                            <div className="board-links-header">
+                                <h3>Private</h3>
+                            </div> : null
+                        }
+                        {privateLinks}
+                        {groupLinks.length > 0 ? 
+                            <div className="board-links-header">
+                                <h3>Shared</h3>
+                                <button type="button" className="notification-button" onClick={pullNotifications}>
+                                    <svg viewBox="-1.5 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="Page-1" stroke="none" strokeWidth="1" fillRule="evenodd"><g id="Dribbble-Light-Preview" transform="translate(-181.000000, -720.000000)"><g id="icons" transform="translate(56.000000, 160.000000)"><path d="M137.75,574 L129.25,574 L129.25,568 C129.25,565.334 131.375,564 133.498937,564 L133.501063,564 C135.625,564 137.75,565.334 137.75,568 L137.75,574 Z M134.5625,577 C134.5625,577.552 134.0865,578 133.5,578 C132.9135,578 132.4375,577.552 132.4375,577 L132.4375,576 L134.5625,576 L134.5625,577 Z M140.9375,574 C140.351,574 139.875,573.552 139.875,573 L139.875,568 C139.875,564.447 137.359,562.475 134.5625,562.079 L134.5625,561 C134.5625,560.448 134.0865,560 133.5,560 C132.9135,560 132.4375,560.448 132.4375,561 L132.4375,562.079 C129.641,562.475 127.125,564.447 127.125,568 L127.125,573 C127.125,573.552 126.649,574 126.0625,574 C125.476,574 125,574.448 125,575 C125,575.552 125.476,576 126.0625,576 L130.3125,576 L130.3125,577 C130.3125,578.657 131.739438,580 133.5,580 C135.260563,580 136.6875,578.657 136.6875,577 L136.6875,576 L140.9375,576 C141.524,576 142,575.552 142,575 C142,574.448 141.524,574 140.9375,574 L140.9375,574 Z" id="notification_bell-[#1397]"></path></g></g></g></svg>
+                                </button>
+                            </div> : null
+                        }
+                        {groupLinks}
+                    </nav>
                     <div className="create-brd-container">
                         <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M0 2.889A2.889 2.889 0 0 1 2.889 0H13.11A2.889 2.889 0 0 1 16 2.889V13.11A2.888 2.888 0 0 1 13.111 16H2.89A2.889 2.889 0 0 1 0 13.111V2.89Zm1.333 5.555v4.667c0 .859.697 1.556 1.556 1.556h6.889V8.444H1.333Zm8.445-1.333V1.333h-6.89A1.556 1.556 0 0 0 1.334 2.89V7.11h8.445Zm4.889-1.333H11.11v4.444h3.556V5.778Zm0 5.778H11.11v3.11h2a1.556 1.556 0 0 0 1.556-1.555v-1.555Zm0-7.112V2.89a1.555 1.555 0 0 0-1.556-1.556h-2v3.111h3.556Z" /></svg>
                         <button type="button" className="create-brd-btn" onClick={() => setCreateBoardVis(true)}>+ Create new board</button>
@@ -139,6 +201,7 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                 <hr />
                 <button className="log-out-btn" onClick={handleLogOut}>Log Out</button>
             </div>
+            {notificationsVis ? <Notifications setNotificationsVis={setNotificationsVis} notifications={notifications} setNotifications={setNotifications} setDisplayMsg={setDisplayMsg} /> : null}
         </section>
     );  
 };

@@ -111,10 +111,30 @@ main > p
 
     fieldset    
         border: none
-    
-    legend
-        margin-bottom: 0.5rem
+        display: flex
+        align-items: center
+        column-gap: 1.5rem
+        
+    div
+        display: flex
+        align-items: center
 
+    label
+        margin-left: 0.5rem
+        color: base.$grey
+
+    legend, label, button
+        font-size: 1.3rem
+    
+    button
+        height: fit-content
+        padding: 0.75rem 1.25rem
+        background-color: base.$drk-blue-inactive
+        border-radius: 5rem
+        color: white
+
+        &:hover, &:focus
+            background-color: base.$drk-blue-active
 
 .board
     display: flex

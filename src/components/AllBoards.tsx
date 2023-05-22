@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import ReactArrayToTree from "react-array-to-tree";
 import { useLocation } from "react-router-dom";
+// import { io } from "socket.io-client";
 
 import { UserContext, userInterface, UserStatusContext, BoardsContext, CurBoardIdContext, boardData } from "../Context";
 import { handleDisplayMsg } from "./helpers";
@@ -26,6 +27,11 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
     const mainRef = useRef<HTMLElement | null>(null);
     const headerLogoRef = useRef<SVGSVGElement | null>(null);
     const sidebarBackdropRef = useRef<HTMLDivElement | null>(null);
+
+    // const socket = io("http://localhost:5500", {
+    //     withCredentials: true,
+    // });
+    // socket.emit("confirm", "client-to-server :)");
 
     useEffect(() => {
         async function pullBoardsData() {
