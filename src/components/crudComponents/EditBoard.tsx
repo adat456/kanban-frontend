@@ -29,6 +29,30 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
 
     const navigate = useNavigate();
 
+    const contributorIconRef = useRef<HTMLDivElement | null>(null);
+    function handleNamePopup(userId: string) {
+        const contributorNamePopup = document.querySelector(`#assignee-name-${userId}`);
+        contributorNamePopup?.classList.toggle("hidden");
+    };
+    // sorts contributors from member to viewer
+    curBoard?.contributors.sort((a, b) => {
+        if (a.userStatus > b.userStatus) return 1;
+        if (a.userStatus < b.userStatus) return -1
+    });
+    const contributorIcons = curBoard?.contributors.map(contributor => {
+        const nameArr = contributor.userName.split(" ");
+        const initials = nameArr.map(name => name.slice(0, 1)).join("");
+        return (
+            <div key={contributor.userId} ref={contributorIconRef} className="assignee-icon" onMouseEnter={() => handleNamePopup(contributor.userId)} onMouseLeave={() => handleNamePopup(contributor.userId)}>
+                <p>{initials}</p>
+                <div className="assignee-full-name hidden" id={`assignee-name-${contributor.userId}`}>
+                    <div className="pointer"></div>
+                    <p>{`${contributor.userName} - ${contributor.userStatus}`}</p>
+                </div>
+            </div>
+        );
+    });
+
     useEffect(() => {
         if (contributorModal) {
             const modal: HTMLDialogElement | null = document.querySelector("#contributor-modal");
@@ -180,6 +204,9 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
                         <button type="button" onClick={() => setContributorModal(true)}>
                             <svg className="add" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V16M8 12H16M7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </button>
+                    </div>
+                    <div className="contributor-icons">
+                        {contributorIcons}
                     </div>
                     <label htmlFor="boardName">Board Name</label>
                     <input type="text" id="boardName" defaultValue={curBoard?.name} onChange={handleChange} maxLength={20} required />

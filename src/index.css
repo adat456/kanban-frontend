@@ -843,7 +843,7 @@ main#no-brd-chosen p {
 .notifications-modal p.deadline, .form-modal p.deadline, .delete-modal p.deadline, .login-form p.deadline, .signup-form p.deadline {
   margin-top: 0.25rem;
 }
-.notifications-modal .assignee-icons, .form-modal .assignee-icons, .delete-modal .assignee-icons, .login-form .assignee-icons, .signup-form .assignee-icons {
+.notifications-modal .assignee-icons, .notifications-modal .contributor-icons, .form-modal .assignee-icons, .form-modal .contributor-icons, .delete-modal .assignee-icons, .delete-modal .contributor-icons, .login-form .assignee-icons, .login-form .contributor-icons, .signup-form .assignee-icons, .signup-form .contributor-icons {
   display: flex;
   flex-wrap: wrap;
   column-gap: 1.25rem;
@@ -852,20 +852,20 @@ main#no-brd-chosen p {
   color: #828FA3;
   position: relative;
 }
-.notifications-modal .assignee-icons .assignee-icon, .form-modal .assignee-icons .assignee-icon, .delete-modal .assignee-icons .assignee-icon, .login-form .assignee-icons .assignee-icon, .signup-form .assignee-icons .assignee-icon {
+.notifications-modal .assignee-icons .assignee-icon, .notifications-modal .contributor-icons .assignee-icon, .form-modal .assignee-icons .assignee-icon, .form-modal .contributor-icons .assignee-icon, .delete-modal .assignee-icons .assignee-icon, .delete-modal .contributor-icons .assignee-icon, .login-form .assignee-icons .assignee-icon, .login-form .contributor-icons .assignee-icon, .signup-form .assignee-icons .assignee-icon, .signup-form .contributor-icons .assignee-icon {
   padding: 1.25rem;
   border-radius: 5rem;
   background-color: #E4EBFA;
   letter-spacing: 0.1rem;
 }
-.notifications-modal .assignee-icons .assignee-full-name, .form-modal .assignee-icons .assignee-full-name, .delete-modal .assignee-icons .assignee-full-name, .login-form .assignee-icons .assignee-full-name, .signup-form .assignee-icons .assignee-full-name {
+.notifications-modal .assignee-icons .assignee-full-name, .notifications-modal .contributor-icons .assignee-full-name, .form-modal .assignee-icons .assignee-full-name, .form-modal .contributor-icons .assignee-full-name, .delete-modal .assignee-icons .assignee-full-name, .delete-modal .contributor-icons .assignee-full-name, .login-form .assignee-icons .assignee-full-name, .login-form .contributor-icons .assignee-full-name, .signup-form .assignee-icons .assignee-full-name, .signup-form .contributor-icons .assignee-full-name {
   position: absolute;
   top: 6rem;
   background-color: #F4F7FD;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
 }
-.notifications-modal .assignee-icons .assignee-full-name .pointer, .form-modal .assignee-icons .assignee-full-name .pointer, .delete-modal .assignee-icons .assignee-full-name .pointer, .login-form .assignee-icons .assignee-full-name .pointer, .signup-form .assignee-icons .assignee-full-name .pointer {
+.notifications-modal .assignee-icons .assignee-full-name .pointer, .notifications-modal .contributor-icons .assignee-full-name .pointer, .form-modal .assignee-icons .assignee-full-name .pointer, .form-modal .contributor-icons .assignee-full-name .pointer, .delete-modal .assignee-icons .assignee-full-name .pointer, .delete-modal .contributor-icons .assignee-full-name .pointer, .login-form .assignee-icons .assignee-full-name .pointer, .login-form .contributor-icons .assignee-full-name .pointer, .signup-form .assignee-icons .assignee-full-name .pointer, .signup-form .contributor-icons .assignee-full-name .pointer {
   position: absolute;
   top: -1rem;
   left: 0;

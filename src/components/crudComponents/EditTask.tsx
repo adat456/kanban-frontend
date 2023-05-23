@@ -79,7 +79,7 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
 
     const assigneeOptions = curBoard?.contributors?.map(contributor => {
         return (
-            <option key={contributor.userId} value={contributor.userId}>{contributor.userName}</option>
+            <option key={contributor.userId} value={contributor.userId}>{`${contributor.userName} - ${contributor.userStatus}`}</option>
         );
     });
 
@@ -231,7 +231,7 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
                             <label htmlFor="assignees">Assign to:</label>
                             <select name="assignees" id="assignees" onChange={handleAddAssignee} value="">
                                 <option disabled value="" />
-                                <option key={user?._id} value={user?._id}>{`${user?.firstName} ${user?.lastName}`}</option>
+                                <option key={user?._id} value={user?._id}>{`${user?.firstName} ${user?.lastName} - Creator`}</option>
                                 {assigneeOptions}
                             </select>
                             <div className="chosen-assignees">
