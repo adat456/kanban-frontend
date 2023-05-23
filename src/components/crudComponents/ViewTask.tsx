@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { BoardsContext, CurBoardIdContext, UserStatusContext, UserContext, columnData, taskData } from "../../Context";
-import { handleDisplayMsg } from "../helpers";
+import { handleDisplayMsg, fetchCatch } from "../helpers";
 
 interface Prop {
     task: taskData,
@@ -26,6 +26,8 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
     const year = task.deadline?.slice(0, 4);
     const month = task.deadline?.slice(5, 7);
     const day = task.deadline?.slice(8, 10);
+
+    const navigate = useNavigate();
 
     const assigneeIconRef = useRef<HTMLDivElement | null>(null);
     function handleNamePopup(userId: string) {
@@ -165,33 +167,27 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         };
 
         try {
-            const res = await fetch("http://localhost:3000/update-task", reqOptions);
-            if (res.ok) {
-                handleDisplayMsg({
-                    ok: true,
-                    message: "Task updated",
-                    msgSetter: setDisplayMsg
-                });
+            const req = await fetch("http://localhost:3000/update-task", reqOptions);
+            // may return updated board
+            const res = await req.json();
+            if (req.ok) {
+                handleDisplayMsg(true, "Task updated", setDisplayMsg);
 
-                const updatedBoard = await res.json();
-                let updatedBoardsData = boardsData?.filter(board => {
-                    return (board._id !== curBoardId);
+                const updatedBoardsData = boardsData?.map(board => {
+                    if (board._id === res._id) {
+                        return res;
+                    } else {
+                        return board;
+                    };
                 });
-                if (updatedBoardsData) {
-                    updatedBoardsData.push(updatedBoard);
-                    setBoardsData(updatedBoardsData);
-                };
+                setBoardsData(updatedBoardsData);
 
                 handleViewTaskModal();
             } else {
-                throw new Error("Unable to update this task.");
+                throw new Error(res);
             };
         } catch(err) {
-            handleDisplayMsg({
-                ok: false,
-                message: err.message,
-                msgSetter: setDisplayMsg
-            });
+            fetchCatch(err, navigate, setDisplayMsg);
         };
     };
 

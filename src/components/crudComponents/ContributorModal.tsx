@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { contributorType } from "../../Context";
 
 interface Prop {
@@ -20,6 +21,8 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal, contrib
     // keys will sometimes repeat if this modal is repeatedly opened and closed and changes are made, so its true value is tracked by the parent
     const counterRef = useRef(contributorCounter);
 
+    const navigate = useNavigate();
+
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setSearch(e.target.value);
         if (result) setResult(null);
@@ -29,23 +32,24 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal, contrib
         e.preventDefault();
 
         try {
-            const res = await fetch(`http://localhost:3000/search/${search}`, { credentials: "include"});
-            const message = await res.json();
-            if (res.ok) {
+            const req = await fetch(`http://localhost:3000/search/${search}`, { credentials: "include"});
+            const res = await req.json();
+            if (req.ok) {
                 // adding a property to the results object if contributor had already been added - will be used to disable button
-                if (contributors && contributors?.find(contributor => contributor.userId === message.userId)) {
+                if (contributors && contributors?.find(contributor => contributor.userId === res.userId)) {
                     setResult({
-                        ...message,
+                        ...res,
                         alreadyAdded: true,
                     });                
                 } else {
-                    setResult(message);
+                    setResult(res);
                 };
             } else {
-                throw new Error(message);
+                throw new Error(res);
             };
         } catch(err) {
-            console.log(err.message);
+            console.log(err);
+            if (err.message === "No JWT found.") navigate("/log-in");
         };
     };
 

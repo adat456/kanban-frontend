@@ -1,9 +1,10 @@
+import { NavigateFunction } from "react-router-dom";
 import { isAlphanumeric, isEmail } from "validator";
 
-export function handleDisplayMsg({ok, message, msgSetter}) {
+export let handleDisplayMsg: (ok: boolean, message: string, msgSetter: React.Dispatch<React.SetStateAction<string>>) => void = function(ok, message, msgSetter) {
     msgSetter(message);
 
-    const displayMsgModal = document.querySelector(".display-msg-modal");
+    const displayMsgModal: HTMLDialogElement | null = document.querySelector(".display-msg-modal");
     if (!ok) displayMsgModal?.classList.add("error");
     displayMsgModal?.show();
 
@@ -14,9 +15,22 @@ export function handleDisplayMsg({ok, message, msgSetter}) {
     }, 3000);
 };
 
+// for when the JWT has expired ==> direct to log-in page
+// or when back end is throwing some kind of error ==> display it in the error modal
+// ok will always be false and message will always be err.message
+export let fetchCatch: (err: any, navigate: NavigateFunction, msgSetter: React.Dispatch<React.SetStateAction<string>>) => void = function(err, navigate, msgSetter) {
+    if (err.message === "No JWT found.") {
+        // state can be accessed by the /log-in component with the useLocation hook
+        // informs user that they were logged out for a reason
+        navigate("/log-in", {state: {logOutMsg: "Logged out due to inactivity."}});
+    } else {
+        handleDisplayMsg(false, err.message, msgSetter);
+    };
+};
+
 // SIGN UP FORM VALIDATIONS
 // for strings that are just required
-export function validateReqString(input, msgSetter) {
+export let validateReqString: (input: HTMLInputElement, msgSetter: React.Dispatch<React.SetStateAction<string>>) => void = function(input, msgSetter) {
     if (input.validity.valueMissing) {
         msgSetter("Field required.");
         input.setCustomValidity("Field required.");
@@ -26,7 +40,7 @@ export function validateReqString(input, msgSetter) {
     };
 };
 
-export function validateEmail(input, msgSetter) {
+export let validateEmail: (input: HTMLInputElement, msgSetter: React.Dispatch<React.SetStateAction<string>>) => void = function(input, msgSetter) {
     if (input.validity.valueMissing) {
         msgSetter("Field required.");
         input.setCustomValidity("Field required.");
@@ -42,7 +56,7 @@ export function validateEmail(input, msgSetter) {
 };
 
 // for username and password
-export function validateCred(input, msgSetter) {
+export let validateCred: (input: HTMLInputElement, msgSetter: React.Dispatch<React.SetStateAction<string>>) => void = function(input, msgSetter) {
     if (input.validity.valueMissing) {
         msgSetter("Field required.");
         input.setCustomValidity("Field required.");
@@ -72,7 +86,7 @@ export function handleVisToggle(e) {
 }; 
 
 // extract info about missing fields (thrown by MongoDB model validation) for error display message
-export function extractErrMsg(errMsg) {
+export let extractErrMsg: (errMsg: string) => string = function(errMsg) {
     const errMessages = errMsg.slice(24);
     let errMsgArr = errMessages.split(",");
     let displayMsg = "";

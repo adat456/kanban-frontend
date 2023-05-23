@@ -1,7 +1,8 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 // import { io } from "socket.io-client";
+import { useNavigate } from "react-router-dom"; 
 import { BoardsContext, contributorType } from "../../Context";
-import { handleDisplayMsg } from "../helpers";
+import { handleDisplayMsg, fetchCatch } from "../helpers";
 import Fields from "./Fields";
 import ContributorModal from "./ContributorModal";
 
@@ -25,6 +26,8 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const counterRef = useRef(3);
+
+    const navigate = useNavigate();
 
     // const socket = io("http://localhost:5500", {
     //     withCredentials: true,
@@ -106,37 +109,23 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
             // socket.on("contributor-message", msg => console.log(msg));
             
             try {
-                const res = await fetch("http://localhost:3000/create-board", reqOptions);
-                if (res.ok) {
-                    handleDisplayMsg({
-                        ok: true,
-                        message: "Board created.",
-                        msgSetter: setDisplayMsg
-                    });
-                    // update context as well, with board NAME
-                    const boardNameUrl = boardName.split(" ").join("-");
-                    const res = await fetch(`http://localhost:3000/read-board/${boardNameUrl}`, {credentials: "include"});
-                    const newMongoBoard = await res.json();
-                    if (boardsData) setBoardsData([...boardsData, newMongoBoard]);
+                const req = await fetch("http://localhost:3000/create-board", reqOptions);
+                const res = await req.json();
+
+                if (req.ok) {
+                    handleDisplayMsg(true, "Board created.", setDisplayMsg);
+                
+                    setBoardsData([...boardsData, res]);
 
                     handleCreateBoardModal();
                 } else {
-                    // client-generated error message
-                    throw new Error("Failed to create board. Please try again later.");
+                    throw new Error(res);
                 };
             } catch(err) {
-                handleDisplayMsg({
-                    ok: false,
-                    message: err.message,
-                    msgSetter: setDisplayMsg
-                });
+                fetchCatch(err, navigate, setDisplayMsg);
             };
         } else {
-            handleDisplayMsg({
-                ok: false,
-                message: "Please fix errors before submitting.",
-                msgSetter: setDisplayMsg
-            });
+            handleDisplayMsg(false, "Please fix errors before submitting.", setDisplayMsg);
         };
     };
     

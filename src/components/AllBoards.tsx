@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import ReactArrayToTree from "react-array-to-tree";
 import { useLocation } from "react-router-dom";
 // import { io } from "socket.io-client";
 
 import { UserContext, userInterface, UserStatusContext, BoardsContext, CurBoardIdContext, boardData } from "../Context";
-import { handleDisplayMsg } from "./helpers";
+import { handleDisplayMsg, fetchCatch } from "./helpers";
 import Sidebar from "./boardComponents/Sidebar";
 import EditBoard from "./crudComponents/EditBoard";
 import Board from "./boardComponents/Board";
@@ -23,6 +24,7 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
     const [ editBoardVis, setEditBoardVis ] = useState(false);
 
     const location = useLocation();
+    const navigate = useNavigate();
 
     const mainRef = useRef<HTMLElement | null>(null);
     const headerLogoRef = useRef<SVGSVGElement | null>(null);
@@ -36,39 +38,34 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
     useEffect(() => {
         async function pullBoardsData() {
             try {
-                const res = await fetch("http://localhost:3000/read-all", { credentials: "include" });
-                const boardsData = await res.json();
-                if (res.ok) {
-                    setBoardsData(boardsData);
+                const req = await fetch("http://localhost:3000/read-all", { credentials: "include" });
+                // may be data for all boards
+                const res = await req.json();
+                if (req.ok) {
+                    setBoardsData(res);
                     setLoading(false);
-                    handleDisplayMsg({
-                        ok: true,
-                        message: "Boards data retrieved.",
-                        msgSetter: setDisplayMsg
-                    });
+                    handleDisplayMsg(true, "Boards data retrieved.", setDisplayMsg
+                    );
                 } else {
-                    throw new Error("Unable to retrieve boards data.");
+                    throw new Error(res);
                 };
             } catch (err) {
-                handleDisplayMsg({
-                    ok: false,
-                    message: err.message,
-                    msgSetter: setDisplayMsg
-                });
+                fetchCatch(err, navigate, setDisplayMsg);
             };
         };    
         
         async function getUser() {
             try {
                 const req = await fetch("http://localhost:3000/user-info", { credentials: "include" });
-                const userInfo = await req.json();
-                setUser(userInfo);
+                // may be user data
+                const res = await req.json();
+                if (req.ok) {
+                    setUser(res);
+                } else {
+                    throw new Error(res);
+                };
             } catch(err) {
-                handleDisplayMsg({
-                    ok: false,
-                    message: err.message,
-                    msgSetter: setDisplayMsg
-                });
+                fetchCatch(err, navigate, setDisplayMsg);
             };
         };
 

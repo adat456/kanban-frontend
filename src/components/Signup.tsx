@@ -85,11 +85,7 @@ const Signup: React.FC = function() {
                 throw new Error(message);
             };
         } catch(err) {
-            handleDisplayMsg({
-                ok: false,
-                message: err.message,
-                msgSetter: setDisplayMsg
-            });
+            handleDisplayMsg(false, err.message, setDisplayMsg);
 
             // setCustomValidity on fields errored because they are not unique
             if (err.message === "Email and username have already been taken.") {
@@ -106,11 +102,7 @@ const Signup: React.FC = function() {
 
             // set display message for missing fields
             if (err.message.startsWith("user validation failed:")) {
-                handleDisplayMsg({
-                    ok: false,
-                    message: extractErrMsg(err.message),
-                    msgSetter: setDisplayMsg
-                });
+                handleDisplayMsg(false, extractErrMsg(err.message), setDisplayMsg);
             };
         };
     };

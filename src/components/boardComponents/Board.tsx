@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from "@dnd-kit/core";
-
+import { useNavigate } from "react-router-dom";
 import { BoardsContext, CurBoardIdContext, UserStatusContext } from "../../Context";
+import { fetchCatch } from "../helpers";
 import Column from "./Column";
 import EditBoard from "../crudComponents/EditBoard";
 
@@ -32,6 +33,8 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
         taskId: "", 
         colId: ""
     });
+
+    const navigate = useNavigate();
 
     function handleFilterClick(e: React.MouseEvent<HTMLInputElement>) {
         const input = e.target as HTMLInputElement;
@@ -99,21 +102,25 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
                 credentials: "include"
             };
 
-            const res = await fetch("http://localhost:3000/update-task", reqOptions);
-            if (res.ok) {
-                const updatedBoard = await res.json();
+            const req = await fetch("http://localhost:3000/update-task", reqOptions);
+            const res = await req.json();
+            if (req.ok) {
+            
                 let updatedBoardsData = boardsData?.map(board => {
-                    if (board._id !== curBoardId) return board;
-                    if (board._id === curBoardId) return updatedBoard;
+                    if (board._id === res._id) {
+                        return res;
+                    } else {
+                        return board;
+                    };
                 });
                 if (updatedBoardsData) setBoardsData(updatedBoardsData);
 
                 setDraggableInfo(null);
             } else {
-                throw new Error("Unable to update this task.");
+                throw new Error(res);
             };
         } catch(err) {
-            console.log(err.message);
+            fetchCatch(err, navigate, setDisplayMsg);
         };
     };
 

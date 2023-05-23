@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { handleDisplayMsg, validateCred, handleVisToggle } from "./helpers";
 
 const Login: React.FC = function() {
@@ -8,7 +8,15 @@ const Login: React.FC = function() {
     const [ password, setPassword ] = useState("");
     const [ passwordErr, setPasswordErr ] = useState("");
     const [ displayMsg, setDisplayMsg ] = useState("");
+
+    const location = useLocation();
     const navigate = useNavigate();
+
+    // whenever login page is loaded, checks to see if there is any state with a log out msg
+    // if so, display it in the dialog
+    useEffect(() => {
+        if (location.state) handleDisplayMsg(true, location.state.logOutMsg, setDisplayMsg);
+    }, []);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const input = e.target;
@@ -43,11 +51,7 @@ const Login: React.FC = function() {
                 throw new Error(message);
             };
         } catch(err) {
-            handleDisplayMsg({
-                ok: false,
-                message: err.message,
-                msgSetter: setDisplayMsg
-            });
+            handleDisplayMsg(false, err.message, setDisplayMsg);
         };
     };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { NotificationInterface } from "../../Context";
-import { handleDisplayMsg } from "../helpers";
+import { fetchCatch, handleDisplayMsg } from "../helpers";
 
 interface Prop {
     notifications: NotificationInterface[],
@@ -11,6 +12,8 @@ interface Prop {
 
 const Notifications: React.FC<Prop> = function({ notifications, setNotifications, setNotificationsVis, setDisplayMsg }) {
     const [ acknowledged, setAcknowledged ] = useState<string[]>([]);
+
+    const navigate = useNavigate();
     
     function handleClick(notifId: string) {
         console.log(acknowledged);
@@ -53,20 +56,15 @@ const Notifications: React.FC<Prop> = function({ notifications, setNotifications
 
         try {
             const req = await fetch("http://localhost:3000/acknowledge-notifications", reqOptions);
+            // success or error message
+            const res = await req.json();
             if (req.ok) {
-                const res = await req.json();
-                handleDisplayMsg({
-                    ok: true,
-                    message: res,
-                    msgSetter: setDisplayMsg,
-                });
-            };
+                handleDisplayMsg(true, res, setDisplayMsg);
+            } else {
+                throw new Error(res);
+            }
         } catch(err) {
-            handleDisplayMsg({
-                ok: false,
-                message: err.message,
-                msgSetter: setDisplayMsg,
-            });
+            fetchCatch(err, navigate, setDisplayMsg);
         };
     };
 

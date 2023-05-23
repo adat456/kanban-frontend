@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import ContributorModal from "./ContributorModal";
 import { BoardsContext, CurBoardIdContext, contributorType } from "../../Context";
-import { handleDisplayMsg } from "../helpers";
+import { handleDisplayMsg, fetchCatch } from "../helpers";
 import Fields from "./Fields";
 
 interface Prop {
@@ -25,6 +26,8 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
     const [ contributorModal, setContributorModal ]  = useState(false);
     const [ contributorsLifted, setContributorsLifted ] = useState<contributorType[] | undefined>(curBoard?.contributors);
     const [ contributorCounter, setContributorCounter ] = useState(0);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (contributorModal) {
@@ -120,24 +123,27 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
                 // either the updated board or an error message
                 const res = await req.json();
                 if (req.ok) {
-                    handleDisplayMsg({ok: true, message: "Board updated.", msgSetter: setDisplayMsg});
+                    handleDisplayMsg(true, "Board updated.", setDisplayMsg);
     
                     // update context as well
-                    const filteredBoardsData = boardsData?.filter(board => {
-                        return (board._id !== curBoardId);
+                    const updatedBoardsData = boardsData?.map(board => {
+                        if (board._id === res._id) {
+                            return res;
+                        } else {
+                            return board;
+                        };
                     });
-                    if (filteredBoardsData) setBoardsData([...filteredBoardsData, res]);
+                    if (updatedBoardsData) setBoardsData(updatedBoardsData);
 
                     handleEditBoardModal();
                 } else {
-                    // client-generated error message
                     throw new Error(res);
                 };
             } catch(err) {
-                handleDisplayMsg({ok: false, message: err.message, msgSetter: setDisplayMsg});
+                fetchCatch(err, navigate, setDisplayMsg);
             };
         } else {
-            handleDisplayMsg({ok: false, message: "Please fix errors before submitting.", msgSetter: setDisplayMsg});
+            handleDisplayMsg(false, "Please fix errors before submitting.", setDisplayMsg);
         };
     };
 
@@ -147,7 +153,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
             // either a success or error message
             const res = await req.json();
             if (req.ok) {
-                handleDisplayMsg({ok: true, message: res, msgSetter: setDisplayMsg});
+                handleDisplayMsg(true, res,setDisplayMsg);
     
                 // update context as well
                 const filteredBoardsData = boardsData?.filter(board => {
@@ -159,9 +165,9 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
                 handleDeleteBoardModal("close");
             } else {
                 throw new Error(res);
-            }
+            };
         } catch(err) {
-            handleDisplayMsg({ok: false, message: err.message, msgSetter: setDisplayMsg});
+            fetchCatch(err, navigate, setDisplayMsg);
         };
     };
 

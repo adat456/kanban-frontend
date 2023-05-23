@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { BoardsContext, CurBoardIdContext, taskData, UserContext } from "../../Context";
-import { handleDisplayMsg } from "../helpers";
+import { handleDisplayMsg, fetchCatch } from "../helpers";
 import Fields from "./Fields";
 
 interface Prop {
@@ -32,6 +32,8 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData?.find(board => (board._id === curBoardId));
     const user = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     const colOptions = curBoard?.columns.map(col => {
         return (
@@ -153,53 +155,59 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
                 credentials: "include"
             };
 
-            try {
-                const res = await fetch("http://localhost:3000/edit-task", reqOptions);
-                if (res.ok) {
-                    handleDisplayMsg({ok: true, message: "Task updated.", msgSetter: setDisplayMsg});
+            console.log(reqOptions.body);
 
-                    const updatedBoard = await res.json();
-                    let updatedBoardsData = boardsData?.filter(board => {
-                        return (board._id !== curBoardId);
-                    })
-                    if (updatedBoardsData) {
-                        updatedBoardsData.push(updatedBoard);
-                        setBoardsData(updatedBoardsData);
-                    };
+            try {
+                const req = await fetch("http://localhost:3000/edit-task", reqOptions);
+                // may be updated boards data
+                const res = await req.json();
+                if (req.ok) {
+                    handleDisplayMsg(true,"Task updated.", setDisplayMsg);
+
+                    let updatedBoardsData = boardsData?.map(board => {
+                        if (board._id === res._id) {
+                            return res;
+                        } else {
+                            return board;
+                        };
+                    });
+                    if (updatedBoardsData) setBoardsData(updatedBoardsData);
 
                     handleEditTaskModal();
                 } else {
-                    throw new Error("Failed to update task. Please try again later.");
+                    throw new Error(res);
                 };
             } catch(err) {
-                handleDisplayMsg({ok: false, message: err.message, msgSetter: setDisplayMsg});
+                fetchCatch(err, navigate, setDisplayMsg);
             };
         } else {
-            handleDisplayMsg({ok: false, message: "Please fix errors before submitting.", msgSetter: setDisplayMsg});
+            handleDisplayMsg(false, "Please fix errors before submitting.", setDisplayMsg);
         };
     };
 
     async function handleDelete() {
         try {
-            const res = await fetch(`http://localhost:3000/delete-task/${curBoardId}/${colId}/${task._id}`, { method: "DELETE", credentials: "include" });;
-            if (res.ok) {
-                handleDisplayMsg({ok: true, message: "Task deleted.", msgSetter: setDisplayMsg});
+            const req = await fetch(`http://localhost:3000/delete-task/${curBoardId}/${colId}/${task._id}`, { method: "DELETE", credentials: "include" });
+            // may return updated boards data
+            const res = await req.json();
+            if (req.ok) {
+                handleDisplayMsg(true, "Task deleted.", setDisplayMsg);
 
-                const updatedBoard = await res.json();
-                let updatedBoardsData = boardsData?.filter(board => {
-                    return (board._id !== curBoardId);
+                let updatedBoardsData = boardsData?.map(board => {
+                    if (board._id === res._id) {
+                        return res;
+                    } else {
+                        return board;
+                    };
                 });
-                if (updatedBoardsData) {
-                    updatedBoardsData.push(updatedBoard);
-                    setBoardsData(updatedBoardsData);
-                };
+                setBoardsData(updatedBoardsData);
                 
                 handleDeleteTaskModal("close");
             } else {
-                throw new Error("Unable to delete task.");
+                throw new Error(res);
             };
         } catch(err) {
-            handleDisplayMsg({ok: false, message: err.message, msgSetter: setDisplayMsg});
+            fetchCatch(err, navigate, setDisplayMsg);
         };
     };
 

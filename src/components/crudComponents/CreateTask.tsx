@@ -1,6 +1,7 @@
 import React, { useState, useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { BoardsContext, CurBoardIdContext, columnData, UserContext } from "../../Context";
-import { handleDisplayMsg } from "../helpers";
+import { handleDisplayMsg, fetchCatch } from "../helpers";
 import Fields from "./Fields";
 
 interface Prop {
@@ -28,6 +29,8 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
     
     const counterRef = useRef(3);
     const deadlineRef = useRef<HTMLInputElement | null>(null);
+
+    const navigate = useNavigate();
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId } = useContext(CurBoardIdContext);
@@ -150,42 +153,33 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
             };
             
             try {
-                const res = await fetch("http://localhost:3000/create-task", reqOptions);
-                if (res.ok) {
-                    handleDisplayMsg({
-                        ok: true,
-                        message: "Task created.",
-                        msgSetter: setDisplayMsg
+                const req = await fetch("http://localhost:3000/create-task", reqOptions);
+                // may be the updated board data
+                const res = await req.json();
+                if (req.ok) {
+                    handleDisplayMsg(true, "Task created.", setDisplayMsg);
+
+                    // update context as well
+                    const updatedBoardsData = boardsData?.map(board => {
+                        if (board._id === res._id) {
+                            return res;
+                        } else {
+                            return board;
+                        };
                     });
-                    // update context as well, with board ID
-                    const res = await fetch(`http://localhost:3000/read-board/${curBoardId}`, {credentials: "include"});
-                    const updatedMongoBoard = await res.json();
-                    console.log(updatedMongoBoard);
-                    // remove current board and replace it with the updated board in context
-                    const filteredBoardsData = boardsData?.filter(board => {
-                        return (board._id !== curBoardId);
-                    })
-                    if (filteredBoardsData) setBoardsData([...filteredBoardsData, updatedMongoBoard]);
+                    if (updatedBoardsData) setBoardsData(updatedBoardsData);
 
                     handleCreateTaskModal();
                 } else {
                     // client-generated error message
-                    throw new Error("Failed to create task. Please try again later.");
+                    throw new Error(res);
                 };
             } catch(err) {
-                handleDisplayMsg({
-                    ok: false,
-                    message: err.message,
-                    msgSetter: setDisplayMsg
-                });
+                fetchCatch(err, navigate, setDisplayMsg);
             };
             // close out window/modal
         } else {
-            handleDisplayMsg({
-                ok: false,
-                message: "Please fix errors before submitting.",
-                msgSetter: setDisplayMsg
-            });
+            handleDisplayMsg(false, "Please fix errors before submitting.", setDisplayMsg);
         };
     };
 

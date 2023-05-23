@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { BoardsContext, CurBoardIdContext, ModeContext, UserContext, userInterface, NotificationInterface, boardData } from "../../Context";
 import { useNavigate } from "react-router-dom";
-import { handleDisplayMsg } from "../helpers";
+import { fetchCatch } from "../helpers";
 import Notifications from "./Notifications";
 import CreateBoard from "../crudComponents/CreateBoard";
 
@@ -24,6 +24,8 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
     const [ notifications, setNotifications ] = useState<NotificationInterface[]>([]);
     const [ notificationsVis, setNotificationsVis ] = useState(false);
     const [ createBoardVis, setCreateBoardVis ] = useState(false);
+
+    const navigate = useNavigate();
 
     const circleRef = useRef<null | HTMLDivElement>(null);
 
@@ -78,38 +80,35 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                 credentials: "include"
             };
 
-            const res = await fetch("http://localhost:3000/update-board-favorite", reqOptions);
-            const updatedUser = await res.json();
-            if (res.ok) {
-                setUser(updatedUser);
+            const req = await fetch("http://localhost:3000/update-board-favorite", reqOptions);
+            // may be updated user doc
+            const res = await req.json();
+
+            if (req.ok) {
+                setUser(res);
 
                 const button: HTMLButtonElement | null = document.getElementById(`star-btn-${boardId}`);
                 if (button) button.classList.toggle("favorite");
+            } else {
+                throw new Error(res);
             };
         } catch (err) {
-            handleDisplayMsg({
-                ok: false,
-                message: err.message,
-                msgSetter: setDisplayMsg,
-            });
+            fetchCatch(err, navigate, setDisplayMsg);
         };
     };
 
     async function pullNotifications() {
         try {
-            const res = await fetch("http://localhost:3000/get-notifications", {credentials: "include"});
-            if (res.ok) {
-                const notifications = await res.json();
-                setNotifications(notifications);
+            const req = await fetch("http://localhost:3000/get-notifications", {credentials: "include"});
+            // may be array of notifications
+            const res = await req.json();
+            if (req.ok) {
+                setNotifications(res);
             } else {
-                throw new Error("Unable to retrieve notifications.");
+                throw new Error(res);
             };
         } catch(err) {
-            handleDisplayMsg({
-                ok: false,
-                message: err.message,
-                msgSetter: setDisplayMsg,
-            });
+            fetchCatch(err, navigate, setDisplayMsg);
         };
 
         setNotificationsVis(true);
@@ -137,21 +136,18 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
         };
     };
 
-    const navigate = useNavigate();
     async function handleLogOut() {
         try {
-            const res = await fetch("http://localhost:3000/users/log-out", {credentials: "include"});
-            if (res.ok) {
+            const req = await fetch("http://localhost:3000/users/log-out", {credentials: "include"});
+            const res = await req.json();
+
+            if (req.ok) {
                 navigate("/log-in");
             } else {
-                throw new Error("Unable to log out.");
+                throw new Error(res);
             };
         } catch(err) {
-            handleDisplayMsg({
-                ok: false,
-                message: err.message,
-                msgSetter: setDisplayMsg,
-            });
+            fetchCatch(err, navigate, setDisplayMsg);
         };
     };
 
