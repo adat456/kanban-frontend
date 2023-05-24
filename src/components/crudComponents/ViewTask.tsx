@@ -155,7 +155,8 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         const reqOptions: RequestInit = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({  
+            body: JSON.stringify({ 
+                userStatus, 
                 boardId: curBoardId,
                 taskId: task._id,
                 updatedSubtasks: subtasks,

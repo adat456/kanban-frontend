@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 // import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom"; 
-import { BoardsContext, contributorType } from "../../Context";
+import { BoardsContext, UserContext, contributorType } from "../../Context";
 import { handleDisplayMsg, fetchCatch } from "../helpers";
 import Fields from "./Fields";
 import ContributorModal from "./ContributorModal";
@@ -25,6 +25,7 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
     const [ contributorCounter, setContributorCounter ] = useState(0);
 
     const { boardsData, setBoardsData } = useContext(BoardsContext);
+    const user = useContext(UserContext);
     const counterRef = useRef(3);
 
     const navigate = useNavigate();
@@ -99,6 +100,10 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({ 
                     name: boardName, 
+                    creator: {
+                        userName: user?.firstName + " " + user?.lastName,
+                        userId: user?._id,
+                    },
                     columns, 
                     contributors
                 }),

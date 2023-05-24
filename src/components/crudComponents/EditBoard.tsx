@@ -29,22 +29,25 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
 
     const navigate = useNavigate();
 
-    const contributorIconRef = useRef<HTMLDivElement | null>(null);
-    function handleNamePopup(userId: string) {
+    function handleNamePopup(userId: string | undefined) {
         const contributorNamePopup = document.querySelector(`#assignee-name-${userId}`);
         contributorNamePopup?.classList.toggle("hidden");
     };
-    // sorts contributors from member to viewer
+    // sorts contributors from co-creator to member to viewer
     curBoard?.contributors.sort((a, b) => {
         if (a.userStatus > b.userStatus) return 1;
         if (a.userStatus < b.userStatus) return -1
     });
+    function generateInitials(name: string | undefined) {
+        let nameArr;
+        if (typeof name === "string") nameArr = name.split(" ");
+        const initials = nameArr?.map(name => name.slice(0, 1)).join("");
+        return initials;
+    };
     const contributorIcons = curBoard?.contributors.map(contributor => {
-        const nameArr = contributor.userName.split(" ");
-        const initials = nameArr.map(name => name.slice(0, 1)).join("");
         return (
-            <div key={contributor.userId} ref={contributorIconRef} className="assignee-icon" onMouseEnter={() => handleNamePopup(contributor.userId)} onMouseLeave={() => handleNamePopup(contributor.userId)}>
-                <p>{initials}</p>
+            <div key={contributor.userId} className="assignee-icon" onMouseEnter={() => handleNamePopup(contributor.userId)} onMouseLeave={() => handleNamePopup(contributor.userId)}>
+                <p>{generateInitials(contributor.userName)}</p>
                 <div className="assignee-full-name hidden" id={`assignee-name-${contributor.userId}`}>
                     <div className="pointer"></div>
                     <p>{`${contributor.userName} - ${contributor.userStatus}`}</p>
@@ -206,6 +209,14 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
                         </button>
                     </div>
                     <div className="contributor-icons">
+                        {/* board creator's icon */}
+                        <div key={curBoard?.creator.userId} className="assignee-icon" onMouseEnter={() => handleNamePopup(curBoard?.creator.userId)} onMouseLeave={() => handleNamePopup(curBoard?.creator.userId)}>
+                            <p>{generateInitials(curBoard?.creator.userName)}</p>
+                            <div className="assignee-full-name hidden" id={`assignee-name-${curBoard?.creator.userId}`}>
+                                <div className="pointer"></div>
+                                <p>{`${curBoard?.creator.userName} - Creator`}</p>
+                            </div>
+                        </div>
                         {contributorIcons}
                     </div>
                     <label htmlFor="boardName">Board Name</label>

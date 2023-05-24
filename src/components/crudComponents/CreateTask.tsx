@@ -43,6 +43,10 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
         );
     });
 
+    curBoard?.contributors.sort((a, b) => {
+        if (a.userStatus > b.userStatus) return 1;
+        if (a.userStatus < b.userStatus) return -1
+    });
     const assigneeOptions = curBoard?.contributors?.map(contributor => {
         return (
             <option key={contributor.userId} value={contributor.userId}>{`${contributor.userName} - ${contributor.userStatus}`}</option>
@@ -202,7 +206,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                         <label htmlFor="assignees">Assign to:</label>
                         <select name="assignees" id="assignees" onChange={handleAddAssignee} value="">
                             <option disabled value="" />
-                            <option key={user?._id} value={user?._id}>{`${user?.firstName} ${user?.lastName} - Creator`}</option>
+                            <option key={curBoard?.creator.userId} value={curBoard?.creator.userId}>{`${curBoard?.creator.userName} - Creator`}</option>
                             {assigneeOptions}
                         </select>
                         <div className="chosen-assignees">

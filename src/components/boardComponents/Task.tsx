@@ -4,7 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import ViewTask from "../crudComponents/ViewTask";
 import EditTask from "../crudComponents/EditTask";
-import { UserStatusContext, taskData } from "../../Context";
+import { taskData } from "../../Context";
 
 interface Prop {
     task: taskData,
@@ -18,8 +18,6 @@ const Task: React.FC<Prop> = function({ task, order, colId, setDisplayMsg }) {
 
     const [ viewTaskVis, setViewTaskVis ] = useState(false);
     const [ editTaskVis, setEditTaskVis ] = useState(false);
-
-    const userStatus = useContext(UserStatusContext);
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         // all of this data is sent to DndContext in Board.tsx to be processed by onDragStart (and onDragEnd)

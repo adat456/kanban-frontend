@@ -20,7 +20,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
     const boardsDataPair = useContext(BoardsContext);
     const { boardsData, setBoardsData } = boardsDataPair;
     const curBoardIdPair = useContext(CurBoardIdContext);
-    const { curBoardId, setCurBoardId } = curBoardIdPair;
+    const { curBoardId } = curBoardIdPair;
     const userStatus = useContext(UserStatusContext);
     const curBoard = boardsData?.find(board => board._id === curBoardId);
     const columnsArr = curBoard?.columns;
@@ -48,7 +48,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
 
     // rendering columns w/ their tasks
     const columns = columnsArr?.map(col => 
-        <Column key={col._id} col={col} filters={filters} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} />
+        <Column key={col._id} col={col} filters={filters} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg}/>
     );
 
     // although pointer sensor is one of the default sensors, I imported it with useSensor and useSensors to be passed along to DndContext so that an activation constraint could be added, and a simple click on a draggable opens the task preview instead of initiating a dragstart event

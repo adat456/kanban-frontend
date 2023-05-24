@@ -32,7 +32,10 @@ export interface columnData {
 export interface boardData {
     _id: string,
     name: string,
-    creator: string,
+    creator: {
+        userName: string,
+        userId: string
+    },
     contributors: contributorType[],
     columns: columnData[]
 };

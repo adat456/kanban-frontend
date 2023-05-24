@@ -88,7 +88,7 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
             if (board._id === curBoardId) {
                 setCurBoard(board);
                 // set the current user every time the current board Id changes
-                if (board.creator === user?._id) {
+                if (board.creator.userId === user?._id) {
                     setUserStatus("Creator");
                 } else if (board.contributors) {
                     const contributorProfile = board.contributors.find(contributor => contributor.userId === user?._id);

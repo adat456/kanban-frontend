@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { contributorType } from "../../Context";
+import { BoardsContext, CurBoardIdContext, contributorType } from "../../Context";
 
 interface Prop {
     setContributorModal: React.Dispatch<React.SetStateAction<boolean>>,
@@ -21,6 +21,13 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal, contrib
     // keys will sometimes repeat if this modal is repeatedly opened and closed and changes are made, so its true value is tracked by the parent
     const counterRef = useRef(contributorCounter);
 
+    const boardsDataPair = useContext(BoardsContext);
+    const { boardsData, setBoardsData } = boardsDataPair;
+    const curBoardIdPair = useContext(CurBoardIdContext);
+    const { curBoardId } = curBoardIdPair;
+    const curBoard = boardsData?.find(board => board._id === curBoardId);
+
+
     const navigate = useNavigate();
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -36,7 +43,7 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal, contrib
             const res = await req.json();
             if (req.ok) {
                 // adding a property to the results object if contributor had already been added - will be used to disable button
-                if (contributors && contributors?.find(contributor => contributor.userId === res.userId)) {
+                if (contributors && contributors?.find(contributor => contributor.userId === res.userId) || curBoard?.creator.userId === res.userId) {
                     setResult({
                         ...res,
                         alreadyAdded: true,
