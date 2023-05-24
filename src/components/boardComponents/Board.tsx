@@ -13,7 +13,7 @@ interface Prop {
 interface draggableInfoProp {
     order: string,
     taskId: string,
-    colId: string
+    colId: string,
 };
 
 const Board: React.FC<Prop> = function({ setDisplayMsg }) {
@@ -31,7 +31,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
     const [ draggableInfo, setDraggableInfo ] = useState<draggableInfoProp | null>({ 
         order: "", 
         taskId: "", 
-        colId: ""
+        colId: "",
     });
 
     const navigate = useNavigate();

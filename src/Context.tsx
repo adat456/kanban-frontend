@@ -22,7 +22,8 @@ export interface taskData {
     }[],
     created: string,
     deadline: string,
-    completed: string
+    completed: boolean,
+    completionDate: string,
 };
 export interface columnData {
     _id: string,
@@ -33,8 +34,8 @@ export interface boardData {
     _id: string,
     name: string,
     creator: {
+        userId: string,
         userName: string,
-        userId: string
     },
     contributors: contributorType[],
     columns: columnData[]

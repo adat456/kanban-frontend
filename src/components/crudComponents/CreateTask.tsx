@@ -152,6 +152,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                     created: today,
                     deadline: deadlineRef?.current?.value,
                     assignees,
+                    completed: false
                 }),
                 credentials: "include"
             };

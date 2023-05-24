@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BoardsContext, CurBoardIdContext, UserStatusContext, UserContext, columnData, taskData } from "../../Context";
 import { handleDisplayMsg, fetchCatch } from "../helpers";
@@ -21,7 +21,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
 
     const [ updatedColId, setUpdatedColId ] = useState(colId);
     const [ numComplete, setNumComplete ] = useState(numCompleteSubtasks);
-    const [ completionDate, setCompletionDate ] = useState(task.completed);
+    const [ completed, setCompleted ] = useState(task.completed);
 
     const year = task.deadline?.slice(0, 4);
     const month = task.deadline?.slice(5, 7);
@@ -29,17 +29,20 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
 
     const navigate = useNavigate();
 
-    const assigneeIconRef = useRef<HTMLDivElement | null>(null);
     function handleNamePopup(userId: string) {
         const assigneeNamePopup = document.querySelector(`#assignee-name-${userId}`);
         assigneeNamePopup?.classList.toggle("hidden");
     };
+    function generateInitials(name: string | undefined) {
+        let nameArr;
+        if (typeof name === "string") nameArr = name.split(" ");
+        const initials = nameArr?.map(name => name.slice(0, 1)).join("");
+        return initials;
+    };
     const assigneeIcons = task.assignees.map(assignee => {
-        const nameArr = assignee.userName.split(" ");
-        const initials = nameArr.map(name => name.slice(0, 1)).join("");
         return (
-            <div key={assignee.userId} ref={assigneeIconRef} className="assignee-icon" onMouseEnter={() => handleNamePopup(assignee.userId)} onMouseLeave={() => handleNamePopup(assignee.userId)}>
-                <p>{initials}</p>
+            <div key={assignee.userId}className="assignee-icon" onMouseEnter={() => handleNamePopup(assignee.userId)} onMouseLeave={() => handleNamePopup(assignee.userId)}>
+                <p>{generateInitials(assignee.userName)}</p>
                 <div className="assignee-full-name hidden" id={`assignee-name-${assignee.userId}`}>
                     <div className="pointer"></div>
                     <p>{assignee.userName}</p>
@@ -92,6 +95,12 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
             if (item.checked) numCompleteSubtasks++;
         });
         setNumComplete(numCompleteSubtasks);
+
+        if (numCompleteSubtasks === task.subtasks.length) {
+            setCompleted(true);
+        } else {
+            setCompleted(false);
+        };
     };
 
     let columnsArr: columnData[] = [];
@@ -108,8 +117,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
 
     // only used when there are no subtasks, and task can only be either complete or incomplete
     function handleToggleCompletion() {
-        if (completionDate) setCompletionDate("");
-        if (!completionDate) setCompletionDate(new Date().toISOString().slice(0, 10));
+        setCompleted(completed => !completed);
     };
 
     function handleViewTaskModal() {
@@ -144,13 +152,8 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
             });
         });
         
-        let today = "";
-        // checks for completion in two ways:
-        // 1. there is a list of subtasks and they are all complete
-        // 2. there are no subtasks and there is a completion date
-        if ((task.subtasks.length > 0 && numComplete === task.subtasks.length) || (task.subtasks.length === 0 && completionDate)) {
-            today = new Date().toISOString().slice(0, 10);
-        };
+        let completionDate = "";
+        if (completed) completionDate = new Date().toISOString().slice(0, 10);
 
         const reqOptions: RequestInit = {
             method: "POST",
@@ -162,7 +165,8 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
                 updatedSubtasks: subtasks,
                 updatedColId,
                 colId,
-                completed: today,
+                completed,
+                completionDate,
             }),
             credentials: "include"
         };
@@ -226,7 +230,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
                 </select>
                 {task.subtasks.length > 0 ?
                     null :
-                    <button type="button" className="add-btn" onClick={handleToggleCompletion}>{`Mark as ${completionDate ? "incomplete" : "complete"}`}</button>
+                    <button type="button" className="add-btn" onClick={handleToggleCompletion}>{`Mark as ${completed ? "incomplete" : "complete"}`}</button>
                 }
                 <button type="submit" className="save-btn" onClick={handleSubmitUpdates}>Save Changes</button>
             </form>
