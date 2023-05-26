@@ -89,8 +89,9 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal, contrib
                     <option value="Member">Member</option>
                     <option value="Viewer">Viewer</option>
                 </select>
-                <button type="button" onClick={() => handleRemoval(contributor.userId)}>
-                    <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                <button type="button" onClick={() => handleRemoval(contributor.userId)} title="Remove contributor">
+                    <svg aria-hidden="true" focusable="false" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                    <span className="sr-only">Remove contributor</span>
                 </button>
             </div>
         );
@@ -153,8 +154,9 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal, contrib
                 {contributorsArr}
                 <button type="submit" className="save-btn">Save Contributors</button>
             </form>
-            <button className="close-modal" type="button" onClick={handleContributorModal}>
-                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+            <button className="close-modal" type="button" onClick={handleContributorModal} title="Close modal">
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                <span className="sr-only">Close modal</span>
             </button>
         </dialog>
     );

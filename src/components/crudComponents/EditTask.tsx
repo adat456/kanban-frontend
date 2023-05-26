@@ -247,8 +247,9 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
                     <input ref={deadlineRef} type="date" id="deadline" name="deadline" defaultValue={task?.deadline?.slice(0, 10)} />
                     <button type="submit" className="save-btn">Save Changes</button>
                     <button type="button" className="delete-btn" onClick={() => handleDeleteTaskModal("show")}>Delete Task</button>
-                    <button className="close-modal" type="button" onClick={handleEditTaskModal}>
-                        <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                    <button className="close-modal" type="button" onClick={handleEditTaskModal} title="Close modal">
+                        <svg aria-hidden="true" focusable="false" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                        <span className="sr-only">Close modal</span>
                     </button>
                 </form>
             </dialog>

@@ -15,8 +15,9 @@ const Fields: React.FC<Prop> = function({ type, values, setValues, counterRef, v
         return (
             <label key={item.id} htmlFor={`${type}${item.id}`} className={`${type}-label`}>
                 <input type="text" id={`${type}${item.id}`} value={item.value} data-id={item.id} onChange={handleChange} maxLength={50} />
-                <button type="button" onClick={() => handleRemoval(item.id)}>
-                    <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                <button type="button" onClick={() => handleRemoval(item.id)} title="Remove">
+                    <svg aria-hidden="true" focusable="false" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                    <span className="sr-only">Remove</span>
                 </button>
             </label>
         );

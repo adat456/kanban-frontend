@@ -174,25 +174,27 @@
         @include base.m
         color: base.$grey
         width: 100%
-
-    // not visible by default
-    // unless the overall container is hovered over/focused
-    // or the .favorite class has been conditionally added
-    .star-btn
-        display: none
-
-        .star
-            height: 1.25rem
-
-        &.favorite
-            display: block
+        text-decoration: none
 
     button
         @include base.m
         color: base.$drk-blue-inactive
 
-    &:hover, &:focus
-        .star-btn
+    button[id^=star-btn]
+        height: 3rem
+
+        &:hover, &:focus
+            .star
+                display: block
+
+    // not visible by default
+    // unless the overall container is hovered over/focused
+    // or the .favorite class has been conditionally added
+    .star
+        display: none
+        height: 1.25rem
+
+        &.favorite
             display: block
 
 .create-brd-container

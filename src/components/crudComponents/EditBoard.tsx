@@ -46,13 +46,13 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
     };
     const contributorIcons = curBoard?.contributors.map(contributor => {
         return (
-            <div key={contributor.userId} className="assignee-icon" onMouseEnter={() => handleNamePopup(contributor.userId)} onMouseLeave={() => handleNamePopup(contributor.userId)}>
+            <li tabIndex={0} key={contributor.userId} className="assignee-icon" onMouseEnter={() => handleNamePopup(contributor.userId)} onFocus={() => handleNamePopup(contributor.userId)} onMouseLeave={() => handleNamePopup(contributor.userId)} onBlur={() => handleNamePopup(contributor.userId)}>
                 <p>{generateInitials(contributor.userName)}</p>
                 <div className="assignee-full-name hidden" id={`assignee-name-${contributor.userId}`}>
                     <div className="pointer"></div>
                     <p>{`${contributor.userName} - ${contributor.userStatus}`}</p>
                 </div>
-            </div>
+            </li>
         );
     });
 
@@ -204,29 +204,31 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
                 <form method="POST" className="edit-brd-form" onSubmit={handleSubmit} noValidate>
                     <div className="edit-board-header">
                         <h2>Edit Board</h2>
-                        <button type="button" onClick={() => setContributorModal(true)}>
-                            <svg className="add" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V16M8 12H16M7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        <button type="button" onClick={() => setContributorModal(true)} title="Edit contribuors">
+                            <svg aria-hidden="true" focusable="false" className="add" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V16M8 12H16M7.8 21H16.2C17.8802 21 18.7202 21 19.362 20.673C19.9265 20.3854 20.3854 19.9265 20.673 19.362C21 18.7202 21 17.8802 21 16.2V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                            <span className="sr-only">Edit contributors</span>
                         </button>
                     </div>
-                    <div className="contributor-icons">
+                    <ul className="contributor-icons">
                         {/* board creator's icon */}
-                        <div key={curBoard?.creator.userId} className="assignee-icon" onMouseEnter={() => handleNamePopup(curBoard?.creator.userId)} onMouseLeave={() => handleNamePopup(curBoard?.creator.userId)}>
+                        <li tabIndex={0} key={curBoard?.creator.userId} className="assignee-icon" onMouseEnter={() => handleNamePopup(curBoard?.creator.userId)} onFocus={() => handleNamePopup(curBoard?.creator.userId)} onMouseLeave={() => handleNamePopup(curBoard?.creator.userId)} onBlur={() => handleNamePopup(curBoard?.creator.userId)}>
                             <p>{generateInitials(curBoard?.creator.userName)}</p>
                             <div className="assignee-full-name hidden" id={`assignee-name-${curBoard?.creator.userId}`}>
                                 <div className="pointer"></div>
                                 <p>{`${curBoard?.creator.userName} - Creator`}</p>
                             </div>
-                        </div>
+                        </li>
                         {contributorIcons}
-                    </div>
+                    </ul>
                     <label htmlFor="boardName">Board Name</label>
                     <input type="text" id="boardName" defaultValue={curBoard?.name} onChange={handleChange} maxLength={20} required />
                     {errMsg ? <p className="err-msg">{errMsg}</p> : null}
                     {colValues ? <Fields type="col" values={colValues} setValues={setColValues} counterRef={counterRef} valuesTBD={colsTBD} setValuesTBD={setColsTBD} /> : null }
                     <button className="save-btn" type="submit">Save Changes</button>
                     <button className="delete-btn" type="button" onClick={() => handleDeleteBoardModal("show")}>Delete Board</button>
-                    <button className="close-modal" type="button" onClick={handleEditBoardModal}>
-                        <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                    <button className="close-modal" type="button" onClick={handleEditBoardModal} title="Close modal">
+                        <svg aria-hidden="true" focusable="false" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                        <span className="sr-only">Close modal</span>
                     </button>
                 </form>       
             </dialog>

@@ -41,13 +41,13 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
     };
     const assigneeIcons = task.assignees.map(assignee => {
         return (
-            <div key={assignee.userId}className="assignee-icon" onMouseEnter={() => handleNamePopup(assignee.userId)} onMouseLeave={() => handleNamePopup(assignee.userId)}>
+            <li tabIndex={0} key={assignee.userId}className="assignee-icon" onMouseEnter={() => handleNamePopup(assignee.userId)} onFocus={() => handleNamePopup(assignee.userId)} onMouseLeave={() => handleNamePopup(assignee.userId)} onBlur={() => handleNamePopup(assignee.userId)}>
                 <p>{generateInitials(assignee.userName)}</p>
                 <div className="assignee-full-name hidden" id={`assignee-name-${assignee.userId}`}>
                     <div className="pointer"></div>
                     <p>{assignee.userName}</p>
                 </div>
-            </div>
+            </li>
         );
     });
 
@@ -213,9 +213,9 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
                     }
                 </div>   
                 {task.assignees.length > 0 ?
-                    <div className="assignee-icons">
+                    <ul className="assignee-icons">
                         {assigneeIcons}
-                    </div> : null
+                    </ul> : null
                 }
                 <p className="desc">{task.desc}</p>
                 {task.subtasks.length > 0 ? 
@@ -234,8 +234,9 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
                 }
                 <button type="submit" className="save-btn" onClick={handleSubmitUpdates}>Save Changes</button>
             </form>
-            <button className="close-modal" type="button" onClick={handleViewTaskModal}>
-                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+            <button className="close-modal" type="button" onClick={handleViewTaskModal} title="Close modal">
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
+                <span className="sr-only">Close modal</span>
             </button>
         </dialog>   
     );

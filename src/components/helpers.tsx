@@ -76,8 +76,10 @@ export let validateCred: (input: HTMLInputElement, msgSetter: React.Dispatch<Rea
 };
 
 export function handleVisToggle(e) {
+    console.log("clicked");
     const fieldId = e.currentTarget.getAttribute("data-id");
     const field = document.querySelector(`#${fieldId}`);
+    console.log(field);
     if (field?.getAttribute("type") === "password") {
         field?.setAttribute("type", "text");
     } else {

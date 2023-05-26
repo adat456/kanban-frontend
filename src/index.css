@@ -21,6 +21,12 @@ button {
   background-color: transparent;
 }
 
+li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
 .sidebar-backdrop {
   position: fixed;
   z-index: 1;
@@ -39,6 +45,20 @@ button {
 
 .hidden {
   display: none;
+}
+
+.sr-only {
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  white-space: nowrap !important;
 }
 
 .all-boards {
@@ -224,6 +244,11 @@ main > p {
   line-height: 1.9rem;
   font-weight: 700;
   box-shadow: none;
+}
+
+.task {
+  width: 100%;
+  text-align: left;
 }
 
 .task, .add-task-btn {
@@ -543,15 +568,7 @@ main#no-brd-chosen p {
   font-weight: 700;
   color: #828FA3;
   width: 100%;
-}
-.board-links-item .star-btn, .create-brd-container .star-btn {
-  display: none;
-}
-.board-links-item .star-btn .star, .create-brd-container .star-btn .star {
-  height: 1.25rem;
-}
-.board-links-item .star-btn.favorite, .create-brd-container .star-btn.favorite {
-  display: block;
+  text-decoration: none;
 }
 .board-links-item button, .create-brd-container button {
   font-size: 1.5rem;
@@ -559,7 +576,17 @@ main#no-brd-chosen p {
   font-weight: 700;
   color: #635FC7;
 }
-.board-links-item:hover .star-btn, .board-links-item:focus .star-btn, .create-brd-container:hover .star-btn, .create-brd-container:focus .star-btn {
+.board-links-item button[id^=star-btn], .create-brd-container button[id^=star-btn] {
+  height: 3rem;
+}
+.board-links-item button[id^=star-btn]:hover .star, .board-links-item button[id^=star-btn]:focus .star, .create-brd-container button[id^=star-btn]:hover .star, .create-brd-container button[id^=star-btn]:focus .star {
+  display: block;
+}
+.board-links-item .star, .create-brd-container .star {
+  display: none;
+  height: 1.25rem;
+}
+.board-links-item .star.favorite, .create-brd-container .star.favorite {
   display: block;
 }
 
