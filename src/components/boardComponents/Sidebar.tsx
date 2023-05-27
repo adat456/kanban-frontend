@@ -156,17 +156,17 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
             }
             {loading ? <p>Loading...</p>:
                 <div className="board-links">
-                    <h2>{`ALL BOARDS (${boardsData?.length})`}</h2>
+                    <h1>{`ALL BOARDS (${boardsData?.length})`}</h1>
                     <nav>
                         {privateLinks.length > 0 ? 
                             <div className="board-links-header">
-                                <h3>Private</h3>
+                                <h2>Private</h2>
                             </div> : null
                         }
                         {privateLinks}
                         {groupLinks.length > 0 ? 
                             <div className="board-links-header">
-                                <h3>Shared</h3>
+                                <h2>Shared</h2>
                                 <button type="button" className="notification-button" onClick={pullNotifications} title="Show notifications from shared boards">
                                     <svg aria-hidden="true" focusable="false" viewBox="-1.5 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="Page-1" stroke="none" strokeWidth="1" fillRule="evenodd"><g id="Dribbble-Light-Preview" transform="translate(-181.000000, -720.000000)"><g id="icons" transform="translate(56.000000, 160.000000)"><path d="M137.75,574 L129.25,574 L129.25,568 C129.25,565.334 131.375,564 133.498937,564 L133.501063,564 C135.625,564 137.75,565.334 137.75,568 L137.75,574 Z M134.5625,577 C134.5625,577.552 134.0865,578 133.5,578 C132.9135,578 132.4375,577.552 132.4375,577 L132.4375,576 L134.5625,576 L134.5625,577 Z M140.9375,574 C140.351,574 139.875,573.552 139.875,573 L139.875,568 C139.875,564.447 137.359,562.475 134.5625,562.079 L134.5625,561 C134.5625,560.448 134.0865,560 133.5,560 C132.9135,560 132.4375,560.448 132.4375,561 L132.4375,562.079 C129.641,562.475 127.125,564.447 127.125,568 L127.125,573 C127.125,573.552 126.649,574 126.0625,574 C125.476,574 125,574.448 125,575 C125,575.552 125.476,576 126.0625,576 L130.3125,576 L130.3125,577 C130.3125,578.657 131.739438,580 133.5,580 C135.260563,580 136.6875,578.657 136.6875,577 L136.6875,576 L140.9375,576 C141.524,576 142,575.552 142,575 C142,574.448 141.524,574 140.9375,574 L140.9375,574 Z" id="notification_bell-[#1397]"></path></g></g></g></svg>
                                     <span className="sr-only">Show notifications from shared boards</span>
@@ -182,10 +182,10 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                 </div>
             }
             {createBoardVis ? <CreateBoard setDisplayMsg={setDisplayMsg} setCreateBoardVis={setCreateBoardVis} /> : null }
-            <div className="sidebar-btm-cluster">
+            <footer>
                 <div className="mode-toggle">
                     <svg viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg" aria-describedby="light-mode-icon" aria-hidden="true" role="img"><title id="light-mode-icon">Light mode</title><path d="M9.167 15.833a.833.833 0 0 1 .833.834v.833a.833.833 0 0 1-1.667 0v-.833a.833.833 0 0 1 .834-.834ZM3.75 13.75a.833.833 0 0 1 .59 1.422l-1.25 1.25a.833.833 0 0 1-1.18-1.178l1.25-1.25a.833.833 0 0 1 .59-.244Zm10.833 0c.221 0 .433.088.59.244l1.25 1.25a.833.833 0 0 1-1.179 1.178l-1.25-1.25a.833.833 0 0 1 .59-1.422ZM9.167 5a4.167 4.167 0 1 1 0 8.334 4.167 4.167 0 0 1 0-8.334Zm-7.5 3.333a.833.833 0 0 1 0 1.667H.833a.833.833 0 1 1 0-1.667h.834Zm15.833 0a.833.833 0 0 1 0 1.667h-.833a.833.833 0 0 1 0-1.667h.833Zm-1.667-6.666a.833.833 0 0 1 .59 1.422l-1.25 1.25a.833.833 0 1 1-1.179-1.178l1.25-1.25a.833.833 0 0 1 .59-.244Zm-13.333 0c.221 0 .433.088.59.244l1.25 1.25a.833.833 0 0 1-1.18 1.178L1.91 3.09a.833.833 0 0 1 .59-1.422ZM9.167 0A.833.833 0 0 1 10 .833v.834a.833.833 0 1 1-1.667 0V.833A.833.833 0 0 1 9.167 0Z" fill="#828FA3"/></svg>
-                    <button className="toggler" onClick={handleModeToggle} title="Toggle light/dark mode">
+                    <button type="button" className="toggler" onClick={handleModeToggle} title="Toggle light/dark mode">
                         <div id="circle" className={mode}></div>
                         <span className="sr-only">Toggle light/dark mode</span>
                     </button>
@@ -196,8 +196,8 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                     Hide Sidebar
                 </button>
                 <hr />
-                <button className="log-out-btn" onClick={handleLogOut}>Log Out</button>
-            </div>
+                <button type="button" className="log-out-btn" onClick={handleLogOut}>Log Out</button>
+            </footer>
             {notificationsVis ? <Notifications setNotificationsVis={setNotificationsVis} notifications={notifications} setNotifications={setNotifications} setDisplayMsg={setDisplayMsg} /> : null}
         </section>
     );  

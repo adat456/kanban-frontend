@@ -174,12 +174,14 @@ main > p
     @media (max-width: 500px)
         padding: 1.5rem
 
-    h3
+    .task-name
         @include base.m
+        display: block
         padding-bottom: 1rem
         word-wrap: break-word
 
-    p
+    .subtasks
+        display: block
         @include base.med-body
         color: base.$grey
 

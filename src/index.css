@@ -265,14 +265,16 @@ main > p {
     padding: 1.5rem;
   }
 }
-.task h3, .add-task-btn h3 {
+.task .task-name, .add-task-btn .task-name {
   font-size: 1.5rem;
   line-height: 1.9rem;
   font-weight: 700;
+  display: block;
   padding-bottom: 1rem;
   word-wrap: break-word;
 }
-.task p, .add-task-btn p {
+.task .subtasks, .add-task-btn .subtasks {
+  display: block;
   font-size: 1.3rem;
   line-height: 2.3rem;
   font-weight: 500;
@@ -433,7 +435,7 @@ main#no-brd-chosen p {
     display: none;
   }
 }
-.sidebar h2, .sidebar h3 {
+.sidebar h1, .sidebar h2 {
   font-weight: bold;
   font-size: 1.4rem;
   letter-spacing: 0.3rem;
@@ -441,7 +443,7 @@ main#no-brd-chosen p {
   padding: 0 3rem 3rem 3rem;
 }
 @media (max-width: 500px) {
-  .sidebar h2, .sidebar h3 {
+  .sidebar h1, .sidebar h2 {
     padding: 0 2rem 1rem 2rem;
   }
 }
@@ -454,7 +456,7 @@ main#no-brd-chosen p {
     padding: 1rem 2rem 0 2rem;
   }
 }
-.sidebar .board-links-header h3 {
+.sidebar .board-links-header h2 {
   letter-spacing: 0;
   font-size: 1.5rem;
   padding: 0;
@@ -602,22 +604,22 @@ main#no-brd-chosen p {
   fill: #635FC7;
 }
 
-.sidebar-btm-cluster {
+footer {
   position: absolute;
   z-index: 0;
   inset: auto 0 3rem 0;
   padding: 0 3rem;
 }
 @media (max-width: 500px) {
-  .sidebar-btm-cluster {
+  footer {
     position: initial;
     padding: 4rem 2rem 2rem 2rem;
   }
-  .sidebar-btm-cluster hr {
+  footer hr {
     padding-top: 2rem;
   }
 }
-.sidebar-btm-cluster .mode-toggle {
+footer .mode-toggle {
   background-color: #F4F7FD;
   display: flex;
   align-items: center;
@@ -626,23 +628,23 @@ main#no-brd-chosen p {
   padding: 1.5rem;
   border-radius: 0.5rem;
 }
-.sidebar-btm-cluster .mode-toggle svg {
+footer .mode-toggle svg {
   height: 2rem;
 }
-.sidebar-btm-cluster .mode-toggle svg.dark-mode {
+footer .mode-toggle svg.dark-mode {
   height: 1.75rem;
 }
-.sidebar-btm-cluster .toggler {
+footer .toggler {
   height: 2rem;
   width: 4rem;
   background-color: #635FC7;
   border-radius: 1rem;
   position: relative;
 }
-.sidebar-btm-cluster .toggler:hover, .sidebar-btm-cluster .toggler:focus {
+footer .toggler:hover, footer .toggler:focus {
   background-color: #A8A4FF;
 }
-.sidebar-btm-cluster .toggler #circle {
+footer .toggler #circle {
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
@@ -650,13 +652,13 @@ main#no-brd-chosen p {
   position: absolute;
   top: 0.25rem;
 }
-.sidebar-btm-cluster .toggler .light {
+footer .toggler .light {
   left: 0.25rem;
 }
-.sidebar-btm-cluster .toggler .dark {
+footer .toggler .dark {
   right: 0.25rem;
 }
-.sidebar-btm-cluster .hide-sidebar {
+footer .hide-sidebar {
   margin: 2rem 0;
   display: flex;
   align-items: center;
@@ -667,15 +669,15 @@ main#no-brd-chosen p {
   font-weight: 700;
   font-size: 1.3rem;
 }
-.sidebar-btm-cluster .hide-sidebar svg {
+footer .hide-sidebar svg {
   width: 2rem;
 }
 @media (max-width: 500px) {
-  .sidebar-btm-cluster .hide-sidebar {
+  footer .hide-sidebar {
     display: none;
   }
 }
-.sidebar-btm-cluster .log-out-btn {
+footer .log-out-btn {
   margin-top: 2rem;
   padding: 1.5rem 0;
   font-size: 1.3rem;
@@ -685,7 +687,7 @@ main#no-brd-chosen p {
   color: white;
   width: 100%;
 }
-.sidebar-btm-cluster .log-out-btn:hover, .sidebar-btm-cluster .log-out-btn:focus {
+footer .log-out-btn:hover, footer .log-out-btn:focus {
   background-color: #A8A4FF;
 }
 

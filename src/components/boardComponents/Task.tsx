@@ -68,10 +68,10 @@ const Task: React.FC<Prop> = function({ task, order, colId, setDisplayMsg }) {
     return (
         <>
             <button type="button" ref={setNodeRef} style={style} className={task.completed ? "task completed" : "task"} onMouseEnter={() => handleDragHandleVis(true)} onMouseLeave={() => handleDragHandleVis(false)} onClick={() => setViewTaskVis(viewTaskVis => true)}>
-                <div className="task-brief">
-                    <h3>{task.task}</h3>
+                <div>
+                    <span className="task-name">{task.task}</span>
                     {task.subtasks.length > 0 ? 
-                        <p>{`${numCompleteSubtasks} of ${task.subtasks.length} subtasks`}</p> : <></>
+                        <span className="subtasks">{`${numCompleteSubtasks} of ${task.subtasks.length} subtasks`}</span> : <></>
                     }
                 </div>
                 <div className="hidden" ref={dragHandleRef} {...listeners} {...attributes}>

@@ -151,24 +151,27 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
                         <main ref={mainRef} id="no-brd-chosen">
                             <p>Please choose or create a board to get started.</p>
                         </main>
-                        <div ref={sidebarBackdropRef}className="sidebar-backdrop" onClick={() => setSidebarVis(false)}></div>
                     </div>  : 
                     <div className="all-boards">
                         <header>
                             <svg ref={headerLogoRef} className="header-logo" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg"><g fill="#635FC7" fillRule="evenodd"><rect width="6" height="25" rx="2"/><rect opacity=".75" x="9" width="6" height="25" rx="2"/><rect opacity=".5" x="18" width="6" height="25" rx="2"/></g></svg>
                             {(userStatus === "Creator" || userStatus === "Co-creator") ? 
-                                <button type="button" className="edit-brd-btn" onClick={() => setEditBoardVis(true)}>
+                                <>
                                     <h1>{curBoard?.name}</h1>
-                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.0651 7.39423L7.09967 20.4114C6.72438 20.7882 6.21446 21 5.68265 21H4.00383C3.44943 21 3 20.5466 3 19.9922V18.2987C3 17.7696 3.20962 17.2621 3.58297 16.8873L16.5517 3.86681C19.5632 1.34721 22.5747 4.87462 20.0651 7.39423Z"  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                                </button> :
-                                <h1>{curBoard?.name}</h1>
+                                    <button type="button" className="edit-brd-btn" onClick={() => setEditBoardVis(true)} title="Edit board">
+                                        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.0651 7.39423L7.09967 20.4114C6.72438 20.7882 6.21446 21 5.68265 21H4.00383C3.44943 21 3 20.5466 3 19.9922V18.2987C3 17.7696 3.20962 17.2621 3.58297 16.8873L16.5517 3.86681C19.5632 1.34721 22.5747 4.87462 20.0651 7.39423Z"  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                        <span className="sr-only">Edit board</span>
+                                    </button>
+                                </> : <h1>{curBoard?.name}</h1>
                             }                                
                             {sidebarVis ?
-                                <button className="dropdown-sidebar-btn open" type="button" onClick={() => setSidebarVis(false)}>
-                                    <svg className="nav-arrow" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="M9 6 5 2 1 6"/></svg>
+                                <button className="dropdown-sidebar-btn open" type="button" onClick={() => setSidebarVis(false)} title="Close navigation">
+                                    <svg aria-hidden="true" focusable="false" className="nav-arrow" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="M9 6 5 2 1 6"/></svg>
+                                    <span className="sr-only">Close navigation</span>
                                 </button> :
-                                <button className="dropdown-sidebar-btn closed" type="button" onClick={() => setSidebarVis(true)}>
-                                    <svg className="nav-arrow" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4"/></svg>    
+                                <button className="dropdown-sidebar-btn closed" type="button" onClick={() => setSidebarVis(true)} title="Expand navigation">
+                                    <svg aria-hidden="true" focusable="false" className="nav-arrow" viewBox="0 0 10 7" xmlns="http://www.w3.org/2000/svg"><path stroke="#635FC7" strokeWidth="2" fill="none" d="m1 1 4 4 4-4"/></svg> 
+                                    <span className="sr-only">Expand navigation</span>   
                                 </button>
                             }
                             {editBoardVis ? <EditBoard setDisplayMsg={setDisplayMsg} setEditBoardVis={setEditBoardVis} /> : null }

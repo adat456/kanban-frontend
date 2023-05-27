@@ -9,7 +9,6 @@ interface Prop {
     col: columnData,
     columnsArr: columnData[],
     filters: string[],
-    // sorter: string,
     setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
 };
 
