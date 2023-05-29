@@ -7,7 +7,6 @@ import Fields from "./Fields";
 interface Prop {
     task: taskData,
     colId: string,
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
     setEditTaskVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
@@ -16,7 +15,7 @@ interface assigneeInfo {
     userName: string
 };
 
-const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditTaskVis }) {
+const EditTask: React.FC<Prop> = function({ task, colId, setEditTaskVis }) {
     const [ taskName, setTaskName ] = useState(task.task);
     const [ errMsg, setErrMsg ] = useState("");
     const [ description, setDescription ] = useState(task.desc);
@@ -159,14 +158,12 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
                 credentials: "include"
             };
 
-            console.log(reqOptions.body);
-
             try {
                 const req = await fetch("http://localhost:3000/edit-task", reqOptions);
                 // may be updated boards data
                 const res = await req.json();
                 if (req.ok) {
-                    handleDisplayMsg(true,"Task updated.", setDisplayMsg);
+                    handleDisplayMsg(true,"Task updated.");
 
                     let updatedBoardsData = boardsData?.map(board => {
                         if (board._id === res._id) {
@@ -182,10 +179,10 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
                     throw new Error(res);
                 };
             } catch(err) {
-                fetchCatch(err, navigate, setDisplayMsg);
+                fetchCatch(err, navigate);
             };
         } else {
-            handleDisplayMsg(false, "Please fix errors before submitting.", setDisplayMsg);
+            handleDisplayMsg(false, "Please fix errors before submitting.");
         };
     };
 
@@ -195,7 +192,7 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
             // may return updated boards data
             const res = await req.json();
             if (req.ok) {
-                handleDisplayMsg(true, "Task deleted.", setDisplayMsg);
+                handleDisplayMsg(true, "Task deleted.");
 
                 let updatedBoardsData = boardsData?.map(board => {
                     if (board._id === res._id) {
@@ -204,14 +201,14 @@ const EditTask: React.FC<Prop> = function({ task, colId, setDisplayMsg, setEditT
                         return board;
                     };
                 });
-                setBoardsData(updatedBoardsData);
+                if (updatedBoardsData) setBoardsData(updatedBoardsData);
                 
                 handleDeleteTaskModal("close");
             } else {
                 throw new Error(res);
             };
         } catch(err) {
-            fetchCatch(err, navigate, setDisplayMsg);
+            fetchCatch(err, navigate);
         };
     };
 

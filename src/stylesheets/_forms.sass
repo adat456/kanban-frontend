@@ -9,17 +9,13 @@
     border-radius: 10rem
     position: fixed
     background-color: base.$lite-blue-inactive
-
-    p
-        color: base.$drk-blue-inactive
-        font-size: 1.5rem
+    color: base.$drk-blue-inactive
+    font-size: 1.5rem
 
     &.error
         border: none
         background-color: base.$red-inactive
-
-        p
-            color: white
+        color: white
 
 .signup-page, .login-page
     @include base.center
@@ -248,6 +244,10 @@
             height: 2rem
             left: 1rem
             top: 0.5rem 
+
+            &:focus, &:hover
+                div.before
+                    background-color: red
 
         div.before
             position: absolute

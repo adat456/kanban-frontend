@@ -7,10 +7,9 @@ interface Prop {
     notifications: NotificationInterface[],
     setNotifications: React.Dispatch<React.SetStateAction<NotificationInterface[]>>,
     setNotificationsVis: React.Dispatch<React.SetStateAction<boolean>>,
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>
 };
 
-const Notifications: React.FC<Prop> = function({ notifications, setNotifications, setNotificationsVis, setDisplayMsg }) {
+const Notifications: React.FC<Prop> = function({ notifications, setNotifications, setNotificationsVis }) {
     const [ acknowledged, setAcknowledged ] = useState<string[]>([]);
 
     const navigate = useNavigate();
@@ -59,12 +58,12 @@ const Notifications: React.FC<Prop> = function({ notifications, setNotifications
             // success or error message
             const res = await req.json();
             if (req.ok) {
-                handleDisplayMsg(true, res, setDisplayMsg);
+                handleDisplayMsg(true, res);
             } else {
                 throw new Error(res);
             }
         } catch(err) {
-            fetchCatch(err, navigate, setDisplayMsg);
+            fetchCatch(err, navigate);
         };
     };
 

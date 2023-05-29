@@ -207,7 +207,7 @@ main > p {
 }
 .sort-and-filter button {
   height: fit-content;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1.5rem;
   background-color: #635FC7;
   border-radius: 5rem;
   color: white;
@@ -356,7 +356,7 @@ main#no-brd-chosen p {
   background-color: #2B2C37;
   box-shadow: none;
 }
-#app.dark main .task h3 {
+#app.dark main .task .task-name {
   color: white;
 }
 #app.dark main .task:hover h3, #app.dark main .task:focus h3 {
@@ -695,7 +695,7 @@ footer .log-out-btn:hover, footer .log-out-btn:focus {
   background-color: #2B2C37;
   border-right-color: #3E3F4E;
 }
-#app.dark > .sidebar h2 {
+#app.dark > .sidebar h1, #app.dark > .sidebar h2 {
   color: white;
 }
 #app.dark > .sidebar hr {
@@ -724,16 +724,12 @@ footer .log-out-btn:hover, footer .log-out-btn:focus {
   border-radius: 10rem;
   position: fixed;
   background-color: #E4EBFA;
-}
-.display-msg-modal p {
   color: #635FC7;
   font-size: 1.5rem;
 }
 .display-msg-modal.error {
   border: none;
   background-color: #EA5555;
-}
-.display-msg-modal.error p {
   color: white;
 }
 
@@ -985,6 +981,9 @@ footer .log-out-btn:hover, footer .log-out-btn:focus {
   height: 2rem;
   left: 1rem;
   top: 0.5rem;
+}
+.notifications-modal .checkboxes-field input:focus div.before, .notifications-modal .checkboxes-field input:hover div.before, .form-modal .checkboxes-field input:focus div.before, .form-modal .checkboxes-field input:hover div.before, .delete-modal .checkboxes-field input:focus div.before, .delete-modal .checkboxes-field input:hover div.before, .login-form .checkboxes-field input:focus div.before, .login-form .checkboxes-field input:hover div.before, .signup-form .checkboxes-field input:focus div.before, .signup-form .checkboxes-field input:hover div.before {
+  background-color: red;
 }
 .notifications-modal .checkboxes-field div.before, .form-modal .checkboxes-field div.before, .delete-modal .checkboxes-field div.before, .login-form .checkboxes-field div.before, .signup-form .checkboxes-field div.before {
   position: absolute;

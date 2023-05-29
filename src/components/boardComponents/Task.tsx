@@ -10,10 +10,9 @@ interface Prop {
     task: taskData,
     order: number,
     colId: string,
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>
 };
 
-const Task: React.FC<Prop> = function({ task, order, colId, setDisplayMsg }) {
+const Task: React.FC<Prop> = function({ task, order, colId }) {
     const dragHandleRef = useRef<HTMLDivElement | null>(null);
 
     const [ viewTaskVis, setViewTaskVis ] = useState(false);
@@ -78,8 +77,8 @@ const Task: React.FC<Prop> = function({ task, order, colId, setDisplayMsg }) {
                     <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="#828FA3" stroke="#828FA3"><g id="SVGRepo_bgCarrier" strokeWidth="0"/><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"/><g id="SVGRepo_iconCarrier"><path d="M7 2a2 2 0 10.001 4.001A2 2 0 007 2zm0 6a2 2 0 10.001 4.001A2 2 0 007 8zm0 6a2 2 0 10.001 4.001A2 2 0 007 14zm6-8a2 2 0 10-.001-4.001A2 2 0 0013 6zm0 2a2 2 0 10.001 4.001A2 2 0 0013 8zm0 6a2 2 0 10.001 4.001A2 2 0 0013 14z" fill="#828FA3"/></g></svg>
                 </div>
             </button>
-            {viewTaskVis ? <ViewTask task={task} colId={colId} setDisplayMsg={setDisplayMsg} numCompleteSubtasks={numCompleteSubtasks} setViewTaskVis={setViewTaskVis} setEditTaskVis={setEditTaskVis} /> : null }
-            {editTaskVis ? <EditTask task={task} colId={colId} setDisplayMsg={setDisplayMsg} setEditTaskVis={setEditTaskVis} /> : null }
+            {viewTaskVis ? <ViewTask task={task} colId={colId} numCompleteSubtasks={numCompleteSubtasks} setViewTaskVis={setViewTaskVis} setEditTaskVis={setEditTaskVis} /> : null }
+            {editTaskVis ? <EditTask task={task} colId={colId} setEditTaskVis={setEditTaskVis} /> : null }
         </>
     );
 };

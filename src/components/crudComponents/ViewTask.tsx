@@ -7,14 +7,13 @@ interface Prop {
     task: taskData,
     numCompleteSubtasks: number,
     colId: string,
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
     setViewTaskVis: React.Dispatch<React.SetStateAction<boolean>>,
     setEditTaskVis: React.Dispatch<React.SetStateAction<boolean>>,
 };
 
-const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, setDisplayMsg, setViewTaskVis, setEditTaskVis }) {
+const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, setViewTaskVis, setEditTaskVis }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
-    const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
+    const { curBoardId } = useContext(CurBoardIdContext);
     const userStatus = useContext(UserStatusContext);
     const user = useContext(UserContext);
     const userInitials = `${user?.firstName.slice(0,1)}${user?.lastName.slice(0,1)}`; 
@@ -129,7 +128,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
 
     async function handleSubmitUpdates(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
+    
         // getting subtask IDs and their statuses
         let subtasks: {
             id: string, 
@@ -176,8 +175,6 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
             // may return updated board
             const res = await req.json();
             if (req.ok) {
-                handleDisplayMsg(true, "Task updated", setDisplayMsg);
-
                 const updatedBoardsData = boardsData?.map(board => {
                     if (board._id === res._id) {
                         return res;
@@ -185,20 +182,20 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
                         return board;
                     };
                 });
-                setBoardsData(updatedBoardsData);
+                if (updatedBoardsData) setBoardsData(updatedBoardsData);
 
-                handleViewTaskModal();
+                handleDisplayMsg(true, "Task updated.");
             } else {
                 throw new Error(res);
             };
         } catch(err) {
-            fetchCatch(err, navigate, setDisplayMsg);
+            fetchCatch(err, navigate);
         };
-    };
+    };  
 
     return (
-        <dialog className="form-modal view-task-modal">
-            <form method="POST" className="view-task">
+        <dialog className="form-modal view-task-modal" onClose={() => console.log("closed")}>
+            <form action="post" className="view-task" onSubmit={handleSubmitUpdates}>
                 <div className="view-task-header">
                     <div>
                         <h2>{task.task}</h2>
@@ -233,7 +230,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
                     null :
                     <button type="button" className="add-btn" onClick={handleToggleCompletion}>{`Mark as ${completed ? "incomplete" : "complete"}`}</button>
                 }
-                <button type="submit" className="save-btn" onClick={handleSubmitUpdates}>Save Changes</button>
+                <button type="submit" className="save-btn">Save Changes</button>
             </form>
             <button className="close-modal" type="button" onClick={handleViewTaskModal} title="Close modal">
                 <svg aria-hidden="true" focusable="false" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>

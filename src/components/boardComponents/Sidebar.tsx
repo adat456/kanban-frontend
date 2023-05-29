@@ -9,11 +9,10 @@ interface Prop {
     loading: boolean,
     setMode: React.Dispatch<React.SetStateAction<string>>,
     setSidebarVis: React.Dispatch<React.SetStateAction<boolean>>,
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
     setUser: React.Dispatch<React.SetStateAction<userInterface>>,
 };
 
-const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setDisplayMsg, setUser }) {
+const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setUser }) {
     const boardsDataPair = useContext(BoardsContext);
     const { boardsData } = boardsDataPair;
     const curBoardIdPair = useContext(CurBoardIdContext);
@@ -97,7 +96,7 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                 throw new Error(res);
             };
         } catch (err) {
-            fetchCatch(err, navigate, setDisplayMsg);
+            fetchCatch(err, navigate);
         };
     };
 
@@ -112,7 +111,7 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                 throw new Error(res);
             };
         } catch(err) {
-            fetchCatch(err, navigate, setDisplayMsg);
+            fetchCatch(err, navigate);
         };
 
         setNotificationsVis(true);
@@ -144,7 +143,7 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                 throw new Error(res);
             };
         } catch(err) {
-            fetchCatch(err, navigate, setDisplayMsg);
+            fetchCatch(err, navigate);
         };
     };
 
@@ -181,7 +180,7 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                     </div>
                 </div>
             }
-            {createBoardVis ? <CreateBoard setDisplayMsg={setDisplayMsg} setCreateBoardVis={setCreateBoardVis} /> : null }
+            {createBoardVis ? <CreateBoard setCreateBoardVis={setCreateBoardVis} /> : null }
             <footer>
                 <div className="mode-toggle">
                     <svg viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg" aria-describedby="light-mode-icon" aria-hidden="true" role="img"><title id="light-mode-icon">Light mode</title><path d="M9.167 15.833a.833.833 0 0 1 .833.834v.833a.833.833 0 0 1-1.667 0v-.833a.833.833 0 0 1 .834-.834ZM3.75 13.75a.833.833 0 0 1 .59 1.422l-1.25 1.25a.833.833 0 0 1-1.18-1.178l1.25-1.25a.833.833 0 0 1 .59-.244Zm10.833 0c.221 0 .433.088.59.244l1.25 1.25a.833.833 0 0 1-1.179 1.178l-1.25-1.25a.833.833 0 0 1 .59-1.422ZM9.167 5a4.167 4.167 0 1 1 0 8.334 4.167 4.167 0 0 1 0-8.334Zm-7.5 3.333a.833.833 0 0 1 0 1.667H.833a.833.833 0 1 1 0-1.667h.834Zm15.833 0a.833.833 0 0 1 0 1.667h-.833a.833.833 0 0 1 0-1.667h.833Zm-1.667-6.666a.833.833 0 0 1 .59 1.422l-1.25 1.25a.833.833 0 1 1-1.179-1.178l1.25-1.25a.833.833 0 0 1 .59-.244Zm-13.333 0c.221 0 .433.088.59.244l1.25 1.25a.833.833 0 0 1-1.18 1.178L1.91 3.09a.833.833 0 0 1 .59-1.422ZM9.167 0A.833.833 0 0 1 10 .833v.834a.833.833 0 1 1-1.667 0V.833A.833.833 0 0 1 9.167 0Z" fill="#828FA3"/></svg>
@@ -198,7 +197,7 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setD
                 <hr />
                 <button type="button" className="log-out-btn" onClick={handleLogOut}>Log Out</button>
             </footer>
-            {notificationsVis ? <Notifications setNotificationsVis={setNotificationsVis} notifications={notifications} setNotifications={setNotifications} setDisplayMsg={setDisplayMsg} /> : null}
+            {notificationsVis ? <Notifications setNotificationsVis={setNotificationsVis} notifications={notifications} setNotifications={setNotifications} /> : null}
         </section>
     );  
 };

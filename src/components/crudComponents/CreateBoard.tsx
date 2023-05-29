@@ -7,11 +7,10 @@ import Fields from "./Fields";
 import ContributorModal from "./ContributorModal";
 
 interface Prop {
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
     setCreateBoardVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis }) {
+const CreateBoard: React.FC<Prop> = function ({ setCreateBoardVis }) {
     const [ boardName, setBoardName ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required");
     const [ colValues, setColValues ] = useState([
@@ -118,7 +117,7 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
                 const res = await req.json();
 
                 if (req.ok) {
-                    handleDisplayMsg(true, "Board created.", setDisplayMsg);
+                    handleDisplayMsg(true, "Board created.");
                 
                     setBoardsData([...boardsData, res]);
 
@@ -127,10 +126,10 @@ const CreateBoard: React.FC<Prop> = function ({ setDisplayMsg, setCreateBoardVis
                     throw new Error(res);
                 };
             } catch(err) {
-                fetchCatch(err, navigate, setDisplayMsg);
+                fetchCatch(err, navigate);
             };
         } else {
-            handleDisplayMsg(false, "Please fix errors before submitting.", setDisplayMsg);
+            handleDisplayMsg(false, "Please fix errors before submitting.");
         };
     };
     

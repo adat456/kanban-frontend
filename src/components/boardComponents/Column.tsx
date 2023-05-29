@@ -9,10 +9,9 @@ interface Prop {
     col: columnData,
     columnsArr: columnData[],
     filters: string[],
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
 };
 
-const Column: React.FC<Prop> = function({ col, columnsArr, filters, setDisplayMsg }) {
+const Column: React.FC<Prop> = function({ col, columnsArr, filters }) {
     const [ createTaskVis, setCreateTaskVis ] = useState(false);
 
     const user = useContext(UserContext);
@@ -71,7 +70,7 @@ const Column: React.FC<Prop> = function({ col, columnsArr, filters, setDisplayMs
     const taskArr = filteredAndSortedTasks?.map((task, index) => {
         return (
             <div key={task._id}>
-                <Task task={task} order={index} colId={col._id} setDisplayMsg={setDisplayMsg} />
+                <Task task={task} order={index} colId={col._id} />
                 <DroppableSpace id={`${col._id}${index + 1}`} />
             </div>
         );
@@ -85,7 +84,7 @@ const Column: React.FC<Prop> = function({ col, columnsArr, filters, setDisplayMs
             {(userStatus === "Creator" || userStatus === "Co-creator") ?
                 <>
                     <button type="button" className="add-task-btn" onClick={() => setCreateTaskVis(true)}>+ New Task</button>
-                    {createTaskVis? <CreateTask setCreateTaskVis={setCreateTaskVis} curCol={col._id} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg} /> : null }
+                    {createTaskVis? <CreateTask setCreateTaskVis={setCreateTaskVis} curCol={col._id} columnsArr={columnsArr} /> : null }
                 </>
                 : null
             }

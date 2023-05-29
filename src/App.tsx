@@ -17,16 +17,17 @@ const App: React.FC = function() {
 
   return (
     <div className="App">
-          <ModeContext.Provider value={mode}>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/log-in" element={<Login />} />
-                <Route path="/sign-up" element={<Signup />} />
-                <Route path="/boards" element={<AllBoards setMode={setMode} />} />
-              </Routes>
-            </BrowserRouter>
-          </ModeContext.Provider>
+        <ModeContext.Provider value={mode}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/log-in" element={<Login />} />
+              <Route path="/sign-up" element={<Signup />} />
+              <Route path="/boards" element={<AllBoards setMode={setMode} />} />
+            </Routes>
+          </BrowserRouter>
+        </ModeContext.Provider>
+        <dialog className="display-msg-modal" />
     </div>
   )
 }

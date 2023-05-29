@@ -6,17 +6,13 @@ import { fetchCatch } from "../helpers";
 import Column from "./Column";
 import EditBoard from "../crudComponents/EditBoard";
 
-interface Prop {
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
-};
-
 interface draggableInfoProp {
     order: string,
     taskId: string,
     colId: string,
 };
 
-const Board: React.FC<Prop> = function({ setDisplayMsg }) {
+const Board: React.FC<Prop> = function() {
     const boardsDataPair = useContext(BoardsContext);
     const { boardsData, setBoardsData } = boardsDataPair;
     const curBoardIdPair = useContext(CurBoardIdContext);
@@ -26,7 +22,6 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
     const columnsArr = curBoard?.columns;
 
     const [ filters, setFilters ] = useState<string[]>([]);
-    // const [ sorter, setSorter ] = useState<string>("");
     const [ editBoardVis, setEditBoardVis ] = useState(false);
     const [ draggableInfo, setDraggableInfo ] = useState<draggableInfoProp | null>({ 
         order: "", 
@@ -48,7 +43,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
 
     // rendering columns w/ their tasks
     const columns = columnsArr?.map(col => 
-        <Column key={col._id} col={col} filters={filters} columnsArr={columnsArr} setDisplayMsg={setDisplayMsg}/>
+        <Column key={col._id} col={col} filters={filters} columnsArr={columnsArr} />
     );
 
     // although pointer sensor is one of the default sensors, I imported it with useSensor and useSensors to be passed along to DndContext so that an activation constraint could be added, and a simple click on a draggable opens the task preview instead of initiating a dragstart event
@@ -120,7 +115,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
                 throw new Error(res);
             };
         } catch(err) {
-            fetchCatch(err, navigate, setDisplayMsg);
+            fetchCatch(err, navigate);
         };
     };
 
@@ -129,16 +124,18 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
             const editBoardModal: HTMLDialogElement | null = document.querySelector("#edit-board-modal");
             editBoardModal?.showModal();
         };
-    }, [ editBoardVis ]);
+    }, [editBoardVis]);
 
     return (
         <>
             <form className="sort-and-filter">
                 <p>Filter by:</p>
-                <div>
-                    <input type="checkbox" id="assigned" name="filter" onClick={handleFilterClick}/>
-                    <label htmlFor="assigned">Assigned</label>
-                </div>
+                {curBoard?.contributors.length > 0 ?
+                    <div>
+                        <input type="checkbox" id="assigned" name="filter" onClick={handleFilterClick}/>
+                        <label htmlFor="assigned">Assigned</label>
+                    </div> : null
+                }
                 <div>
                     <input type="checkbox" id="incomplete" name="filter" onClick={handleFilterClick} />
                     <label htmlFor="incomplete">Incomplete</label>
@@ -155,7 +152,7 @@ const Board: React.FC<Prop> = function({ setDisplayMsg }) {
                     {(userStatus === "Creator" || userStatus === "Co-creator") ? 
                         <>
                             <button type="button" className="add-column-btn" onClick={() => setEditBoardVis(true)}>+ New Column</button>
-                            {editBoardVis ? <EditBoard setDisplayMsg={setDisplayMsg} setEditBoardVis={setEditBoardVis} /> : null }
+                            {editBoardVis ? <EditBoard setEditBoardVis={setEditBoardVis} /> : null }
                         </> : null
                     }    
                 </section>

@@ -20,7 +20,6 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
     const [ curBoard, setCurBoard ] = useState<boardData | null>(null);
     const [ loading, setLoading ] = useState(true);
     const [ sidebarVis, setSidebarVis ] = useState(window.innerWidth > 500 ? true : false);
-    const [ displayMsg, setDisplayMsg ] = useState("");
     const [ editBoardVis, setEditBoardVis ] = useState(false);
 
     const location = useLocation();
@@ -29,11 +28,6 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
     const mainRef = useRef<HTMLElement | null>(null);
     const headerLogoRef = useRef<SVGSVGElement | null>(null);
     const sidebarBackdropRef = useRef<HTMLDivElement | null>(null);
-
-    // const socket = io("http://localhost:5500", {
-    //     withCredentials: true,
-    // });
-    // socket.emit("confirm", "client-to-server :)");
 
     useEffect(() => {
         async function pullBoardsData() {
@@ -44,13 +38,12 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
                 if (req.ok) {
                     setBoardsData(res);
                     setLoading(false);
-                    handleDisplayMsg(true, "Boards data retrieved.", setDisplayMsg
-                    );
+                    handleDisplayMsg(true, "Boards data retrieved.");
                 } else {
                     throw new Error(res);
                 };
             } catch (err) {
-                fetchCatch(err, navigate, setDisplayMsg);
+                fetchCatch(err, navigate);
             };
         };    
         
@@ -65,7 +58,7 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
                     throw new Error(res);
                 };
             } catch(err) {
-                fetchCatch(err, navigate, setDisplayMsg);
+                fetchCatch(err, navigate);
             };
         };
 
@@ -96,7 +89,7 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
                 };
             };
         });
-    }, [curBoardId]);
+    }, [curBoardId, boardsData]);
 
     useEffect(() => {
         if (sidebarVis) {
@@ -128,7 +121,7 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
         <div id="app">
             <Providers>
                 {sidebarVis ?
-                    <Sidebar loading={loading} setMode={setMode} setSidebarVis={setSidebarVis} setDisplayMsg={setDisplayMsg} setUser={setUser} /> :
+                    <Sidebar loading={loading} setMode={setMode} setSidebarVis={setSidebarVis} setUser={setUser} /> :
                     <button onClick={() => setSidebarVis(true)} className="sidebar-vis-btn" title="Show sidebar">
                         <svg aria-hidden="true" focusable="false" viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg"><path d="M15.815 4.434A9.055 9.055 0 0 0 8 0 9.055 9.055 0 0 0 .185 4.434a1.333 1.333 0 0 0 0 1.354A9.055 9.055 0 0 0 8 10.222c3.33 0 6.25-1.777 7.815-4.434a1.333 1.333 0 0 0 0-1.354ZM8 8.89A3.776 3.776 0 0 1 4.222 5.11 3.776 3.776 0 0 1 8 1.333a3.776 3.776 0 0 1 3.778 3.778A3.776 3.776 0 0 1 8 8.89Zm2.889-3.778a2.889 2.889 0 1 1-5.438-1.36 1.19 1.19 0 1 0 1.19-1.189H6.64a2.889 2.889 0 0 1 4.25 2.549Z" fill="#FFF"/></svg>
                         <span className="sr-only">Show sidebar</span>
@@ -174,17 +167,14 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
                                     <span className="sr-only">Expand navigation</span>   
                                 </button>
                             }
-                            {editBoardVis ? <EditBoard setDisplayMsg={setDisplayMsg} setEditBoardVis={setEditBoardVis} /> : null }
+                            {editBoardVis ? <EditBoard setEditBoardVis={setEditBoardVis} /> : null }
                         </header>
                         <main ref={mainRef}>
-                            <Board setDisplayMsg={setDisplayMsg} />
+                            <Board />
                         </main>
                         <div ref={sidebarBackdropRef} className="sidebar-backdrop" onClick={() => setSidebarVis(false)}></div>
                     </div>
                 }
-                <dialog className="display-msg-modal">
-                    <p>{displayMsg}</p>
-                </dialog>
             </Providers>
         </div>   
     );

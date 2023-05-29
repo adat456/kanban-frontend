@@ -7,7 +7,6 @@ import Fields from "./Fields";
 interface Prop {
     curCol: string,
     columnsArr: columnData[],
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
     setCreateTaskVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
@@ -16,7 +15,7 @@ interface assigneeInfo {
     userName: string
 };
 
-const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg, setCreateTaskVis }) {
+const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setCreateTaskVis }) {
     const [ task, setTask ] = useState("");
     const [ errMsg, setErrMsg ] = useState("Field required.");
     const [ desc, setDesc ] = useState("");
@@ -162,7 +161,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                 // may be the updated board data
                 const res = await req.json();
                 if (req.ok) {
-                    handleDisplayMsg(true, "Task created.", setDisplayMsg);
+                    handleDisplayMsg(true, "Task created.");
 
                     // update context as well
                     const updatedBoardsData = boardsData?.map(board => {
@@ -180,11 +179,11 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setDisplayMsg,
                     throw new Error(res);
                 };
             } catch(err) {
-                fetchCatch(err, navigate, setDisplayMsg);
+                fetchCatch(err, navigate);
             };
             // close out window/modal
         } else {
-            handleDisplayMsg(false, "Please fix errors before submitting.", setDisplayMsg);
+            handleDisplayMsg(false, "Please fix errors before submitting.");
         };
     };
 

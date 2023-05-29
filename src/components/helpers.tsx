@@ -1,30 +1,32 @@
 import { NavigateFunction } from "react-router-dom";
 import { isAlphanumeric, isEmail } from "validator";
 
-export let handleDisplayMsg: (ok: boolean, message: string, msgSetter: React.Dispatch<React.SetStateAction<string>>) => void = function(ok, message, msgSetter) {
-    msgSetter(message);
-
+export let handleDisplayMsg: (ok: boolean, message: string) => void = function(ok, message) {
     const displayMsgModal: HTMLDialogElement | null = document.querySelector(".display-msg-modal");
-    if (!ok) displayMsgModal?.classList.add("error");
-    displayMsgModal?.show();
+    if (displayMsgModal) {
+        displayMsgModal.textContent = message;
+        if (!ok) displayMsgModal.classList.add("error");
+        displayMsgModal.show();
+    };  
 
     setTimeout(() => {
-        displayMsgModal?.close();
-        displayMsgModal?.classList.remove("error");
-        msgSetter("");
+        if (displayMsgModal) {
+            displayMsgModal.close();
+            displayMsgModal.classList.remove("error");
+        };   
     }, 3000);
 };
 
 // for when the JWT has expired ==> direct to log-in page
 // or when back end is throwing some kind of error ==> display it in the error modal
 // ok will always be false and message will always be err.message
-export let fetchCatch: (err: any, navigate: NavigateFunction, msgSetter: React.Dispatch<React.SetStateAction<string>>) => void = function(err, navigate, msgSetter) {
+export let fetchCatch: (err: any, navigate: NavigateFunction) => void = function(err, navigate) {
     if (err.message === "No JWT found.") {
         // state can be accessed by the /log-in component with the useLocation hook
         // informs user that they were logged out for a reason
         navigate("/log-in", {state: {logOutMsg: "Logged out due to inactivity."}});
     } else {
-        handleDisplayMsg(false, err.message, msgSetter);
+        handleDisplayMsg(false, err.message);
     };
 };
 

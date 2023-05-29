@@ -6,11 +6,10 @@ import { handleDisplayMsg, fetchCatch } from "../helpers";
 import Fields from "./Fields";
 
 interface Prop {
-    setDisplayMsg: React.Dispatch<React.SetStateAction<string>>,
     setEditBoardVis: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
+const EditBoard: React.FC<Prop> = function({ setEditBoardVis }) {
     const { boardsData, setBoardsData } = useContext(BoardsContext);
     const { curBoardId, setCurBoardId } = useContext(CurBoardIdContext);
     const curBoard = boardsData?.find(board => (board._id === curBoardId));
@@ -150,7 +149,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
                 // either the updated board or an error message
                 const res = await req.json();
                 if (req.ok) {
-                    handleDisplayMsg(true, "Board updated.", setDisplayMsg);
+                    handleDisplayMsg(true, "Board updated.");
     
                     // update context as well
                     const updatedBoardsData = boardsData?.map(board => {
@@ -167,10 +166,10 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
                     throw new Error(res);
                 };
             } catch(err) {
-                fetchCatch(err, navigate, setDisplayMsg);
+                fetchCatch(err, navigate);
             };
         } else {
-            handleDisplayMsg(false, "Please fix errors before submitting.", setDisplayMsg);
+            handleDisplayMsg(false, "Please fix errors before submitting.");
         };
     };
 
@@ -180,7 +179,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
             // either a success or error message
             const res = await req.json();
             if (req.ok) {
-                handleDisplayMsg(true, res,setDisplayMsg);
+                handleDisplayMsg(true, res);
     
                 // update context as well
                 const filteredBoardsData = boardsData?.filter(board => {
@@ -194,7 +193,7 @@ const EditBoard: React.FC<Prop> = function({ setDisplayMsg, setEditBoardVis }) {
                 throw new Error(res);
             };
         } catch(err) {
-            fetchCatch(err, navigate, setDisplayMsg);
+            fetchCatch(err, navigate);
         };
     };
 
