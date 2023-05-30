@@ -127,8 +127,10 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setU
     function handleModeToggle() {
         if (mode === "light") {
             setMode("dark");
+            if (user) localStorage.setItem(user._id, 'dark');
         } else {
             setMode("light");
+            if (user) localStorage.setItem(user._id, 'light');
         };  
     };
 

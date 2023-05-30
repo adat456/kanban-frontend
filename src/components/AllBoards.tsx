@@ -4,18 +4,19 @@ import ReactArrayToTree from "react-array-to-tree";
 import { useLocation } from "react-router-dom";
 // import { io } from "socket.io-client";
 
-import { UserContext, userInterface, UserStatusContext, BoardsContext, CurBoardIdContext, boardData } from "../Context";
+import { UserContext, userInterface, ModeContext, UserStatusContext, BoardsContext, CurBoardIdContext, boardData } from "../Context";
 import { handleDisplayMsg, fetchCatch } from "./helpers";
 import Sidebar from "./boardComponents/Sidebar";
 import EditBoard from "./crudComponents/EditBoard";
 import Board from "./boardComponents/Board";
 
-const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>> }> = function({ setMode }) {
+const AllBoards: React.FC = function({}) {
     // context values
     const [ boardsData, setBoardsData ] = useState<boardData[] | null>(null);
     const [ curBoardId, setCurBoardId ] = useState("");
     const [ user, setUser ] = useState<userInterface | null>(null);
     const [ userStatus, setUserStatus ] = useState("");
+    const [ mode, setMode ] = useState("light");
     // local state
     const [ curBoard, setCurBoard ] = useState<boardData | null>(null);
     const [ loading, setLoading ] = useState(true);
@@ -54,6 +55,10 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
                 const res = await req.json();
                 if (req.ok) {
                     setUser(res);
+
+                    // if able to pull a user, check if there is a dark mode preference in localstorage; if so, set it, if not, default will be light mode
+                    const mode = localStorage.getItem(res._id);
+                    if (mode) setMode(mode);
                 } else {
                     throw new Error(res);
                 };
@@ -75,6 +80,12 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
             pullBoardsData();
         };  
     }, []);
+
+    useEffect(() => {
+        const app = document.querySelector("#app");
+        if (mode === "light") app?.classList.remove("dark");
+        if (mode === "dark") app?.classList.add("dark");
+    }, [mode]);
 
     useEffect(() => {
         boardsData?.forEach(board => {
@@ -114,7 +125,8 @@ const AllBoards: React.FC<{ setMode: React.Dispatch<React.SetStateAction<string>
         [BoardsContext.Provider, {value: {boardsData, setBoardsData}}],
         [CurBoardIdContext.Provider, {value: {curBoardId, setCurBoardId}}],
         [UserContext.Provider, {value: user}],
-        [UserStatusContext.Provider, {value: userStatus}]
+        [UserStatusContext.Provider, {value: userStatus}],
+        [ModeContext.Provider, {value: mode}]
     ]);
 
     return (  

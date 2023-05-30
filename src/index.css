@@ -470,7 +470,8 @@ main#no-brd-chosen p {
   fill: #A8A4FF;
 }
 .sidebar hr {
-  border: 1px solid #F4F7FD;
+  border: none;
+  border-bottom: 1px solid #F4F7FD;
 }
 
 .notifications-modal .notifications-header {
@@ -681,7 +682,7 @@ footer .name {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 2rem 0 0 0;
+  margin: 2.5rem 0 1rem 0;
   color: black;
   font-weight: 700;
   font-size: 1.3rem;
