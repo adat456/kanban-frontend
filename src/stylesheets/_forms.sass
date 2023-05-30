@@ -235,7 +235,7 @@
     // specifically for checkboxes in ViewTask (inputs also nested in labels here)
     .checkboxes-field
         .subtask-box
-            position: relative
+            position: relative 
 
         input
             position: absolute
@@ -244,10 +244,6 @@
             height: 2rem
             left: 1rem
             top: 0.5rem 
-
-            &:focus, &:hover
-                div.before
-                    background-color: red
 
         div.before
             position: absolute
@@ -273,8 +269,16 @@
             font-weight: 700
             color: white 
 
-        input:checked + div.after
+        input:hover + div.before, input:focus + div.before
+            background-color: base.$drk-blue-active
+            border-color: base.$drk-blue-active
+
+        input:checked + div.before + div.after
             opacity: 1      
+
+        input:hover + div.before + div.after, input:focus + div.before + div.after
+            background-color: base.$drk-blue-active
+            border-color: base.$drk-blue-active
 
         label
             padding: 1.5rem

@@ -982,9 +982,6 @@ footer .log-out-btn:hover, footer .log-out-btn:focus {
   left: 1rem;
   top: 0.5rem;
 }
-.notifications-modal .checkboxes-field input:focus div.before, .notifications-modal .checkboxes-field input:hover div.before, .form-modal .checkboxes-field input:focus div.before, .form-modal .checkboxes-field input:hover div.before, .delete-modal .checkboxes-field input:focus div.before, .delete-modal .checkboxes-field input:hover div.before, .login-form .checkboxes-field input:focus div.before, .login-form .checkboxes-field input:hover div.before, .signup-form .checkboxes-field input:focus div.before, .signup-form .checkboxes-field input:hover div.before {
-  background-color: red;
-}
 .notifications-modal .checkboxes-field div.before, .form-modal .checkboxes-field div.before, .delete-modal .checkboxes-field div.before, .login-form .checkboxes-field div.before, .signup-form .checkboxes-field div.before {
   position: absolute;
   left: 1rem;
@@ -1011,8 +1008,16 @@ footer .log-out-btn:hover, footer .log-out-btn:focus {
   font-weight: 700;
   color: white;
 }
-.notifications-modal .checkboxes-field input:checked + div.after, .form-modal .checkboxes-field input:checked + div.after, .delete-modal .checkboxes-field input:checked + div.after, .login-form .checkboxes-field input:checked + div.after, .signup-form .checkboxes-field input:checked + div.after {
+.notifications-modal .checkboxes-field input:hover + div.before, .notifications-modal .checkboxes-field input:focus + div.before, .form-modal .checkboxes-field input:hover + div.before, .form-modal .checkboxes-field input:focus + div.before, .delete-modal .checkboxes-field input:hover + div.before, .delete-modal .checkboxes-field input:focus + div.before, .login-form .checkboxes-field input:hover + div.before, .login-form .checkboxes-field input:focus + div.before, .signup-form .checkboxes-field input:hover + div.before, .signup-form .checkboxes-field input:focus + div.before {
+  background-color: #A8A4FF;
+  border-color: #A8A4FF;
+}
+.notifications-modal .checkboxes-field input:checked + div.before + div.after, .form-modal .checkboxes-field input:checked + div.before + div.after, .delete-modal .checkboxes-field input:checked + div.before + div.after, .login-form .checkboxes-field input:checked + div.before + div.after, .signup-form .checkboxes-field input:checked + div.before + div.after {
   opacity: 1;
+}
+.notifications-modal .checkboxes-field input:hover + div.before + div.after, .notifications-modal .checkboxes-field input:focus + div.before + div.after, .form-modal .checkboxes-field input:hover + div.before + div.after, .form-modal .checkboxes-field input:focus + div.before + div.after, .delete-modal .checkboxes-field input:hover + div.before + div.after, .delete-modal .checkboxes-field input:focus + div.before + div.after, .login-form .checkboxes-field input:hover + div.before + div.after, .login-form .checkboxes-field input:focus + div.before + div.after, .signup-form .checkboxes-field input:hover + div.before + div.after, .signup-form .checkboxes-field input:focus + div.before + div.after {
+  background-color: #A8A4FF;
+  border-color: #A8A4FF;
 }
 .notifications-modal .checkboxes-field label, .form-modal .checkboxes-field label, .delete-modal .checkboxes-field label, .login-form .checkboxes-field label, .signup-form .checkboxes-field label {
   padding: 1.5rem;

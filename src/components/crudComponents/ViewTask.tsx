@@ -50,21 +50,36 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         );
     });
 
+    function handleCheckboxClick(e: React.KeyboardEvent<HTMLInputElement>) {
+        if (e.key === "space") {
+            // still need to stop form from closing when enter is pressed
+            const checkbox = e.target as HTMLInputElement;
+            if (checkbox.checked) {
+                checkbox.checked = false;
+            } else {
+                checkbox.setAttribute("checked", "");
+            };
+            handleClick(e);
+        };
+    };
+
     // very complicated :(
     const subtasksArr = task.subtasks.map(subtask => {
         return (
-            <div className="subtask-box" key={subtask._id} onClick={handleClick}>
-                <div className="before" />
+            <div className="subtask-box" key={subtask._id} onClick={handleClick}>    
                 {subtask.status ?
                     // if the subtask was completed, check whether the completedBy userId matches the user's id. if it was completed...
                     (subtask.completedBy.userId === user?._id ? 
                         // ...by current user, make it defaultChecked so that user can toggle checked status
-                        <input type="checkbox" name="subtask" id={subtask._id} data-user-info={`${subtask.completedBy.userInitials}${subtask.completedBy.userId}`} defaultChecked /> :
+                        <input type="checkbox" name="subtask" id={subtask._id} data-user-info={`${subtask.completedBy.userInitials}${subtask.completedBy.userId}`} defaultChecked onKeyPress={handleCheckboxClick} /> :
                         // ...by another user, make it checked and disabled so that it is read-only, and add a class specifying that it was completed by another
                         <input type="checkbox" name="subtask" id={subtask._id} className="completed-by-other" data-user-info={`${subtask.completedBy.userInitials}${subtask.completedBy.userId}`} checked disabled />
                         // either way, add the data-user-info data attribute with completedBy info
-                    ): <input type="checkbox" name="subtask" id={subtask._id} />
+                    ): <input type="checkbox" name="subtask" id={subtask._id} onKeyPress={handleCheckboxClick} />
                 }
+                {/* this is the empty custom checkbox */}
+                <div className="before" />
+                {/* and these are the custom initials... neither actually receive focus, only the opacity 0 input does */}
                 {subtask.status ?
                     // if the subtask has been completed, then initials should belong to that user
                     <div className="after">{subtask.completedBy.userInitials}</div> :
@@ -75,12 +90,12 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
             </div>
         );
     });
-    function handleClick(e: React.MouseEvent<HTMLDivElement>) {
+    function handleClick(e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement>) {
         addUserInfoToSubtask(e);
         updateNumCompleteSubtasks();
     };
-    function addUserInfoToSubtask(e: React.MouseEvent<HTMLDivElement>) {
-        const subtaskBox = e.target.closest("div");
+    function addUserInfoToSubtask(e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLInputElement>) {
+        const subtaskBox = e.target.closest("div.subtask-box");
         const input = subtaskBox.querySelector("input");
         // data string consists of current user's initials + id
         // if the input is now checked AND the input was not completed by another user (so that it is always checked), add the current user's data
@@ -126,7 +141,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         setViewTaskVis(false);
     };
 
-    async function handleSubmitUpdates(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmitUpdates(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
     
         // getting subtask IDs and their statuses
@@ -195,7 +210,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
 
     return (
         <dialog className="form-modal view-task-modal" onClose={() => console.log("closed")}>
-            <form action="post" className="view-task" onSubmit={handleSubmitUpdates}>
+            <form action="post" className="view-task">
                 <div className="view-task-header">
                     <div>
                         <h2>{task.task}</h2>
@@ -230,7 +245,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
                     null :
                     <button type="button" className="add-btn" onClick={handleToggleCompletion}>{`Mark as ${completed ? "incomplete" : "complete"}`}</button>
                 }
-                <button type="submit" className="save-btn">Save Changes</button>
+                <button type="submit" className="save-btn" onClick={handleSubmitUpdates}>Save Changes</button>
             </form>
             <button className="close-modal" type="button" onClick={handleViewTaskModal} title="Close modal">
                 <svg aria-hidden="true" focusable="false" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m12.728 0 2.122 2.122L2.122 14.85 0 12.728z"/><path d="M0 2.122 2.122 0 14.85 12.728l-2.122 2.122z"/></g></svg>
