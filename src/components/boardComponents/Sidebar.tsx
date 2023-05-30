@@ -132,6 +132,17 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setU
         };  
     };
 
+    function returnGreeting() {
+        const date: any = new Date();
+        const noon = new Date().setHours(12, 0, 0);
+        const evening = new Date().setHours(17, 30, 0);
+        const midnight = new Date().setHours(0, 0, 0);
+
+        if (date > midnight && date < noon) return "Good morning, ";
+        if (date >= noon && date < evening) return "Good afternoon, ";
+        if (date >= evening) return "Good evening, ";
+    };
+
     async function handleLogOut() {
         try {
             const req = await fetch("http://localhost:3000/users/log-out", {credentials: "include"});
@@ -195,6 +206,7 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setU
                     Hide Sidebar
                 </button>
                 <hr />
+                <p className="name"><span className="greeting">{returnGreeting()}</span>{`${user?.firstName} ${user?.lastName}`}</p>
                 <button type="button" className="log-out-btn" onClick={handleLogOut}>Log Out</button>
             </footer>
             {notificationsVis ? <Notifications setNotificationsVis={setNotificationsVis} notifications={notifications} setNotifications={setNotifications} /> : null}

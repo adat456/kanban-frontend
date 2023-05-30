@@ -52,7 +52,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
 
     function handleCheckboxClick(e: React.KeyboardEvent<HTMLInputElement>) {
         if (e.key === "space") {
-            // still need to stop form from closing when enter is pressed
+            // uses space becase space is traditionally used for toggling checkboxes, and enter key seems to persistently submit the form and close the dialog
             const checkbox = e.target as HTMLInputElement;
             if (checkbox.checked) {
                 checkbox.checked = false;

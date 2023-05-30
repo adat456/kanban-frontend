@@ -271,6 +271,19 @@ footer
         @media (max-width: 500px)
             display: none
 
+    .name
+        @include base.center
+        margin: 2rem 0 0 0
+        color: black
+        font-weight: 700
+        font-size: 1.3rem  
+
+    .greeting
+        color: base.$grey
+        font-weight: 700
+        font-size: 1.3rem 
+        white-space: pre 
+
     .log-out-btn
         margin-top: 2rem
         padding: 1.5rem 0
@@ -302,6 +315,9 @@ footer
 
     .hide-sidebar, .create-brd-btn
         background-color: base.$dark-background-2
+    
+    .name
+        color: white
 
     .notifications-modal
         background-color: base.$dark-background-2

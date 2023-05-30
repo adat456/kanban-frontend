@@ -677,6 +677,21 @@ footer .hide-sidebar svg {
     display: none;
   }
 }
+footer .name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0 0 0;
+  color: black;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+footer .greeting {
+  color: #828FA3;
+  font-weight: 700;
+  font-size: 1.3rem;
+  white-space: pre;
+}
 footer .log-out-btn {
   margin-top: 2rem;
   padding: 1.5rem 0;
@@ -706,6 +721,9 @@ footer .log-out-btn:hover, footer .log-out-btn:focus {
 }
 #app.dark > .sidebar .hide-sidebar, #app.dark > .sidebar .create-brd-btn {
   background-color: #2B2C37;
+}
+#app.dark > .sidebar .name {
+  color: white;
 }
 #app.dark > .sidebar .notifications-modal {
   background-color: #2B2C37;
