@@ -8,7 +8,7 @@ const App: React.FC = function() {
 
   return (
     <div className="App">
-        <BrowserRouter>
+        <BrowserRouter basename="/kanban-frontend">
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/log-in" element={<Login />} />
