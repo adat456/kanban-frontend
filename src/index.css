@@ -729,6 +729,9 @@ footer .log-out-btn:hover, footer .log-out-btn:focus {
 #app.dark > .sidebar .notifications-modal {
   background-color: #2B2C37;
 }
+#app.dark > .sidebar .notifications-modal > p {
+  color: white;
+}
 #app.dark > .sidebar .notification {
   background-color: #20212C;
   color: white;
