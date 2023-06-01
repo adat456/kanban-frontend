@@ -186,7 +186,7 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
         };
 
         try {
-            const req = await fetch("http://localhost:3000/update-task", reqOptions);
+            const req = await fetch("/api/update-task", reqOptions);
             // may return updated board
             const res = await req.json();
             if (req.ok) {
@@ -198,6 +198,8 @@ const ViewTask: React.FC<Prop> = function({ task, numCompleteSubtasks, colId, se
                     };
                 });
                 if (updatedBoardsData) setBoardsData(updatedBoardsData);
+
+                handleViewTaskModal();
 
                 handleDisplayMsg(true, "Task updated.");
             } else {

@@ -83,7 +83,7 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setU
                 credentials: "include"
             };
 
-            const req = await fetch("http://localhost:3000/update-board-favorite", reqOptions);
+            const req = await fetch("/api/update-board-favorite", reqOptions);
             // may be updated user doc
             const res = await req.json();
 
@@ -102,7 +102,7 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setU
 
     async function pullNotifications() {
         try {
-            const req = await fetch("http://localhost:3000/get-notifications", {credentials: "include"});
+            const req = await fetch("/api/get-notifications", {credentials: "include"});
             // may be array of notifications
             const res = await req.json();
             if (req.ok) {
@@ -147,7 +147,7 @@ const Sidebar: React.FC<Prop> = function({ loading, setMode, setSidebarVis, setU
 
     async function handleLogOut() {
         try {
-            const req = await fetch("http://localhost:3000/users/log-out", {credentials: "include"});
+            const req = await fetch("/api/users/log-out", {credentials: "include"});
             const res = await req.json();
 
             if (req.ok) {

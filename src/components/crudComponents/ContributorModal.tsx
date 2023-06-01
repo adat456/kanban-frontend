@@ -39,7 +39,7 @@ const ContributorModal: React.FC<Prop> = function({ setContributorModal, contrib
         e.preventDefault();
 
         try {
-            const req = await fetch(`http://localhost:3000/search/${search}`, { credentials: "include"});
+            const req = await fetch(`/api/search/${search}`, { credentials: "include"});
             const res = await req.json();
             if (req.ok) {
                 // adding a property to the results object if contributor had already been added - will be used to disable button

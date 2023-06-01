@@ -70,14 +70,14 @@ const Signup: React.FC = function() {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        const reqOptions = {
+        const reqOptions: RequestInit = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({ firstName, lastName, email, username, password })
         };
 
         try {
-            const res = await fetch("http://localhost:3000/users/sign-up", reqOptions);
+            const res = await fetch("/api/users/sign-up", reqOptions);
             const message = await res.json();
             if (res.ok) {
                 navigate("/boards", {state: {newUser: true}});

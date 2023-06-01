@@ -145,7 +145,7 @@ const EditBoard: React.FC<Prop> = function({ setEditBoardVis }) {
             };
             
             try {
-                const req = await fetch("http://localhost:3000/update-board", reqOptions);
+                const req = await fetch("/api/update-board", reqOptions);
                 // either the updated board or an error message
                 const res = await req.json();
                 if (req.ok) {
@@ -175,7 +175,7 @@ const EditBoard: React.FC<Prop> = function({ setEditBoardVis }) {
 
     async function handleDelete() {
         try {
-            const req = await fetch(`http://localhost:3000/delete-board/${curBoardId}`, { method: "DELETE", credentials: "include" });
+            const req = await fetch(`/api/delete-board/${curBoardId}`, { method: "DELETE", credentials: "include" });
             // either a success or error message
             const res = await req.json();
             if (req.ok) {

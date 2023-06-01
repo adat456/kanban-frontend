@@ -157,7 +157,7 @@ const CreateTask: React.FC<Prop> = function({ curCol, columnsArr, setCreateTaskV
             };
             
             try {
-                const req = await fetch("http://localhost:3000/create-task", reqOptions);
+                const req = await fetch("/api/create-task", reqOptions);
                 // may be the updated board data
                 const res = await req.json();
                 if (req.ok) {

@@ -32,7 +32,7 @@ const AllBoards: React.FC = function({}) {
     useEffect(() => {
         async function pullBoardsData() {
             try {
-                const req = await fetch("http://localhost:3000/read-all", { credentials: "include" });
+                const req = await fetch("/api/read-all", { credentials: "include" });
                 // may be data for all boards
                 const res = await req.json();
                 if (req.ok) {
@@ -49,7 +49,7 @@ const AllBoards: React.FC = function({}) {
         
         async function getUser() {
             try {
-                const req = await fetch("http://localhost:3000/user-info", { credentials: "include" });
+                const req = await fetch("/api/user-info", { credentials: "include" });
                 // may be user data
                 const res = await req.json();
                 if (req.ok) {
@@ -77,6 +77,7 @@ const AllBoards: React.FC = function({}) {
         if (!location.state.newUser && !boardsData) {
             getUser();
             pullBoardsData();
+            setLoading(false);
         };  
     }, []);
 

@@ -54,7 +54,7 @@ const Notifications: React.FC<Prop> = function({ notifications, setNotifications
         };
 
         try {
-            const req = await fetch("http://localhost:3000/acknowledge-notifications", reqOptions);
+            const req = await fetch("/api/acknowledge-notifications", reqOptions);
             // success or error message
             const res = await req.json();
             if (req.ok) {

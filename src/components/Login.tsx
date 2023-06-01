@@ -34,7 +34,7 @@ const Login: React.FC = function() {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        const reqOptions = {
+        const reqOptions: RequestInit = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({ username, password }),
@@ -42,7 +42,7 @@ const Login: React.FC = function() {
         };
 
         try {
-            const res = await fetch("http://localhost:3000/users/log-in", reqOptions);
+            const res = await fetch("/api/users/log-in", reqOptions);
             // must parse the JSON error, because if the log in attempt failed, the returned JSON message contains the specific error message
             const message = await res.json();
             if (res.ok) {

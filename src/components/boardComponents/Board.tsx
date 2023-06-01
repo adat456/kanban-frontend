@@ -97,7 +97,7 @@ const Board: React.FC<Prop> = function() {
                 credentials: "include"
             };
 
-            const req = await fetch("http://localhost:3000/update-task", reqOptions);
+            const req = await fetch("/api/update-task", reqOptions);
             const res = await req.json();
             if (req.ok) {
             

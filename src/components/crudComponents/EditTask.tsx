@@ -159,7 +159,7 @@ const EditTask: React.FC<Prop> = function({ task, colId, setEditTaskVis }) {
             };
 
             try {
-                const req = await fetch("http://localhost:3000/edit-task", reqOptions);
+                const req = await fetch("/api/edit-task", reqOptions);
                 // may be updated boards data
                 const res = await req.json();
                 if (req.ok) {
@@ -188,7 +188,7 @@ const EditTask: React.FC<Prop> = function({ task, colId, setEditTaskVis }) {
 
     async function handleDelete() {
         try {
-            const req = await fetch(`http://localhost:3000/delete-task/${curBoardId}/${colId}/${task._id}`, { method: "DELETE", credentials: "include" });
+            const req = await fetch(`/api/delete-task/${curBoardId}/${colId}/${task._id}`, { method: "DELETE", credentials: "include" });
             // may return updated boards data
             const res = await req.json();
             if (req.ok) {

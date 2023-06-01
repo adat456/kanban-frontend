@@ -113,7 +113,7 @@ const CreateBoard: React.FC<Prop> = function ({ setCreateBoardVis }) {
             // socket.on("contributor-message", msg => console.log(msg));
             
             try {
-                const req = await fetch("http://localhost:3000/create-board", reqOptions);
+                const req = await fetch("/api/create-board", reqOptions);
                 const res = await req.json();
 
                 if (req.ok) {
